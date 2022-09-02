@@ -9,6 +9,7 @@
         <entry key="Views/MainWindow.axaml" value="MatchPacketReaderTool.csproj" />
         <entry key="Views/Menu.axaml" value="MatchPacketReaderTool.csproj" />
         <entry key="Views/MenuC.axaml" value="MatchPacketReaderTool.csproj" />
+        <entry key="Views/PacketTypeView.axaml" value="MatchPacketReaderTool.csproj" />
       </map>
     </option>
   </component>
