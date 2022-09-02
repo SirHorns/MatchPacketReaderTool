@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MatchPacketReaderTool.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MatchPacketReaderTool.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MatchPacketReaderTool"
+        Width="1200"
+        Height="768"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        
+        <StackPanel VerticalAlignment="Top">
+            <Panel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0">
+                <TextBlock Text="{Binding Greeting}"/>
+            </Panel>
+            
+            <ComboBox Margin="40,0,0,0" Width="250"></ComboBox>
+            <ListBox Margin="0,50,0,0" Items="{Binding MyItems}"/>
+        </StackPanel>
+        
+        <Panel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
+            <Button>ADD</Button>
+        </Panel>
+    </Panel>
+    
+</Window>

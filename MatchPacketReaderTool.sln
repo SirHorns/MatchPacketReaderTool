@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchPacketReaderTool", "MatchPacketReaderTool.csproj", "{BE9B2B5D-795E-46A1-A2CD-2FE455F3EBF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE9B2B5D-795E-46A1-A2CD-2FE455F3EBF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE9B2B5D-795E-46A1-A2CD-2FE455F3EBF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE9B2B5D-795E-46A1-A2CD-2FE455F3EBF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE9B2B5D-795E-46A1-A2CD-2FE455F3EBF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
