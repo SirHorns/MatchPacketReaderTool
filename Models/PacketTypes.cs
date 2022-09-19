@@ -40,7 +40,7 @@ public class PacketTypes
             "UpdateLevelPropS2C", "UseItemAns", "WaypointGroup", "WaypointGroupWithSpeed", "World_SendGameNumber"
         };
     
-    public static async Task<List<string>> Filters()
+    public static List<string> Filters()
     {
         return _filters;
     }

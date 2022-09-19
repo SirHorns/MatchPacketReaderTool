@@ -1,11 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:MatchPacketReaderTool.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:local="clr-namespace:MatchPacketReaderTool.Views"
         x:Class="MatchPacketReaderTool.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/sota-logo.ico"
         Title="MatchPacketReaderTool"
         Width="1200"
         Height="768"
@@ -17,7 +15,7 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
+    
     <Panel>
         <ExperimentalAcrylicBorder IsHitTestVisible="False">
             <ExperimentalAcrylicBorder.Material>
@@ -29,25 +27,33 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
         
-        <StackPanel VerticalAlignment="Top">
-            <Panel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0">
-                <TextBlock Text="{Binding Greeting}"/>
-            </Panel>
+        <StackPanel Margin="0,18,0,0">
+            <DockPanel>
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="_File">
+                        <MenuItem 
+                            Header="_Open..." 
+                            Command="{Binding OpenFileCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="_Exit"/>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
             
-            <ComboBox x:Name="fontComboBox"  SelectedIndex="0">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" FontFamily="{Binding}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+            <ComboBox 
+                SelectedIndex="0"
+                Width="260" 
+                Margin="15"
+                FontSize="12"
+                Items="{Binding pTypes}">
             </ComboBox>
             
-            <ListBox HorizontalAlignment="Left" Margin="0,50,0,0" Width="200" Items="{Binding Packets}"/>
+            <Panel Margin="40">
+                <local:PacketDisplay />
+            </Panel>
+            
         </StackPanel>
         
-        <Panel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="50">
-            <Button>ADD</Button>
-        </Panel>
+        
     </Panel>
-    
 </Window>

@@ -4,9 +4,9 @@ using Avalonia.Markup.Xaml;
 
 namespace MatchPacketReaderTool.Views;
 
-public partial class ItemV : UserControl
+public partial class PacketDisplay : UserControl
 {
-    public ItemV()
+    public PacketDisplay()
     {
         InitializeComponent();
     }

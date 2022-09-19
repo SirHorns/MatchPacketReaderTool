@@ -5,7 +5,6 @@
              x:Class="MatchPacketReaderTool.Views.PacketTypeView">
     <Panel>
         <TextBlock Text="{Binding Type}" HorizontalAlignment="Center" />
-        <TextBlock Padding="5" Text="PacketTypeHere" HorizontalAlignment="Center" />
     </Panel>
     
 </UserControl>
