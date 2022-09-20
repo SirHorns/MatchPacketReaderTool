@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using MatchPacketReaderTool.Models;
+using MatchPacketReaderTool.Services;
 using ReactiveUI;
 
 namespace MatchPacketReaderTool.ViewModels
@@ -34,11 +36,11 @@ namespace MatchPacketReaderTool.ViewModels
             People.Add(new Person("Iam", "Therefore"));
             
             LoadPacketTypes();
-            ShowDiag = new Interaction<string, string>();
+            ShowOpenFileDialog = new Interaction<Unit, string?>();
 
             OpenFileCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                var _result = await ShowDiag.Handle("");
+                var _result = await ShowOpenFileDialog.Handle(default);
                 Path = _result;
                 LoadMatch(Path);
             });
@@ -47,7 +49,7 @@ namespace MatchPacketReaderTool.ViewModels
 
         public ICommand OpenFileCommand { get; }
         
-        public Interaction<string,string> ShowDiag { get; }
+        public Interaction<Unit,string> ShowOpenFileDialog { get; }
 
 
         private void LoadMatch(string path)

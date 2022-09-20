@@ -1,3 +1,4 @@
+using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -11,10 +12,10 @@ namespace MatchPacketReaderTool.Views
         public MainWindow()
         {
             InitializeComponent();
-            this.WhenActivated(d => d(ViewModel!.ShowDiag.RegisterHandler(DoShowDialogAsync)));
+            this.WhenActivated(d => d(ViewModel!.ShowOpenFileDialog.RegisterHandler(OpenIOFIleDialog)));
         }
         
-        private async Task DoShowDialogAsync(InteractionContext<string, string> interaction)
+        private async Task OpenIOFIleDialog(InteractionContext<Unit, string?> interaction)
         {
             OpenFileDialog _dialog = new OpenFileDialog();
             _dialog.Filters.Add(new FileDialogFilter() { Name = "JSON", Extensions =  { "json" } });

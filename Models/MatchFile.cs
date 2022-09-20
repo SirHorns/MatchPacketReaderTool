@@ -10,22 +10,16 @@ namespace MatchPacketReaderTool.Models;
 
 public class MatchFile
 {
-    private string _path = "";
+    private string _rawJson;
     private List<string> _matchJson;
+    private List<JObject> _jObjs;
     private readonly JsonSerializer _serializer;
     private Dictionary<String, int> _packtNumbers = new Dictionary<string, int>();
-
-    public string Path
-    {
-        get => _path;
-        private set => _path = value;
-    }
-
+    
     public MatchFile(string path)
     {
-        Path = path;
         _serializer = new JsonSerializer();
-        LoadJson(Path);
+        LoadJson(path);
     }
     
     public List<string> MatchJson
@@ -33,7 +27,13 @@ public class MatchFile
         get => _matchJson;
         set => _matchJson = value;
     }
-    
+
+    public List<JObject> JObjs
+    {
+        get => _jObjs;
+        set => _jObjs = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
     private async void LoadJson(string path)
     {
         using (StreamReader sr = new StreamReader(path))
@@ -41,9 +41,9 @@ public class MatchFile
         {
             try
             {
-                MatchJson = await Task.Run(() =>
+                JObjs = await Task.Run(() =>
                 {
-                    List<string> jsonList = new List<string>();
+                    List<JObject> _list = new List<JObject>();
                         
                     while (reader.Read())
                     { 
@@ -54,7 +54,7 @@ public class MatchFile
                             
                             if (_jObject != null)
                             {
-                                jsonList.Add(_jObject.ToString());
+                                _list.Add(_jObject);
                                 
                                 var pName = _jObject["Packet"]["$type"].ToString();
 
@@ -72,7 +72,7 @@ public class MatchFile
                         }
                     }
                         
-                    return jsonList;
+                    return _list;
                 });
             }
             catch (Exception e)
