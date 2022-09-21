@@ -8,15 +8,13 @@
     <Design.DataContext>
         <viewModels:MainWindowViewModel/>
     </Design.DataContext>
-    
     <Grid>
         <DataGrid 
             Name="MyDataGrid" 
-            Items="{Binding People}" 
+            Items="{Binding RawPackets}" 
             AutoGenerateColumns="False" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Forename"  Binding="{Binding FirstName}"/>
-                <DataGridTextColumn Header="Surname" Binding="{Binding LastName}" />
+                <DataGridTextColumn Header="Raw ID"  Binding="{Binding RawId}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

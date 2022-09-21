@@ -12,26 +12,19 @@ public class MatchFile
 {
     private string _rawJson;
     private List<string> _matchJson;
-    private List<JObject> _jObjs;
     private readonly JsonSerializer _serializer;
-    private Dictionary<String, int> _packtNumbers = new Dictionary<string, int>();
+    private Dictionary<String, int> _packtNumbers = new();
     
     public MatchFile(string path)
     {
         _serializer = new JsonSerializer();
         LoadJson(path);
     }
-    
+
     public List<string> MatchJson
     {
         get => _matchJson;
         set => _matchJson = value;
-    }
-
-    public List<JObject> JObjs
-    {
-        get => _jObjs;
-        set => _jObjs = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     private async void LoadJson(string path)
@@ -41,9 +34,9 @@ public class MatchFile
         {
             try
             {
-                JObjs = await Task.Run(() =>
+                MatchJson = await Task.Run(() =>
                 {
-                    List<JObject> _list = new List<JObject>();
+                    List<string> _list = new List<string>();
                         
                     while (reader.Read())
                     { 
@@ -54,7 +47,7 @@ public class MatchFile
                             
                             if (_jObject != null)
                             {
-                                _list.Add(_jObject);
+                                _list.Add(_jObject.ToString());
                                 
                                 var pName = _jObject["Packet"]["$type"].ToString();
 
