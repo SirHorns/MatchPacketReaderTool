@@ -1,0 +1,1814 @@
+[
+  {
+    "Name": "Aatrox",
+    "Hash": 1446403606
+  },
+  {
+    "Name": "Ahri",
+    "Hash": 3604666701
+  },
+  {
+    "Name": "Akali",
+    "Hash": 547435717
+  },
+  {
+    "Name": "Alistar",
+    "Hash": 3213821345
+  },
+  {
+    "Name": "Amumu",
+    "Hash": 3487624738
+  },
+  {
+    "Name": "AncientGolem",
+    "Hash": 3065647075
+  },
+  {
+    "Name": "Anivia",
+    "Hash": 800161761
+  },
+  {
+    "Name": "AniviaEgg",
+    "Hash": 1827276292
+  },
+  {
+    "Name": "AniviaIceblock",
+    "Hash": 3131670179
+  },
+  {
+    "Name": "Annie",
+    "Hash": 1218083662
+  },
+  {
+    "Name": "AnnieTibbers",
+    "Hash": 1828713443
+  },
+  {
+    "Name": "ARAMChaosNexus",
+    "Hash": 428069899
+  },
+  {
+    "Name": "ARAMChaosTurretFront",
+    "Hash": 75840421
+  },
+  {
+    "Name": "ARAMChaosTurretInhib",
+    "Hash": 1633599064
+  },
+  {
+    "Name": "ARAMChaosTurretNexus",
+    "Hash": 1042070587
+  },
+  {
+    "Name": "ARAMChaosTurretShrine",
+    "Hash": 880737639
+  },
+  {
+    "Name": "ARAMOrderNexus",
+    "Hash": 3937920253
+  },
+  {
+    "Name": "ARAMOrderTurretFront",
+    "Hash": 3946234263
+  },
+  {
+    "Name": "ARAMOrderTurretInhib",
+    "Hash": 1209025610
+  },
+  {
+    "Name": "ARAMOrderTurretNexus",
+    "Hash": 617497133
+  },
+  {
+    "Name": "ARAMOrderTurretShrine",
+    "Hash": 2149643253
+  },
+  {
+    "Name": "AramSpeedShrine",
+    "Hash": 3398024478
+  },
+  {
+    "Name": "AscRelic",
+    "Hash": 1541447217
+  },
+  {
+    "Name": "AscWarpIcon",
+    "Hash": 927900387
+  },
+  {
+    "Name": "AscXerath",
+    "Hash": 2769332498
+  },
+  {
+    "Name": "Ashe",
+    "Hash": 4005988574
+  },
+  {
+    "Name": "Azir",
+    "Hash": 4280990769
+  },
+  {
+    "Name": "AzirSoldier",
+    "Hash": 1933681425
+  },
+  {
+    "Name": "AzirSunDisc",
+    "Hash": 1979591792
+  },
+  {
+    "Name": "AzirTowerClicker",
+    "Hash": 4148788573
+  },
+  {
+    "Name": "AzirUltSoldier",
+    "Hash": 4228389750
+  },
+  {
+    "Name": "Blitzcrank",
+    "Hash": 3645415353
+  },
+  {
+    "Name": "Blue_Minion_Basic",
+    "Hash": 2465391131
+  },
+  {
+    "Name": "Blue_Minion_MechCannon",
+    "Hash": 2440675469
+  },
+  {
+    "Name": "Blue_Minion_MechMelee",
+    "Hash": 4250759012
+  },
+  {
+    "Name": "Blue_Minion_Wizard",
+    "Hash": 1828765598
+  },
+  {
+    "Name": "Brand",
+    "Hash": 3969523704
+  },
+  {
+    "Name": "Braum",
+    "Hash": 918053050
+  },
+  {
+    "Name": "brush_A_SR",
+    "Hash": 3644055889
+  },
+  {
+    "Name": "brush_B_SR",
+    "Hash": 4016063120
+  },
+  {
+    "Name": "brush_C_SR",
+    "Hash": 93103055
+  },
+  {
+    "Name": "brush_D_SR",
+    "Hash": 465110286
+  },
+  {
+    "Name": "brush_E_SR",
+    "Hash": 837117517
+  },
+  {
+    "Name": "brush_F_SR",
+    "Hash": 1209124748
+  },
+  {
+    "Name": "brush_SRU_A",
+    "Hash": 895330148
+  },
+  {
+    "Name": "brush_SRU_B",
+    "Hash": 903591653
+  },
+  {
+    "Name": "brush_SRU_C",
+    "Hash": 911853158
+  },
+  {
+    "Name": "brush_SRU_D",
+    "Hash": 920114663
+  },
+  {
+    "Name": "brush_SRU_E",
+    "Hash": 928376168
+  },
+  {
+    "Name": "brush_SRU_F",
+    "Hash": 936637673
+  },
+  {
+    "Name": "brush_SRU_G",
+    "Hash": 944899178
+  },
+  {
+    "Name": "brush_SRU_H",
+    "Hash": 953160683
+  },
+  {
+    "Name": "brush_SRU_I",
+    "Hash": 961422188
+  },
+  {
+    "Name": "brush_SRU_J",
+    "Hash": 969683693
+  },
+  {
+    "Name": "Caitlyn",
+    "Hash": 3044318089
+  },
+  {
+    "Name": "CaitlynTrap",
+    "Hash": 2006889046
+  },
+  {
+    "Name": "Cassiopeia",
+    "Hash": 3283984768
+  },
+  {
+    "Name": "Cassiopeia_Death",
+    "Hash": 2738536949
+  },
+  {
+    "Name": "ChaosInhibitor",
+    "Hash": 3803894425
+  },
+  {
+    "Name": "ChaosInhibitor_D",
+    "Hash": 2119474014
+  },
+  {
+    "Name": "ChaosNexus",
+    "Hash": 2747425262
+  },
+  {
+    "Name": "ChaosTurretGiant",
+    "Hash": 920655428
+  },
+  {
+    "Name": "ChaosTurretNormal",
+    "Hash": 4034340968
+  },
+  {
+    "Name": "ChaosTurretShrine",
+    "Hash": 2388118724
+  },
+  {
+    "Name": "ChaosTurretTutorial",
+    "Hash": 3396120927
+  },
+  {
+    "Name": "ChaosTurretWorm",
+    "Hash": 3554094932
+  },
+  {
+    "Name": "ChaosTurretWorm2",
+    "Hash": 1380238558
+  },
+  {
+    "Name": "Chogath",
+    "Hash": 955422921
+  },
+  {
+    "Name": "Corki",
+    "Hash": 2043942165
+  },
+  {
+    "Name": "crystal_platform",
+    "Hash": 1587579595
+  },
+  {
+    "Name": "Darius",
+    "Hash": 3296063681
+  },
+  {
+    "Name": "DestroyedInhibitor",
+    "Hash": 1657713472
+  },
+  {
+    "Name": "DestroyedNexus",
+    "Hash": 3001764245
+  },
+  {
+    "Name": "DestroyedTower",
+    "Hash": 1758540447
+  },
+  {
+    "Name": "Diana",
+    "Hash": 3487982400
+  },
+  {
+    "Name": "Dragon",
+    "Hash": 3806683682
+  },
+  {
+    "Name": "Draven",
+    "Hash": 209374139
+  },
+  {
+    "Name": "DrMundo",
+    "Hash": 2195386452
+  },
+  {
+    "Name": "Elise",
+    "Hash": 4069769029
+  },
+  {
+    "Name": "EliseSpider",
+    "Hash": 335608586
+  },
+  {
+    "Name": "EliseSpiderling",
+    "Hash": 4282359296
+  },
+  {
+    "Name": "Evelynn",
+    "Hash": 625132306
+  },
+  {
+    "Name": "Ezreal",
+    "Hash": 2618078626
+  },
+  {
+    "Name": "Ezreal_cyber_1",
+    "Hash": 1436871918
+  },
+  {
+    "Name": "Ezreal_cyber_2",
+    "Hash": 1445133423
+  },
+  {
+    "Name": "Ezreal_cyber_3",
+    "Hash": 1453394928
+  },
+  {
+    "Name": "FiddleSticks",
+    "Hash": 3708382670
+  },
+  {
+    "Name": "Fiora",
+    "Hash": 3980703052
+  },
+  {
+    "Name": "Fizz",
+    "Hash": 104508434
+  },
+  {
+    "Name": "FizzBait",
+    "Hash": 3325114460
+  },
+  {
+    "Name": "FizzShark",
+    "Hash": 1931892563
+  },
+  {
+    "Name": "Galio",
+    "Hash": 2859401001
+  },
+  {
+    "Name": "Gangplank",
+    "Hash": 1805217824
+  },
+  {
+    "Name": "Garen",
+    "Hash": 2271209138
+  },
+  {
+    "Name": "GhostWard",
+    "Hash": 3223556348
+  },
+  {
+    "Name": "GiantWolf",
+    "Hash": 1467605768
+  },
+  {
+    "Name": "Gnar",
+    "Hash": 3773434279
+  },
+  {
+    "Name": "GnarBig",
+    "Hash": 3640014137
+  },
+  {
+    "Name": "Golem",
+    "Hash": 633663133
+  },
+  {
+    "Name": "GolemODIN",
+    "Hash": 3600990231
+  },
+  {
+    "Name": "Gragas",
+    "Hash": 1127307890
+  },
+  {
+    "Name": "Graves",
+    "Hash": 4163251837
+  },
+  {
+    "Name": "GreatWraith",
+    "Hash": 3616341589
+  },
+  {
+    "Name": "HA_AP_BannerMidBridge",
+    "Hash": 969162988
+  },
+  {
+    "Name": "HA_AP_BridgeLaneStatue",
+    "Hash": 2142615538
+  },
+  {
+    "Name": "HA_AP_Chains",
+    "Hash": 4057101131
+  },
+  {
+    "Name": "HA_AP_Chains_Long",
+    "Hash": 2885258064
+  },
+  {
+    "Name": "HA_AP_ChaosTurret",
+    "Hash": 2998785783
+  },
+  {
+    "Name": "HA_AP_ChaosTurret2",
+    "Hash": 3567977979
+  },
+  {
+    "Name": "HA_AP_ChaosTurret3",
+    "Hash": 3576239484
+  },
+  {
+    "Name": "HA_AP_ChaosTurretRubble",
+    "Hash": 1651565427
+  },
+  {
+    "Name": "HA_AP_ChaosTurretShrine",
+    "Hash": 3231631130
+  },
+  {
+    "Name": "HA_AP_ChaosTurretTutorial",
+    "Hash": 2133844149
+  },
+  {
+    "Name": "HA_AP_Cutaway",
+    "Hash": 3012502871
+  },
+  {
+    "Name": "HA_AP_HealthRelic",
+    "Hash": 465901502
+  },
+  {
+    "Name": "HA_AP_Hermit",
+    "Hash": 1059720572
+  },
+  {
+    "Name": "HA_AP_Hermit_Robot",
+    "Hash": 4125184199
+  },
+  {
+    "Name": "HA_AP_HeroTower",
+    "Hash": 1579487382
+  },
+  {
+    "Name": "HA_AP_OrderCloth",
+    "Hash": 3074848997
+  },
+  {
+    "Name": "HA_AP_OrderShrineTurret",
+    "Hash": 3291959592
+  },
+  {
+    "Name": "HA_AP_OrderTurret",
+    "Hash": 1065353861
+  },
+  {
+    "Name": "HA_AP_OrderTurret2",
+    "Hash": 2751577581
+  },
+  {
+    "Name": "HA_AP_OrderTurret3",
+    "Hash": 2759839086
+  },
+  {
+    "Name": "HA_AP_OrderTurretRubble",
+    "Hash": 2920471041
+  },
+  {
+    "Name": "HA_AP_OrderTurretTutorial",
+    "Hash": 1931702339
+  },
+  {
+    "Name": "HA_AP_PeriphBridge",
+    "Hash": 1410578854
+  },
+  {
+    "Name": "HA_AP_Poro",
+    "Hash": 3059470389
+  },
+  {
+    "Name": "HA_AP_PoroSpawner",
+    "Hash": 1478286067
+  },
+  {
+    "Name": "HA_AP_ShpNorth",
+    "Hash": 181836195
+  },
+  {
+    "Name": "HA_AP_ShpSouth",
+    "Hash": 91381547
+  },
+  {
+    "Name": "HA_AP_Viking",
+    "Hash": 3122701667
+  },
+  {
+    "Name": "HA_FB_HealthRelic",
+    "Hash": 1963977579
+  },
+  {
+    "Name": "Hecarim",
+    "Hash": 1703831660
+  },
+  {
+    "Name": "Heimerdinger",
+    "Hash": 4039668328
+  },
+  {
+    "Name": "HeimerTBlue",
+    "Hash": 295459665
+  },
+  {
+    "Name": "HeimerTYellow",
+    "Hash": 1889999627
+  },
+  {
+    "Name": "Irelia",
+    "Hash": 2700971223
+  },
+  {
+    "Name": "Janna",
+    "Hash": 2525348699
+  },
+  {
+    "Name": "JarvanIV",
+    "Hash": 3746929188
+  },
+  {
+    "Name": "JarvanIVStandard",
+    "Hash": 3176104225
+  },
+  {
+    "Name": "JarvanIVWall",
+    "Hash": 629458126
+  },
+  {
+    "Name": "Jax",
+    "Hash": 1277624434
+  },
+  {
+    "Name": "Jayce",
+    "Hash": 2212175413
+  },
+  {
+    "Name": "Jinx",
+    "Hash": 798902552
+  },
+  {
+    "Name": "JinxMine",
+    "Hash": 787243083
+  },
+  {
+    "Name": "Kalista",
+    "Hash": 3376997662
+  },
+  {
+    "Name": "KalistaAltar",
+    "Hash": 3993651740
+  },
+  {
+    "Name": "KalistaSpawn",
+    "Hash": 1221802365
+  },
+  {
+    "Name": "Karma",
+    "Hash": 1306221857
+  },
+  {
+    "Name": "Karthus",
+    "Hash": 242121887
+  },
+  {
+    "Name": "Kassadin",
+    "Hash": 101781645
+  },
+  {
+    "Name": "Katarina",
+    "Hash": 1223268252
+  },
+  {
+    "Name": "Kayle",
+    "Hash": 4240663405
+  },
+  {
+    "Name": "Kennen",
+    "Hash": 2728821650
+  },
+  {
+    "Name": "Khazix",
+    "Hash": 4077039860
+  },
+  {
+    "Name": "KogMaw",
+    "Hash": 1803818351
+  },
+  {
+    "Name": "KogMawDead",
+    "Hash": 2722293043
+  },
+  {
+    "Name": "Leblanc",
+    "Hash": 817219908
+  },
+  {
+    "Name": "LeeSin",
+    "Hash": 2346838043
+  },
+  {
+    "Name": "Leona",
+    "Hash": 3749282906
+  },
+  {
+    "Name": "LesserWraith",
+    "Hash": 1674939788
+  },
+  {
+    "Name": "Lissandra",
+    "Hash": 3697876602
+  },
+  {
+    "Name": "Lizard",
+    "Hash": 2372119013
+  },
+  {
+    "Name": "LizardElder",
+    "Hash": 358951685
+  },
+  {
+    "Name": "Lucian",
+    "Hash": 2797982123
+  },
+  {
+    "Name": "Lulu",
+    "Hash": 746827681
+  },
+  {
+    "Name": "LuluCupcake",
+    "Hash": 403470773
+  },
+  {
+    "Name": "LuluDragon",
+    "Hash": 3060863156
+  },
+  {
+    "Name": "LuluFaerie",
+    "Hash": 3959211941
+  },
+  {
+    "Name": "LuluKitty",
+    "Hash": 1130224474
+  },
+  {
+    "Name": "LuluLadybug",
+    "Hash": 3129743273
+  },
+  {
+    "Name": "LuluPig",
+    "Hash": 2604489933
+  },
+  {
+    "Name": "LuluSnowman",
+    "Hash": 465043478
+  },
+  {
+    "Name": "LuluSquill",
+    "Hash": 621761043
+  },
+  {
+    "Name": "Lux",
+    "Hash": 1988627808
+  },
+  {
+    "Name": "Malphite",
+    "Hash": 1525865913
+  },
+  {
+    "Name": "Malzahar",
+    "Hash": 1810002537
+  },
+  {
+    "Name": "MalzaharVoidling",
+    "Hash": 2544192147
+  },
+  {
+    "Name": "Maokai",
+    "Hash": 502522055
+  },
+  {
+    "Name": "MaokaiSproutling",
+    "Hash": 2991493558
+  },
+  {
+    "Name": "MasterYi",
+    "Hash": 880736513
+  },
+  {
+    "Name": "MissFortune",
+    "Hash": 1493241814
+  },
+  {
+    "Name": "MonkeyKing",
+    "Hash": 830304089
+  },
+  {
+    "Name": "MonkeyKingClone",
+    "Hash": 4272323524
+  },
+  {
+    "Name": "MonkeyKingFlying",
+    "Hash": 1474439048
+  },
+  {
+    "Name": "Mordekaiser",
+    "Hash": 749108399
+  },
+  {
+    "Name": "Morgana",
+    "Hash": 1431657358
+  },
+  {
+    "Name": "Nami",
+    "Hash": 855841982
+  },
+  {
+    "Name": "Nasus",
+    "Hash": 2438735023
+  },
+  {
+    "Name": "NasusUlt",
+    "Hash": 1724197134
+  },
+  {
+    "Name": "Nautilus",
+    "Hash": 938590658
+  },
+  {
+    "Name": "Nidalee",
+    "Hash": 1694800101
+  },
+  {
+    "Name": "Nidalee_Cougar",
+    "Hash": 3976320009
+  },
+  {
+    "Name": "Nidalee_Spear",
+    "Hash": 127406591
+  },
+  {
+    "Name": "Nocturne",
+    "Hash": 2703614229
+  },
+  {
+    "Name": "Nunu",
+    "Hash": 3052016541
+  },
+  {
+    "Name": "OdinBlueSuperminion",
+    "Hash": 1879105134
+  },
+  {
+    "Name": "OdinCenterRelic",
+    "Hash": 1336970325
+  },
+  {
+    "Name": "OdinChaosTurretShrine",
+    "Hash": 4257313738
+  },
+  {
+    "Name": "OdinClaw",
+    "Hash": 2468706728
+  },
+  {
+    "Name": "OdinCrane",
+    "Hash": 2890340096
+  },
+  {
+    "Name": "OdinMinionGraveyardPortal",
+    "Hash": 2343798892
+  },
+  {
+    "Name": "OdinMinionSpawnPortal",
+    "Hash": 1161298600
+  },
+  {
+    "Name": "OdinNeutralGuardian",
+    "Hash": 3843579951
+  },
+  {
+    "Name": "OdinOpeningBarrier",
+    "Hash": 973993256
+  },
+  {
+    "Name": "OdinOrderTurretShrine",
+    "Hash": 1231252056
+  },
+  {
+    "Name": "OdinQuestBuff",
+    "Hash": 1509229612
+  },
+  {
+    "Name": "OdinQuestIndicator",
+    "Hash": 3324984918
+  },
+  {
+    "Name": "OdinRedSuperminion",
+    "Hash": 3286663945
+  },
+  {
+    "Name": "OdinRockSaw",
+    "Hash": 3979009147
+  },
+  {
+    "Name": "OdinShieldRelic",
+    "Hash": 3039832321
+  },
+  {
+    "Name": "OdinSpeedShrine",
+    "Hash": 1498527745
+  },
+  {
+    "Name": "OdinTestCubeRender",
+    "Hash": 1572165574
+  },
+  {
+    "Name": "Odin_Blue_Minion_Caster",
+    "Hash": 1262496870
+  },
+  {
+    "Name": "Odin_Drill",
+    "Hash": 3262040261
+  },
+  {
+    "Name": "Odin_Lifts_Buckets",
+    "Hash": 3375823676
+  },
+  {
+    "Name": "Odin_Lifts_Crystal",
+    "Hash": 1335153513
+  },
+  {
+    "Name": "Odin_Minecart",
+    "Hash": 636918793
+  },
+  {
+    "Name": "Odin_Red_Minion_Caster",
+    "Hash": 2503388593
+  },
+  {
+    "Name": "Odin_skeleton",
+    "Hash": 3155880867
+  },
+  {
+    "Name": "Odin_SoG_Chaos",
+    "Hash": 1008254230
+  },
+  {
+    "Name": "Odin_SOG_Chaos_Crystal",
+    "Hash": 978182509
+  },
+  {
+    "Name": "Odin_SoG_Order",
+    "Hash": 500866468
+  },
+  {
+    "Name": "Odin_SOG_Order_Crystal",
+    "Hash": 4170655227
+  },
+  {
+    "Name": "Odin_Windmill_Gears",
+    "Hash": 2568766975
+  },
+  {
+    "Name": "Odin_Windmill_Propellers",
+    "Hash": 1160708201
+  },
+  {
+    "Name": "Olaf",
+    "Hash": 76258193
+  },
+  {
+    "Name": "OlafAxe",
+    "Hash": 2525622269
+  },
+  {
+    "Name": "OrderInhibitor",
+    "Hash": 4216369547
+  },
+  {
+    "Name": "OrderInhibitor_D",
+    "Hash": 1694900560
+  },
+  {
+    "Name": "OrderNexus",
+    "Hash": 1962308320
+  },
+  {
+    "Name": "OrderTurretAngel",
+    "Hash": 2018136754
+  },
+  {
+    "Name": "OrderTurretDragon",
+    "Hash": 3687306050
+  },
+  {
+    "Name": "OrderTurretNormal",
+    "Hash": 1008279286
+  },
+  {
+    "Name": "OrderTurretNormal2",
+    "Hash": 3928014268
+  },
+  {
+    "Name": "OrderTurretShrine",
+    "Hash": 3657024338
+  },
+  {
+    "Name": "OrderTurretTutorial",
+    "Hash": 3193979117
+  },
+  {
+    "Name": "Orianna",
+    "Hash": 1261573591
+  },
+  {
+    "Name": "OriannaBall",
+    "Hash": 1940435798
+  },
+  {
+    "Name": "OriannaNoBall",
+    "Hash": 108429783
+  },
+  {
+    "Name": "Pantheon",
+    "Hash": 434191810
+  },
+  {
+    "Name": "Poppy",
+    "Hash": 3266084715
+  },
+  {
+    "Name": "Quinn",
+    "Hash": 3757232214
+  },
+  {
+    "Name": "QuinnValor",
+    "Hash": 724908590
+  },
+  {
+    "Name": "Rammus",
+    "Hash": 1346453244
+  },
+  {
+    "Name": "RammusDBC",
+    "Hash": 923458153
+  },
+  {
+    "Name": "RammusPB",
+    "Hash": 4263298030
+  },
+  {
+    "Name": "redDragon",
+    "Hash": 4048008437
+  },
+  {
+    "Name": "Red_Minion_Basic",
+    "Hash": 308631746
+  },
+  {
+    "Name": "Red_Minion_MechCannon",
+    "Hash": 206453414
+  },
+  {
+    "Name": "Red_Minion_MechMelee",
+    "Hash": 231464715
+  },
+  {
+    "Name": "Red_Minion_Wizard",
+    "Hash": 1087566519
+  },
+  {
+    "Name": "Renekton",
+    "Hash": 2043704705
+  },
+  {
+    "Name": "Rengar",
+    "Hash": 2223555020
+  },
+  {
+    "Name": "Riven",
+    "Hash": 2085399609
+  },
+  {
+    "Name": "Rumble",
+    "Hash": 1993448512
+  },
+  {
+    "Name": "Ryze",
+    "Hash": 1153295745
+  },
+  {
+    "Name": "Sejuani",
+    "Hash": 1917138832
+  },
+  {
+    "Name": "Shaco",
+    "Hash": 1297603689
+  },
+  {
+    "Name": "ShacoBox",
+    "Hash": 1194852354
+  },
+  {
+    "Name": "Shen",
+    "Hash": 194470797
+  },
+  {
+    "Name": "Shop",
+    "Hash": 3721898501
+  },
+  {
+    "Name": "ShopKeeper",
+    "Hash": 1391847255
+  },
+  {
+    "Name": "ShopMale",
+    "Hash": 220797618
+  },
+  {
+    "Name": "Shyvana",
+    "Hash": 4198116243
+  },
+  {
+    "Name": "ShyvanaDragon",
+    "Hash": 2824110502
+  },
+  {
+    "Name": "SightWard",
+    "Hash": 2786288138
+  },
+  {
+    "Name": "Singed",
+    "Hash": 863803261
+  },
+  {
+    "Name": "Sion",
+    "Hash": 549972484
+  },
+  {
+    "Name": "Sivir",
+    "Hash": 243997626
+  },
+  {
+    "Name": "Skarner",
+    "Hash": 1331291043
+  },
+  {
+    "Name": "SmallGolem",
+    "Hash": 1875371284
+  },
+  {
+    "Name": "Sona",
+    "Hash": 2204404158
+  },
+  {
+    "Name": "Soraka",
+    "Hash": 257175408
+  },
+  {
+    "Name": "SpellBook1",
+    "Hash": 4286123343
+  },
+  {
+    "Name": "SRUAP_ChaosInhibitor",
+    "Hash": 3041494259
+  },
+  {
+    "Name": "sruap_chaosinhibitor_rubble",
+    "Hash": 2719464872
+  },
+  {
+    "Name": "SRUAP_ChaosNexus",
+    "Hash": 1241755208
+  },
+  {
+    "Name": "Sruap_Chaosnexus_Rubble",
+    "Hash": 758470931
+  },
+  {
+    "Name": "sruap_flag",
+    "Hash": 2411737909
+  },
+  {
+    "Name": "SRUAP_MageCrystal",
+    "Hash": 1010660827
+  },
+  {
+    "Name": "sruap_mage_vines",
+    "Hash": 2767143109
+  },
+  {
+    "Name": "SRUAP_OrderInhibitor",
+    "Hash": 3453969381
+  },
+  {
+    "Name": "sruap_orderinhibitor_rubble",
+    "Hash": 2099275318
+  },
+  {
+    "Name": "SRUAP_OrderNexus",
+    "Hash": 456638266
+  },
+  {
+    "Name": "Sruap_Ordernexus_Rubble",
+    "Hash": 2027376545
+  },
+  {
+    "Name": "Sruap_Pali_Statue_Banner",
+    "Hash": 1516019999
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos1",
+    "Hash": 272746359
+  },
+  {
+    "Name": "sruap_turret_chaos1_rubble",
+    "Hash": 2652021284
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos2",
+    "Hash": 281007864
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos3",
+    "Hash": 289269369
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos3_Test",
+    "Hash": 3609690840
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos4",
+    "Hash": 297530874
+  },
+  {
+    "Name": "SRUAP_Turret_Chaos5",
+    "Hash": 305792379
+  },
+  {
+    "Name": "SRUAP_Turret_Order1",
+    "Hash": 2139490921
+  },
+  {
+    "Name": "SRUAP_Turret_Order1_Rubble",
+    "Hash": 1549526706
+  },
+  {
+    "Name": "SRUAP_Turret_Order2",
+    "Hash": 2147752426
+  },
+  {
+    "Name": "SRUAP_Turret_Order3",
+    "Hash": 2156013931
+  },
+  {
+    "Name": "SRUAP_Turret_Order3_Test",
+    "Hash": 1676258918
+  },
+  {
+    "Name": "SRUAP_Turret_Order4",
+    "Hash": 2164275436
+  },
+  {
+    "Name": "SRUAP_Turret_Order5",
+    "Hash": 2172536941
+  },
+  {
+    "Name": "Sru_Antlermouse",
+    "Hash": 4255270235
+  },
+  {
+    "Name": "SRU_Baron",
+    "Hash": 3072242170
+  },
+  {
+    "Name": "SRU_BaronSpawn",
+    "Hash": 4041211809
+  },
+  {
+    "Name": "SRU_Bird",
+    "Hash": 669022705
+  },
+  {
+    "Name": "SRU_Blue",
+    "Hash": 2142771378
+  },
+  {
+    "Name": "SRU_BlueMini",
+    "Hash": 3305149417
+  },
+  {
+    "Name": "SRU_BlueMini2",
+    "Hash": 269059465
+  },
+  {
+    "Name": "Sru_Butterfly",
+    "Hash": 2892350491
+  },
+  {
+    "Name": "SRU_ChaosMinionMelee",
+    "Hash": 3401194582
+  },
+  {
+    "Name": "SRU_ChaosMinionRanged",
+    "Hash": 2761711301
+  },
+  {
+    "Name": "SRU_ChaosMinionSiege",
+    "Hash": 2852405455
+  },
+  {
+    "Name": "SRU_ChaosMinionSuper",
+    "Hash": 1218055389
+  },
+  {
+    "Name": "Sru_Crab",
+    "Hash": 2305570440
+  },
+  {
+    "Name": "SRU_Dragon",
+    "Hash": 4131269515
+  },
+  {
+    "Name": "Sru_Dragonfly",
+    "Hash": 2009056168
+  },
+  {
+    "Name": "sru_dragon_prop",
+    "Hash": 364388695
+  },
+  {
+    "Name": "SRU_Gromp",
+    "Hash": 923873327
+  },
+  {
+    "Name": "Sru_Gromp_Prop",
+    "Hash": 3801639347
+  },
+  {
+    "Name": "SRU_Krug",
+    "Hash": 3754810609
+  },
+  {
+    "Name": "SRU_KrugMini",
+    "Hash": 2684205352
+  },
+  {
+    "Name": "Sru_Lizard",
+    "Hash": 2696704846
+  },
+  {
+    "Name": "SRU_Murkwolf",
+    "Hash": 36524779
+  },
+  {
+    "Name": "SRU_MurkwolfMini",
+    "Hash": 1604121890
+  },
+  {
+    "Name": "SRU_OrderMinionMelee",
+    "Hash": 2976621128
+  },
+  {
+    "Name": "SRU_OrderMinionRanged",
+    "Hash": 4030616915
+  },
+  {
+    "Name": "SRU_OrderMinionSiege",
+    "Hash": 2427832001
+  },
+  {
+    "Name": "SRU_OrderMinionSuper",
+    "Hash": 793481935
+  },
+  {
+    "Name": "SRU_Razorbeak",
+    "Hash": 825836259
+  },
+  {
+    "Name": "SRU_RazorbeakMini",
+    "Hash": 492170522
+  },
+  {
+    "Name": "SRU_Red",
+    "Hash": 3820080441
+  },
+  {
+    "Name": "SRU_RedMini",
+    "Hash": 2490130800
+  },
+  {
+    "Name": "SRU_RiverDummy",
+    "Hash": 1335156564
+  },
+  {
+    "Name": "Sru_Snail",
+    "Hash": 1969366577
+  },
+  {
+    "Name": "SRU_SnailSpawner",
+    "Hash": 1762016759
+  },
+  {
+    "Name": "SRU_Spiritwolf",
+    "Hash": 86248187
+  },
+  {
+    "Name": "sru_storekeepernorth",
+    "Hash": 1590159274
+  },
+  {
+    "Name": "sru_storekeepersouth",
+    "Hash": 1499704626
+  },
+  {
+    "Name": "SummonerBeacon",
+    "Hash": 1116792481
+  },
+  {
+    "Name": "Summoner_Rider_Chaos",
+    "Hash": 2791564793
+  },
+  {
+    "Name": "Summoner_Rider_Order",
+    "Hash": 2284177031
+  },
+  {
+    "Name": "Swain",
+    "Hash": 2963039251
+  },
+  {
+    "Name": "SwainBeam",
+    "Hash": 802150626
+  },
+  {
+    "Name": "SwainNoBird",
+    "Hash": 641144461
+  },
+  {
+    "Name": "SwainRaven",
+    "Hash": 3820669245
+  },
+  {
+    "Name": "Syndra",
+    "Hash": 633654714
+  },
+  {
+    "Name": "SyndraOrbs",
+    "Hash": 2212375694
+  },
+  {
+    "Name": "SyndraSphere",
+    "Hash": 747493351
+  },
+  {
+    "Name": "Talon",
+    "Hash": 2705846447
+  },
+  {
+    "Name": "Taric",
+    "Hash": 473865136
+  },
+  {
+    "Name": "Teemo",
+    "Hash": 3253947047
+  },
+  {
+    "Name": "TeemoMushroom",
+    "Hash": 1648107871
+  },
+  {
+    "Name": "TestCube",
+    "Hash": 3382483990
+  },
+  {
+    "Name": "TestCubeRender",
+    "Hash": 889226060
+  },
+  {
+    "Name": "TestCubeRender10Vision",
+    "Hash": 4104867187
+  },
+  {
+    "Name": "TestCubeRenderwCollision",
+    "Hash": 970701095
+  },
+  {
+    "Name": "Thresh",
+    "Hash": 1586743851
+  },
+  {
+    "Name": "ThreshLantern",
+    "Hash": 176541883
+  },
+  {
+    "Name": "Tristana",
+    "Hash": 2749625911
+  },
+  {
+    "Name": "Trundle",
+    "Hash": 2460340375
+  },
+  {
+    "Name": "TrundleWall",
+    "Hash": 3893209153
+  },
+  {
+    "Name": "Tryndamere",
+    "Hash": 4156476010
+  },
+  {
+    "Name": "TT_Brazier",
+    "Hash": 2707691389
+  },
+  {
+    "Name": "TT_Buffplat_L",
+    "Hash": 1296598079
+  },
+  {
+    "Name": "TT_Buffplat_R",
+    "Hash": 1346167109
+  },
+  {
+    "Name": "TT_Bufplat_Chain",
+    "Hash": 1183523156
+  },
+  {
+    "Name": "TT_Chains_Bot_Lane",
+    "Hash": 3179377825
+  },
+  {
+    "Name": "TT_Chains_Order_Base",
+    "Hash": 2324596383
+  },
+  {
+    "Name": "TT_Chains_Order_Periph",
+    "Hash": 1754747986
+  },
+  {
+    "Name": "TT_Chains_Xaos_Base",
+    "Hash": 1010236454
+  },
+  {
+    "Name": "TT_ChaosInhibitor",
+    "Hash": 1969891866
+  },
+  {
+    "Name": "TT_ChaosInhibitor_D",
+    "Hash": 3226354271
+  },
+  {
+    "Name": "TT_ChaosTurret1",
+    "Hash": 2515059793
+  },
+  {
+    "Name": "TT_ChaosTurret2",
+    "Hash": 2523321298
+  },
+  {
+    "Name": "TT_ChaosTurret3",
+    "Hash": 2531582803
+  },
+  {
+    "Name": "TT_ChaosTurret4",
+    "Hash": 2539844308
+  },
+  {
+    "Name": "TT_DummyPusher",
+    "Hash": 2771454687
+  },
+  {
+    "Name": "TT_Flytrap_A",
+    "Hash": 1958342002
+  },
+  {
+    "Name": "TT_Nexus_Gears",
+    "Hash": 2455918964
+  },
+  {
+    "Name": "TT_NGolem",
+    "Hash": 3861881614
+  },
+  {
+    "Name": "TT_NGolem2",
+    "Hash": 1237532580
+  },
+  {
+    "Name": "TT_NWolf",
+    "Hash": 1533729296
+  },
+  {
+    "Name": "TT_NWolf2",
+    "Hash": 1515702562
+  },
+  {
+    "Name": "TT_NWraith",
+    "Hash": 2037346261
+  },
+  {
+    "Name": "TT_NWraith2",
+    "Hash": 1396548765
+  },
+  {
+    "Name": "TT_OrderInhibitor",
+    "Hash": 2382366988
+  },
+  {
+    "Name": "TT_OrderInhibitor_D",
+    "Hash": 2801780817
+  },
+  {
+    "Name": "TT_OrderTurret1",
+    "Hash": 1698659395
+  },
+  {
+    "Name": "TT_OrderTurret2",
+    "Hash": 1706920900
+  },
+  {
+    "Name": "TT_OrderTurret3",
+    "Hash": 1715182405
+  },
+  {
+    "Name": "TT_OrderTurret4",
+    "Hash": 1723443910
+  },
+  {
+    "Name": "TT_Relic",
+    "Hash": 3424911331
+  },
+  {
+    "Name": "TT_Shopkeeper",
+    "Hash": 3389087704
+  },
+  {
+    "Name": "TT_Shroom_A",
+    "Hash": 1069648194
+  },
+  {
+    "Name": "TT_SpeedShrine",
+    "Hash": 572870586
+  },
+  {
+    "Name": "TT_Speedshrine_Gears",
+    "Hash": 3587526079
+  },
+  {
+    "Name": "TT_Spiderboss",
+    "Hash": 79314850
+  },
+  {
+    "Name": "TT_SpiderLayer_Web",
+    "Hash": 1449133585
+  },
+  {
+    "Name": "TT_Tree1",
+    "Hash": 3934906851
+  },
+  {
+    "Name": "TT_Tree_A",
+    "Hash": 372115728
+  },
+  {
+    "Name": "Tutorial_Blue_Minion_Basic",
+    "Hash": 4284487832
+  },
+  {
+    "Name": "Tutorial_Blue_Minion_Wizard",
+    "Hash": 1381902433
+  },
+  {
+    "Name": "Tutorial_Red_Minion_Basic",
+    "Hash": 995209989
+  },
+  {
+    "Name": "Tutorial_Red_Minion_Wizard",
+    "Hash": 2906663220
+  },
+  {
+    "Name": "TwistedFate",
+    "Hash": 2934335683
+  },
+  {
+    "Name": "Twitch",
+    "Hash": 905239970
+  },
+  {
+    "Name": "Udyr",
+    "Hash": 3435083511
+  },
+  {
+    "Name": "UdyrPhoenix",
+    "Hash": 1906553944
+  },
+  {
+    "Name": "UdyrPhoenixUlt",
+    "Hash": 1901635621
+  },
+  {
+    "Name": "UdyrTiger",
+    "Hash": 1044162376
+  },
+  {
+    "Name": "UdyrTigerUlt",
+    "Hash": 2792941877
+  },
+  {
+    "Name": "UdyrTurtle",
+    "Hash": 4092225779
+  },
+  {
+    "Name": "UdyrTurtleUlt",
+    "Hash": 2046384074
+  },
+  {
+    "Name": "UdyrUlt",
+    "Hash": 3057274054
+  },
+  {
+    "Name": "Urf",
+    "Hash": 1164303130
+  },
+  {
+    "Name": "Urgot",
+    "Hash": 2679887456
+  },
+  {
+    "Name": "Varus",
+    "Hash": 4274469302
+  },
+  {
+    "Name": "Vayne",
+    "Hash": 2376680566
+  },
+  {
+    "Name": "Veigar",
+    "Hash": 2716967565
+  },
+  {
+    "Name": "Velkoz",
+    "Hash": 2205690056
+  },
+  {
+    "Name": "Vi",
+    "Hash": 667222658
+  },
+  {
+    "Name": "Viktor",
+    "Hash": 626416782
+  },
+  {
+    "Name": "ViktorSingularity",
+    "Hash": 1888956521
+  },
+  {
+    "Name": "VisionWard",
+    "Hash": 3733615507
+  },
+  {
+    "Name": "Vladimir",
+    "Hash": 3385768277
+  },
+  {
+    "Name": "Volibear",
+    "Hash": 1155864665
+  },
+  {
+    "Name": "Warwick",
+    "Hash": 816430579
+  },
+  {
+    "Name": "wolf",
+    "Hash": 2172566209
+  },
+  {
+    "Name": "Worm",
+    "Hash": 2618952642
+  },
+  {
+    "Name": "Wraith",
+    "Hash": 1790707718
+  },
+  {
+    "Name": "Xerath",
+    "Hash": 2268011103
+  },
+  {
+    "Name": "XerathArcaneBarrageLauncher",
+    "Hash": 2327314427
+  },
+  {
+    "Name": "XinZhao",
+    "Hash": 1730720042
+  },
+  {
+    "Name": "Yasuo",
+    "Hash": 3275499062
+  },
+  {
+    "Name": "YellowTrinket",
+    "Hash": 2548961652
+  },
+  {
+    "Name": "YellowTrinketUpgrade",
+    "Hash": 3387938664
+  },
+  {
+    "Name": "Yonkey",
+    "Hash": 619780758
+  },
+  {
+    "Name": "Yorick",
+    "Hash": 2446812932
+  },
+  {
+    "Name": "YorickDecayedGhoul",
+    "Hash": 1447132720
+  },
+  {
+    "Name": "YorickRavenousGhoul",
+    "Hash": 2709208772
+  },
+  {
+    "Name": "YorickSpectralGhoul",
+    "Hash": 2157858013
+  },
+  {
+    "Name": "YoungLizard",
+    "Hash": 3877241151
+  },
+  {
+    "Name": "Zac",
+    "Hash": 2157292269
+  },
+  {
+    "Name": "ZacRebirthBloblet",
+    "Hash": 3473051455
+  },
+  {
+    "Name": "Zed",
+    "Hash": 992935274
+  },
+  {
+    "Name": "ZedShadow",
+    "Hash": 2400430250
+  },
+  {
+    "Name": "Ziggs",
+    "Hash": 2454617653
+  },
+  {
+    "Name": "Zilean",
+    "Hash": 1066945348
+  },
+  {
+    "Name": "Zyra",
+    "Hash": 2146577277
+  },
+  {
+    "Name": "ZyraGraspingPlant",
+    "Hash": 903592287
+  },
+  {
+    "Name": "ZyraPassive",
+    "Hash": 136024490
+  },
+  {
+    "Name": "ZyraSeed",
+    "Hash": 2524783342
+  },
+  {
+    "Name": "ZyraThornPlant",
+    "Hash": 3956296369
+  }
+]

@@ -1,0 +1,862 @@
+[
+  {
+    "Name": "Aggro",
+    "Hash": 6807183
+  },
+  {
+    "Name": "AIComponentDefaultFearBehavior",
+    "Hash": 178581298
+  },
+  {
+    "Name": "AIComponentDefaultFleeBehavior",
+    "Hash": 180215346
+  },
+  {
+    "Name": "AIComponentDefaultTauntBehavior",
+    "Hash": 152701410
+  },
+  {
+    "Name": "AIComponentFleeEventBehavior",
+    "Hash": 80643698
+  },
+  {
+    "Name": "AIComponentLockMovementToRiver",
+    "Hash": 59377890
+  },
+  {
+    "Name": "AIComponentNonAggressiveTauntBehavior",
+    "Hash": 171932098
+  },
+  {
+    "Name": "AIComponentOutOfCombatRegen",
+    "Hash": 256868638
+  },
+  {
+    "Name": "AIComponentSkittishMonster",
+    "Hash": 165632546
+  },
+  {
+    "Name": "AIComponentSystem",
+    "Hash": 264444045
+  },
+  {
+    "Name": "AIComponentWanderAlongPath",
+    "Hash": 197202984
+  },
+  {
+    "Name": "AzirSoldier",
+    "Hash": 172736338
+  },
+  {
+    "Name": "BaronMinionAI",
+    "Hash": 147276073
+  },
+  {
+    "Name": "Bot",
+    "Hash": 26980
+  },
+  {
+    "Name": "CharScriptAkali",
+    "Hash": 255841993
+  },
+  {
+    "Name": "CharScriptAmumu",
+    "Hash": 255822501
+  },
+  {
+    "Name": "CharScriptAncientGolem",
+    "Hash": 106361837
+  },
+  {
+    "Name": "CharScriptAnivia",
+    "Hash": 66658817
+  },
+  {
+    "Name": "CharScriptARAMChaosTurretFront",
+    "Hash": 241906340
+  },
+  {
+    "Name": "CharScriptARAMChaosTurretInhib",
+    "Hash": 241887746
+  },
+  {
+    "Name": "CharScriptARAMChaosTurretNexus",
+    "Hash": 242379571
+  },
+  {
+    "Name": "CharScriptARAMChaosTurretShrine",
+    "Hash": 133546405
+  },
+  {
+    "Name": "CharScriptARAMOrderTurretFront",
+    "Hash": 72935524
+  },
+  {
+    "Name": "CharScriptARAMOrderTurretInhib",
+    "Hash": 73080002
+  },
+  {
+    "Name": "CharScriptARAMOrderTurretNexus",
+    "Hash": 73506291
+  },
+  {
+    "Name": "CharScriptARAMOrderTurretShrine",
+    "Hash": 80391429
+  },
+  {
+    "Name": "CharScriptAramSpeedShrine",
+    "Hash": 221959861
+  },
+  {
+    "Name": "CharScriptAscRelic",
+    "Hash": 92688867
+  },
+  {
+    "Name": "CharScriptAscWarpIcon",
+    "Hash": 128426606
+  },
+  {
+    "Name": "CharScriptAzirSoldiersTowerClicker",
+    "Hash": 94283426
+  },
+  {
+    "Name": "CharScriptAzirTowerClicker",
+    "Hash": 256536674
+  },
+  {
+    "Name": "CharScriptBlitzcrank",
+    "Hash": 117025131
+  },
+  {
+    "Name": "CharScriptBlue_Minion_MechCannon",
+    "Hash": 251831742
+  },
+  {
+    "Name": "CharScriptBlue_Minion_MechMelee",
+    "Hash": 252374965
+  },
+  {
+    "Name": "CharScriptBrand",
+    "Hash": 254822052
+  },
+  {
+    "Name": "CharScriptCassiopeia",
+    "Hash": 118845297
+  },
+  {
+    "Name": "CharScriptChaosTurretGiant",
+    "Hash": 83180980
+  },
+  {
+    "Name": "CharScriptChaosTurretNormal",
+    "Hash": 14306604
+  },
+  {
+    "Name": "CharScriptChaosTurretShrine",
+    "Hash": 236139013
+  },
+  {
+    "Name": "CharScriptChaosTurretTutorial",
+    "Hash": 2670924
+  },
+  {
+    "Name": "CharScriptChaosTurretWorm",
+    "Hash": 240020029
+  },
+  {
+    "Name": "CharScriptChaosTurretWorm2",
+    "Hash": 82224354
+  },
+  {
+    "Name": "CharScriptChogath",
+    "Hash": 3618712
+  },
+  {
+    "Name": "CharScriptCopy",
+    "Hash": 250813017
+  },
+  {
+    "Name": "CharScriptCorki",
+    "Hash": 254913529
+  },
+  {
+    "Name": "CharScriptCrystal_platform",
+    "Hash": 115345117
+  },
+  {
+    "Name": "CharScriptDragon",
+    "Hash": 52712622
+  },
+  {
+    "Name": "CharScriptDrMundo",
+    "Hash": 39218079
+  },
+  {
+    "Name": "CharScriptEvelynn",
+    "Hash": 84595070
+  },
+  {
+    "Name": "CharScriptEzreal",
+    "Hash": 57517452
+  },
+  {
+    "Name": "CharScriptFiddlesticks",
+    "Hash": 268008947
+  },
+  {
+    "Name": "CharScriptFiora",
+    "Hash": 255149153
+  },
+  {
+    "Name": "CharScriptFizz",
+    "Hash": 250834234
+  },
+  {
+    "Name": "CharScriptGalio",
+    "Hash": 255115295
+  },
+  {
+    "Name": "CharScriptGiantWolf",
+    "Hash": 112521750
+  },
+  {
+    "Name": "CharScriptGolem",
+    "Hash": 255172701
+  },
+  {
+    "Name": "CharScriptGolemOdin",
+    "Hash": 7171934
+  },
+  {
+    "Name": "CharScriptGraves",
+    "Hash": 57975347
+  },
+  {
+    "Name": "CharScriptHecarim",
+    "Hash": 125528013
+  },
+  {
+    "Name": "CharScriptIrelia",
+    "Hash": 76852225
+  },
+  {
+    "Name": "CharScriptJarvanIV",
+    "Hash": 78811542
+  },
+  {
+    "Name": "CharScriptJax",
+    "Hash": 49236296
+  },
+  {
+    "Name": "CharScriptKarma",
+    "Hash": 256396241
+  },
+  {
+    "Name": "CharScriptKassadin",
+    "Hash": 75992702
+  },
+  {
+    "Name": "CharScriptKatarina",
+    "Hash": 75922625
+  },
+  {
+    "Name": "CharScriptKayle",
+    "Hash": 256396997
+  },
+  {
+    "Name": "CharScriptKennen",
+    "Hash": 76053070
+  },
+  {
+    "Name": "CharScriptLeona",
+    "Hash": 256608417
+  },
+  {
+    "Name": "CharScriptLesserWraith",
+    "Hash": 223938456
+  },
+  {
+    "Name": "CharScriptLizard",
+    "Hash": 80553588
+  },
+  {
+    "Name": "CharScriptLizardElder",
+    "Hash": 132708514
+  },
+  {
+    "Name": "CharScriptLKalistaAltar",
+    "Hash": 111338850
+  },
+  {
+    "Name": "CharScriptLulu",
+    "Hash": 250914837
+  },
+  {
+    "Name": "CharScriptLuluCupcake",
+    "Hash": 93067077
+  },
+  {
+    "Name": "CharScriptLuluFaerie",
+    "Hash": 87253221
+  },
+  {
+    "Name": "CharScriptLuluKitty",
+    "Hash": 24068409
+  },
+  {
+    "Name": "CharScriptLuluPig",
+    "Hash": 176236983
+  },
+  {
+    "Name": "CharScriptLuluSquill",
+    "Hash": 39589948
+  },
+  {
+    "Name": "CharScriptLux",
+    "Hash": 49236488
+  },
+  {
+    "Name": "CharScriptMalphite",
+    "Hash": 202908677
+  },
+  {
+    "Name": "CharScriptMalzahar",
+    "Hash": 204376610
+  },
+  {
+    "Name": "CharScriptMonkeyKing",
+    "Hash": 255632951
+  },
+  {
+    "Name": "CharScriptMordekaiser",
+    "Hash": 90022786
+  },
+  {
+    "Name": "CharScriptMorgana",
+    "Hash": 195705089
+  },
+  {
+    "Name": "CharScriptNautilus",
+    "Hash": 82056979
+  },
+  {
+    "Name": "CharScriptNidalee_Spear",
+    "Hash": 139642482
+  },
+  {
+    "Name": "CharScriptNocturne",
+    "Hash": 159727013
+  },
+  {
+    "Name": "CharScriptNunu",
+    "Hash": 250923125
+  },
+  {
+    "Name": "CharScriptOdinBlueSuperminion",
+    "Hash": 10232478
+  },
+  {
+    "Name": "CharScriptOdinCenterRelic",
+    "Hash": 37735219
+  },
+  {
+    "Name": "CharScriptOdinChaosTurretShrine",
+    "Hash": 260422789
+  },
+  {
+    "Name": "CharScriptOdinMinionGraveyardPortal",
+    "Hash": 186028220
+  },
+  {
+    "Name": "CharScriptOdinMinionSpawnPortal",
+    "Hash": 160447228
+  },
+  {
+    "Name": "CharScriptOdinNeutralGuardian",
+    "Hash": 190739998
+  },
+  {
+    "Name": "CharScriptOdinOpeningBarrier",
+    "Hash": 168534146
+  },
+  {
+    "Name": "CharScriptOdinOrderTurretShrine",
+    "Hash": 211472933
+  },
+  {
+    "Name": "CharScriptOdinQuestBuff",
+    "Hash": 12856374
+  },
+  {
+    "Name": "CharScriptOdinQuestIndicator",
+    "Hash": 99995730
+  },
+  {
+    "Name": "CharScriptOdinRedSuperminion",
+    "Hash": 138699758
+  },
+  {
+    "Name": "CharScriptOdinShieldRelic",
+    "Hash": 202252563
+  },
+  {
+    "Name": "CharScriptOdinSpeedShrine",
+    "Hash": 86682005
+  },
+  {
+    "Name": "CharScriptOdinTestCubeRender",
+    "Hash": 82315794
+  },
+  {
+    "Name": "CharScriptOdin_Blue_Minion_Caster",
+    "Hash": 212048066
+  },
+  {
+    "Name": "CharScriptOdin_Red_Minion_Caster",
+    "Hash": 148909506
+  },
+  {
+    "Name": "CharScriptOrderTurretAngel",
+    "Hash": 248082620
+  },
+  {
+    "Name": "CharScriptOrderTurretDragon",
+    "Hash": 206286526
+  },
+  {
+    "Name": "CharScriptOrderTurretNormal",
+    "Hash": 231039900
+  },
+  {
+    "Name": "CharScriptOrderTurretNormal2",
+    "Hash": 206977314
+  },
+  {
+    "Name": "CharScriptOrderTurretShrine",
+    "Hash": 225206437
+  },
+  {
+    "Name": "CharScriptOrderTurretTutorial",
+    "Hash": 260465212
+  },
+  {
+    "Name": "CharScriptOrianna",
+    "Hash": 256748545
+  },
+  {
+    "Name": "CharScriptOriannaBall",
+    "Hash": 201902988
+  },
+  {
+    "Name": "CharScriptPantheon",
+    "Hash": 208935598
+  },
+  {
+    "Name": "CharScriptRammus",
+    "Hash": 35400243
+  },
+  {
+    "Name": "CharScriptRammusDBC",
+    "Hash": 44284739
+  },
+  {
+    "Name": "CharScriptRammusPB",
+    "Hash": 204093554
+  },
+  {
+    "Name": "CharScriptredDragon",
+    "Hash": 139943214
+  },
+  {
+    "Name": "CharScriptRed_Minion_MechCannon",
+    "Hash": 94284638
+  },
+  {
+    "Name": "CharScriptRed_Minion_MechMelee",
+    "Hash": 6500181
+  },
+  {
+    "Name": "CharScriptShen",
+    "Hash": 250741406
+  },
+  {
+    "Name": "CharScriptShyvana",
+    "Hash": 4335969
+  },
+  {
+    "Name": "CharScriptShyvanaDragon",
+    "Hash": 133846334
+  },
+  {
+    "Name": "CharScriptSinged",
+    "Hash": 33841988
+  },
+  {
+    "Name": "CharScriptSkeleton_Minion_Melee",
+    "Hash": 79591637
+  },
+  {
+    "Name": "CharScriptSmallGolem",
+    "Hash": 232807901
+  },
+  {
+    "Name": "CharScriptSru_Crab",
+    "Hash": 94067266
+  },
+  {
+    "Name": "CharScriptSummoner_Rider_Chaos",
+    "Hash": 136293283
+  },
+  {
+    "Name": "CharScriptSummoner_Rider_Order",
+    "Hash": 136365826
+  },
+  {
+    "Name": "CharScriptSwain",
+    "Hash": 253957406
+  },
+  {
+    "Name": "CharScriptSwainBeam",
+    "Hash": 86747245
+  },
+  {
+    "Name": "CharScriptSwainRaven",
+    "Hash": 44744174
+  },
+  {
+    "Name": "CharScriptSyndra",
+    "Hash": 36988273
+  },
+  {
+    "Name": "CharScriptTalon",
+    "Hash": 254001598
+  },
+  {
+    "Name": "CharScriptTaric",
+    "Hash": 253970963
+  },
+  {
+    "Name": "CharScriptTeemo",
+    "Hash": 253983455
+  },
+  {
+    "Name": "CharScriptTestCube",
+    "Hash": 8673717
+  },
+  {
+    "Name": "CharScriptThresh",
+    "Hash": 36938344
+  },
+  {
+    "Name": "CharScriptThreshLantern",
+    "Hash": 23038558
+  },
+  {
+    "Name": "CharScriptTT_Buffplat_L",
+    "Hash": 253099708
+  },
+  {
+    "Name": "CharScriptTT_Buffplat_R",
+    "Hash": 253099650
+  },
+  {
+    "Name": "CharScriptTT_ChaosTurret1",
+    "Hash": 213444785
+  },
+  {
+    "Name": "CharScriptTT_ChaosTurret2",
+    "Hash": 213444786
+  },
+  {
+    "Name": "CharScriptTT_ChaosTurret3",
+    "Hash": 213444787
+  },
+  {
+    "Name": "CharScriptTT_ChaosTurret4",
+    "Hash": 213444788
+  },
+  {
+    "Name": "CharScriptTT_DummyPusher",
+    "Hash": 101305522
+  },
+  {
+    "Name": "CharScriptTT_NGolem",
+    "Hash": 144933085
+  },
+  {
+    "Name": "CharScriptTT_NGolem2",
+    "Hash": 171445890
+  },
+  {
+    "Name": "CharScriptTT_NWolf",
+    "Hash": 109787142
+  },
+  {
+    "Name": "CharScriptTT_NWolf2",
+    "Hash": 145981682
+  },
+  {
+    "Name": "CharScriptTT_NWraith",
+    "Hash": 186279464
+  },
+  {
+    "Name": "CharScriptTT_NWraith2",
+    "Hash": 27681282
+  },
+  {
+    "Name": "CharScriptTT_OrderTurret1",
+    "Hash": 55444097
+  },
+  {
+    "Name": "CharScriptTT_OrderTurret2",
+    "Hash": 55444098
+  },
+  {
+    "Name": "CharScriptTT_OrderTurret3",
+    "Hash": 55444099
+  },
+  {
+    "Name": "CharScriptTT_OrderTurret4",
+    "Hash": 55444100
+  },
+  {
+    "Name": "CharScriptTT_Relic",
+    "Hash": 105271507
+  },
+  {
+    "Name": "CharScriptTT_SpeedShrine",
+    "Hash": 232462293
+  },
+  {
+    "Name": "CharScriptTT_Spiderboss",
+    "Hash": 145547123
+  },
+  {
+    "Name": "CharScriptTutorial_Red_Minion_Basic",
+    "Hash": 139054563
+  },
+  {
+    "Name": "CharScriptTwistedFate",
+    "Hash": 93907685
+  },
+  {
+    "Name": "CharScriptUrf",
+    "Hash": 49227078
+  },
+  {
+    "Name": "CharScriptVarus",
+    "Hash": 254102307
+  },
+  {
+    "Name": "CharScriptVayne",
+    "Hash": 254103205
+  },
+  {
+    "Name": "CharScriptVladimir",
+    "Hash": 240390754
+  },
+  {
+    "Name": "CharScriptVolibear",
+    "Hash": 167868898
+  },
+  {
+    "Name": "CharScriptWaenaLadybug",
+    "Hash": 3167015
+  },
+  {
+    "Name": "CharScriptWarwick",
+    "Hash": 72036539
+  },
+  {
+    "Name": "CharScriptWolf",
+    "Hash": 250763782
+  },
+  {
+    "Name": "CharScriptWorm",
+    "Hash": 250763949
+  },
+  {
+    "Name": "CharScriptWraith",
+    "Hash": 41184856
+  },
+  {
+    "Name": "CharScriptXinZhao",
+    "Hash": 122216799
+  },
+  {
+    "Name": "CharScriptYasuo",
+    "Hash": 254167135
+  },
+  {
+    "Name": "CharScriptYorick",
+    "Hash": 41591147
+  },
+  {
+    "Name": "CharScriptYorickDecayedGhoul",
+    "Hash": 142405436
+  },
+  {
+    "Name": "CharScriptYorickRavenousGhoul",
+    "Hash": 62612188
+  },
+  {
+    "Name": "CharScriptYorickSpectralGhoul",
+    "Hash": 200043068
+  },
+  {
+    "Name": "CharScriptYoungLizard",
+    "Hash": 51946020
+  },
+  {
+    "Name": "CharScriptZiggs",
+    "Hash": 255409923
+  },
+  {
+    "Name": "CharScriptZilean",
+    "Hash": 60032398
+  },
+  {
+    "Name": "CharScriptZyra",
+    "Hash": 250846369
+  },
+  {
+    "Name": "CharScriptZyraGraspingPlant",
+    "Hash": 89672740
+  },
+  {
+    "Name": "CharScriptZyraThornPlant",
+    "Hash": 99711652
+  },
+  {
+    "Name": "EndOfGame",
+    "Hash": 190626933
+  },
+  {
+    "Name": "EndOfGameCheat",
+    "Hash": 118235204
+  },
+  {
+    "Name": "EventSystem",
+    "Hash": 198993645
+  },
+  {
+    "Name": "H28GEvolutionTurret",
+    "Hash": 182381620
+  },
+  {
+    "Name": "Hero",
+    "Hash": 453775
+  },
+  {
+    "Name": "Idle",
+    "Hash": 457509
+  },
+  {
+    "Name": "Leashed",
+    "Hash": 45653700
+  },
+  {
+    "Name": "LuluFairyAI",
+    "Hash": 202595529
+  },
+  {
+    "Name": "MalzaharVoidling",
+    "Hash": 92577751
+  },
+  {
+    "Name": "Minion",
+    "Hash": 121655390
+  },
+  {
+    "Name": "MinionOdin",
+    "Hash": 6560430
+  },
+  {
+    "Name": "MinionReverse",
+    "Hash": 214552501
+  },
+  {
+    "Name": "Minions",
+    "Hash": 67438115
+  },
+  {
+    "Name": "Pet",
+    "Hash": 30404
+  },
+  {
+    "Name": "Poro",
+    "Hash": 489103
+  },
+  {
+    "Name": "RiverCrab",
+    "Hash": 214487410
+  },
+  {
+    "Name": "RiverRegions",
+    "Hash": 254626499
+  },
+  {
+    "Name": "Spawning",
+    "Hash": 109988327
+  },
+  {
+    "Name": "StormIdle",
+    "Hash": 110330261
+  },
+  {
+    "Name": "TaskBuyItem",
+    "Hash": 162955437
+  },
+  {
+    "Name": "TaskCastSpell",
+    "Hash": 3175388
+  },
+  {
+    "Name": "TaskDefendStructure",
+    "Hash": 267656437
+  },
+  {
+    "Name": "TaskKillHero",
+    "Hash": 161107615
+  },
+  {
+    "Name": "TaskKillMinion",
+    "Hash": 194926542
+  },
+  {
+    "Name": "TaskKillTower",
+    "Hash": 162614354
+  },
+  {
+    "Name": "TaskPushLane",
+    "Hash": 188188213
+  },
+  {
+    "Name": "TaskRetreat",
+    "Hash": 145818020
+  },
+  {
+    "Name": "TaskWander",
+    "Hash": 47309410
+  },
+  {
+    "Name": "TempMinionAI",
+    "Hash": 165946185
+  },
+  {
+    "Name": "Turret",
+    "Hash": 129800388
+  },
+  {
+    "Name": "UncontrollablePet",
+    "Hash": 39317380
+  },
+  {
+    "Name": "YorickPHPet",
+    "Hash": 178691636
+  },
+  {
+    "Name": "Zone",
+    "Hash": 529989
+  }
+]
