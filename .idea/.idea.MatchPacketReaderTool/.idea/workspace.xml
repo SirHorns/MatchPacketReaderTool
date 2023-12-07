@@ -12,542 +12,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/GUI/App.axaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/App.axaml.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Assets/avalonia-logo.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/GUI.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Services/FileService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/ViewLocator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/ViewModels/ViewModelBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/app.manifest" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/BasePacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/ByteReader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/ByteWriter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/ChannelID.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/000_Dummy.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/001_SPM_HierarchicalProfilerUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/002_S2C_DisplayLocalizedTutorialChatText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/003_Barrack_SpawnUnit.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/004_S2C_SwitchNexusesToOnIdleParticles.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/005_C2S_TutorialAudioEventFinished.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/006_S2C_SetCircularMovementRestriction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/007_UpdateGoldRedirectTarget.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/008_SynchSimTimeC2S.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/009_RemoveItemReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/010_ResumePacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/011_RemoveItemAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/012_Basic_Attack.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/013_S2C_ReplaceObjectiveText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/014_S2C_CloseShop.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/015_S2C_Reconnect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/016_UnitAddEXP.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/017_S2C_EndSpawn.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/018_SetFrequency.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/019_S2C_BotAI.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/020_C2S_QueryStatusReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/021_NPC_UpgradeSpellAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/022_C2S_Ping_Load_Info.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/023_ChangeSlotSpellData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/024_NPC_MessageToClient_Broadcast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/025_DisplayFloatingText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/026_Basic_Attack_Pos.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/027_NPC_ForceDead.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/028_NPC_BuffUpdateCount.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/029_C2S_WriteNavFlags_Acc.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/030_NPC_BuffReplaceGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/031_NPC_SetAutocast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/032_SwapItemReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/033_NPC_Die_EventHistory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/034_UnitAddGold.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/035_AddRegion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/036_S2C_MoveRegion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/037_S2C_MoveCameraToPoint.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/038_S2C_LineMissileHitList.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/039_S2C_MuteVolumeCategory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/040_ServerTick.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/041_S2C_StopAnimation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/042_AvatarInfo_Server.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/043_DampenerSwitchStates.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/044_World_SendCamera_Server_Acknologment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/045_S2C_ModifyDebugCircleRadius.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/046_World_SendCamera_Server.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/047_HeroReincarnateAlive.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/048_NPC_BuffReplace.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/049_Pause.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/050_SetFadeOut_Pop.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/051_RemoveRegion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/052_NPC_InstantStop_Attack.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/053_OnLeaveLocalVisibilityClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/054_S2C_ShowObjectiveText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/055_CHAR_SpawnPet.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/056_FX_Kill.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/057_NPC_UpgradeSpellReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/058_UseObjectC2S.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/059_MissileReplication.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/060_MovementDriverReplication.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/061_S2C_HighlightHUDElement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/062_SwapItemAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/063_NPC_LevelUp.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/064_S2C_MapPing.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/065_S2C_WriteNavFlags.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/066_S2C_PlayEmote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/067_S2C_PlaySound.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/068_S2C_PlayVOCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/069_S2C_OnEventWorld.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/070_S2C_HeroStats.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/071_C2S_UpdateGameOptions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/072_C2S_PlayEmote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/073_C2S_PlayVOCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/074_HeroReincarnate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/075_C2S_OnScoreBoardOpened.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/076_S2C_CreateHero.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/077_SPM_AddMemoryListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/078_SPM_HierarchicalMemoryUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/079_S2C_ToggleUIHighlight.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/080_S2C_FaceDirection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/081_OnLeaveVisibilityClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/082_C2S_ClientReady.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/083_SetItem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/084_SynchVersionS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/085_S2C_HandleTipUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/086_C2S_StatsUpdateReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/087_C2S_MapPing.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/088_S2C_RemoveDebugObject.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/089_S2C_CreateUnitHighlight.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/090_S2C_DestroyClientMissile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/091_S2C_SetSpellLevel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/092_S2C_StartGame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/093_C2S_OnShopOpened.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/094_NPC_Hero_Die.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/095_S2C_FadeOutMainSFX.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/096_S2C_PlayThemeMusic.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/097_WaypointGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/098_S2C_StartSpawn.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/099_S2C_CreateNeutral.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/100_WaypointGroupWithSpeed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/101_UnitApplyDamage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/102_ModifyShield.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/103_S2C_PopCharacterData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/104_NPC_BuffAddGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/105_S2C_AI_TargetSelection.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/106_AI_TargetS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/107_S2C_SetAnimStates.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/108_S2C_ChainMissileSync.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/109_C2S_OnTipEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/110_S2C_ForceCreateMissile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/111_BuyItemAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/112_S2C_SetSpellData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/113_S2C_PauseAnimation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/114_NPC_IssueOrderReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/115_S2C_CameraBehavior.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/116_S2C_AnimatedBuildingSetCurrentSkin.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/117_Connected.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/118_SyncSimTimeFinalS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/119_Waypoint_Acc.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/120_S2C_LockCamera.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/121_S2C_PlayVOAudioEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/122_AI_Command.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/123_NPC_BuffRemove2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/124_SpawnMinionS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/125_Unused125.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/126_S2C_ToggleFoW.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/127_S2C_ToolTipVars.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/128_Unused128.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/129_World_LockCamera_Server.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/130_BuyItemReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/131_WaypointListHeroWithSpeed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/132_S2C_SetInputLockFlag.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/133_CHAR_SetCooldown.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/134_CHAR_CancelTargetingReticle.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/135_FX_Create_Group.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/136_S2C_QueryStatusAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/137_Building_Die.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/138_S2C_PreloadCharacterData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/139_SPM_RemoveListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/140_S2C_HandleQuestUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/141_C2S_ClientFinished.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/142_SPM_RemoveMemoryListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/143_C2S_Exit.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/144_S2C_ModifyDebugObjectColor.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/145_SPM_AddListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/146_World_SendGameNumber.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/147_SetPARState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/148_NPC_BuffRemoveGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/149_S2C_Ping_Load_Info.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/150_S2C_ChangeCharacterVoice.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/151_S2C_ChangeCharacterData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/152_S2C_Exit.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/153_SPM_RemoveBBProfileListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/154_NPC_CastSpellReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/155_S2C_ToggleInputLockFlag.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/156_C2S_SoftReconnect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/157_S2C_CreateTurret.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/158_NPC_Die_Broadcast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/159_UseItemAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/160_S2C_ShowAuxiliaryText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/161_PausePacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/162_S2C_HideObjectiveText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/163_OnEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/164_C2S_TeamSurrenderVote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/165_S2C_TeamSurrenderStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/166_SPM_AddBBProfileListener.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/167_S2C_HideAuxiliaryText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/168_OnReplication_Acc.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/169_S2C_SetGreyscaleEnabledWhenDead.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/170_S2C_AI_State.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/171_S2C_SetFoWStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/172_ReloadScripts.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/173_Cheat.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/174_OnEnterLocalVisibilityClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/175_SendSelectedObjID.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/176_S2C_PlayAnimation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/177_S2C_RefreshAuxiliaryText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/178_SetFadeOut_Push.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/179_S2C_OpenTutorialPopup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/180_S2C_RemoveUnitHighlight.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/181_NPC_CastSpellAns.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/182_SPM_HierarchicalBBProfileUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/183_NPC_BuffAdd2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/184_S2C_OpenAFKWarningMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/185_WaypointList.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/186_OnEnterVisibilityClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/187_S2C_AddDebugObject.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/188_S2C_DisableHUDForEndOfGame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/189_SynchVersionC2S.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/190_C2S_CharSelected.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/191_NPC_BuffUpdateCountGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/192_AI_TargetHeroS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/193_SynchSimTimeS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/194_SyncMissionStartTimeS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/195_S2C_Neutral_Camp_Empty.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/196_OnReplication.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/197_S2C_EndOfGameEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/198_S2C_EndGame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/199_SPM_SamplingProfilerUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/200_S2C_PopAllCharacterData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/201_S2C_TeamSurrenderVote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/202_S2C_HandleUIHighlight.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/203_S2C_FadeMinions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/204_C2S_OnTutorialPopupClosed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/205_C2S_OnQuestEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/206_S2C_ShowHealthBar.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/207_SpawnBotS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/208_SpawnLevelPropS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/209_UpdateLevelPropS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/210_AttachFlexParticleS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/211_S2C_HandleCapturePointUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/212_S2C_HandleGameScore.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/213_S2C_HandleRespawnPointUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/214_C2S_OnRespawnPointEvent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/215_S2C_UnitChangeTeam.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/216_S2C_UnitSetMinimapIcon.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/217_S2C_IncrementPlayerScore.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/218_S2C_IncrementPlayerStat.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/219_S2C_ColorRemapFX.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/220_S2C_InteractiveMusicCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/221_Unused221.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/222_Unused222.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/223_UNK_0xDF.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/224_S2C_OnEnterTeamVisibility.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/225_S2C_OnLeaveTeamVisibility.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/226_S2C_FX_OnEnterTeamVisibility.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/227_S2C_FX_OnLeaveTeamVisibility.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/228_ReplayOnly_GoldEarned.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/229_S2C_CloseClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/230_C2S_SpellChargeUpdateReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/231_S2C_ModifyDebugText.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/232_S2C_SetDebugHidden.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/233_S2C_ActivateMinionCamp.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/234_C2S_SpectatorDataReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/235_S2C_SpectatorMetaData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/236_S2C_SpectatorDataChunkInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/237_S2C_SpectatorDataChunk.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/238_S2C_ChangeMissileTarget.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/239_S2C_MarkOrSweepForSoftReconnect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/240_S2C_SetShopEnabled.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/241_S2C_CreateFollowerObject.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/242_S2C_ReattachFollowerObject.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/243_S2C_PlayContextualEmote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/244_C2S_PlayContextualEmote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/245_S2C_SetHoverIndicatorTarget.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/246_S2C_SetHoverIndicatorEnabled.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/247_S2C_SystemMessage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/248_S2C_ChangeEmitterGroup.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/249_S2C_UpdateRestrictedChatCount.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/250_S2C_TeamBalanceVote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/251_C2S_TeamBalanceVote.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/252_S2C_TeamBalanceStatus.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/253_S2C_SetItemCharges.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/255_Batched.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/256_SpawnMarkerS2C.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/257_S2C_UnitSetAutoAttackGroundAllowed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/258_S2C_UnitSetShowAutoAttackIndicator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/259_S2C_AnimationUpdateTimeStep.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/260_S2C_UnitSetSpellPARCost.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/261_S2C_UnitSetDrawPathMode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/262_C2S_UnitSendDrawPath.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/263_S2C_AmmoUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/264_S2C_UnitSetCursorReticle.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/265_NPC_BuffUpdateNumCounter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/266_C2S_UndoItemReq.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/267_S2C_SetUndoEnabled.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/268_S2C_SetInventory_Broadcast.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/269_S2C_ChangeMissileSpeed.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/270_S2C_SetCanSurrender.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/271_S2C_UnitSetLookAt.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/272_S2C_DestroyUnit.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/273_S2C_UnitSetSpellLevelOverrides.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/274_S2C_UnitSetMaxLevelOverride.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/275_S2C_UnitSetPARType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/276_S2C_MoveMarker.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/277_ReplayOnly_MultiKillCountUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/278_S2C_NeutralMinionTimerUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/279_S2C_UpdateDeathTimer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/280_S2C_UpdateSpellToggle.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/281_S2C_UpdateBounceMissile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/282_S2C_DebugLogGoldSources.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/283_C2S_CheatLogGoldSources.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/284_S2C_ShopItemSubstitutionSet.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/285_S2C_ShopItemSubstitutionClear.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/286_S2C_ResetClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/287_S2C_IncrementMinionKills.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/288_S2C_UpdateAttackSpeedCapOverrides.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/289_S2C_NotifyContextualSituation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/290_S2C_CreateMinionCamp.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/291_S2C_SpawnTurret.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/292_S2C_UpdateAscended.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/293_ChangeSlotSpellData_OwnerOnly.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/294_S2C_NPC_Die_MapView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/295_S2C_SetInventory_MapView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/296_NPC_MessageToClient_MapView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/297_S2C_StartSpellTargeter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/298_S2C_StopSpellTargeter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/299_S2C_CameraLock.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/300_S2C_TeamUpdateDragonBuffCount.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/301_S2C_SetFadeOut.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/302_AddConeRegion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/303_S2C_UnlockAnimation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/BasicAttackData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/BuffAddGroupEntry.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/BuffRemoveGroupEntry.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/BuffReplaceGroupEntry.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/BuffUpdateCountGroupEntry.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/CastInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/ChangeSpellData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/CharacterStackData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/Color.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/CompressedWaypoint.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/ConnectionInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/DeathData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/FXCreateData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/FXCreateGroupData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/HeroStat.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/ItemData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/MovementData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/MovementDriverHomingData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/NavFlagCircle.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/PlayerLoadInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/ReplicationData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/SpeedParams.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/SpellChangeData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/Talent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/TipConfig.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/TooltipVars.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Common/UpdateLevelPropData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsAlert.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsAssist.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsBase.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsBuff.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsCC.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsCapturePoint.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsChampionKillPre.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsDamage.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsDamageCriticalStrike.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsDie.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsEqualizeVotes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsForClient.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsGlobalMessageGeneric.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsGoldEarned.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsGoldSpent.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsHeal.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsItemCallout.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsItemChange.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsItemConsumedPurchased.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsItemSoldOrRemoved.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsItemUndo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsKillingSpree.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsMinionKill.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsShopItemSubstitutionChange.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsSurrenderVotes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/ArgsUndoEnabledChange.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/Event.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/EventID.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/Game/Events/Events.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/GamePacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/GamePacketID.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/IGamePacketsList.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/IUnusedPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/KeyCheckPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LeaguePackets.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LeaguePackets.nuspec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/100_RequestJoinTeam.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/101_RequestResking.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/102_RequestRename.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/103_TeamRosterUpdate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/104_Chat.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreen/105_QuickChat.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreenPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/LoadScreenPacketID.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/bin/Debug/net7.0/LeaguePackets.deps.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/bin/Debug/net7.0/LeaguePackets.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/bin/Debug/net7.0/LeaguePackets.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.csproj.AssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/LeaguePackets.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/ref/LeaguePackets.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/Debug/net7.0/refint/LeaguePackets.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/LeaguePackets.csproj.nuget.dgspec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/LeaguePackets.csproj.nuget.g.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/LeaguePackets.csproj.nuget.g.targets" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePackets/obj/rider.project.restore.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/BadPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacketFlags.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeOnReplication.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeReplicationData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/GameServer/Enums/ActionState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/GameServer/Enums/SpellDataFlags.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/LeaguePacketsSerializer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/BDODecompress.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Blowfish.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserENet.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserSpectator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ENetProtocol.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/HttpProtocol.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/IChunkParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Utils.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replicate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplicationType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/SerializedPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.AssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CopyComplete" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.genruntimeconfig.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/apphost.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/ref/LeaguePacketsSerializer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/refint/LeaguePacketsSerializer.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/LeaguePacketsSerializer.csproj.nuget.dgspec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/LeaguePacketsSerializer.csproj.nuget.g.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/LeaguePacketsSerializer.csproj.nuget.g.targets" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/rider.project.restore.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/tests/Syndra_2596859.lrf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/tests/Syndra_2596859.lrf.hardbad.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/tests/Syndra_2596859.lrf.metadata.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/tests/Syndra_2596859.lrf.serialized.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/tests/Syndra_2596859.lrf.softbad.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/Program.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/ReplayNamesUnhasher.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/Newtonsoft.Json.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/ReplayNamesUnhasher.deps.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/ReplayNamesUnhasher.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/ReplayNamesUnhasher.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/ReplayNamesUnhasher.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/bin/Debug/net6.0/ReplayNamesUnhasher.runtimeconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.AssemblyInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.GlobalUsings.g.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.csproj.AssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.csproj.CopyComplete" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.genruntimeconfig.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ReplayNamesUnhasher.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/apphost.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/ref/ReplayNamesUnhasher.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net6.0/refint/ReplayNamesUnhasher.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.AssemblyInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.AssemblyInfoInputs.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.GlobalUsings.g.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.assets.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/Debug/net7.0/ReplayNamesUnhasher.csproj.AssemblyReference.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/ReplayNamesUnhasher.csproj.nuget.dgspec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/ReplayNamesUnhasher.csproj.nuget.g.props" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/ReplayNamesUnhasher.csproj.nuget.g.targets" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/project.assets.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/project.nuget.cache" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/project.packagespec.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool.dir/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.axaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/avalonia-logo.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/sota-logo.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Icons.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MatchPacketReaderTool.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MatchPacketReaderTool.sln" beforeDir="false" afterPath="$PROJECT_DIR$/MatchPacketReaderTool.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/MatchFile.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/PacketTypes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Person.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/RawPacket.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/IIODialogService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/IODialogService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/PacketDataManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/ViewLocator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewLocator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModels/FilterViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModels/MainWindowViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModels/PacketTypeViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ViewModels/ViewModelBase.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/FilterView.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/FilterView.axaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/MainWindow.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/MainWindow.axaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/PacketDisplay.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/PacketDisplay.axaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/PacketTypeView.axaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/PacketTypeView.axaml.cs" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/MetaData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/DataOffset.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/BadPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/BadPacket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/ENetPacket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacketFlags.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/ENetPacketFlags.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeOnReplication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/FakeOnReplication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeReplicationData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/FakeReplicationData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserENet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserSpectator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserSpectator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/IChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/IChunkParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Replicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/Replicate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplicationType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/ReplicationType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/SerializedPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/SerializedPacket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/ref/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/ref/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/refint/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/refint/LeaguePacketsSerializer.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -565,7 +66,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ee456ec7f2e479b4eaa66183eaa0d1365ef16c4615282c4e7dccacdcc14dda/ArgumentNullException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f9fc8937ef45ecc0699912ccc71c27e28143b57e1b939fdc521426c5371e/Interaction.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/ViewLocator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -600,7 +101,7 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected=".NET Project.Serializer">
+  <component name="RunManager" selected=".NET Project.GUI">
     <configuration name="GUI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -678,7 +179,7 @@
       <workItem from="1699632059796" duration="3019000" />
       <workItem from="1701365393482" duration="188000" />
       <workItem from="1701366595381" duration="32074000" />
-      <workItem from="1701959555224" duration="6468000" />
+      <workItem from="1701959555224" duration="19885000" />
     </task>
     <servers />
   </component>
@@ -692,36 +193,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs</url>
-          <line>75</line>
-          <properties documentPath="C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ReplayNamesUnhasher\Unhasher.cs" initialLine="75" containingFunctionPresentation="Method 'UnhashReplay'">
+          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs</url>
+          <line>58</line>
+          <properties documentPath="C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplayParser\ReplayReader.cs" initialLine="58" containingFunctionPresentation="Method 'ReadPackets'">
             <startOffsets>
-              <option value="1965" />
+              <option value="1928" />
             </startOffsets>
             <endOffsets>
-              <option value="2025" />
+              <option value="1976" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs</url>
-          <line>122</line>
-          <properties documentPath="C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplayParser\Replay.cs" initialLine="128" containingFunctionPresentation="Method 'Read'" />
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs</url>
-          <line>90</line>
-          <properties documentPath="C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplayParser\Replay.cs" initialLine="90" containingFunctionPresentation="Method 'Read'">
-            <startOffsets>
-              <option value="2674" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2734" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="8" />
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

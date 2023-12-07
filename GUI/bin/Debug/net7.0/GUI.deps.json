@@ -15,6 +15,7 @@
           "Avalonia.ReactiveUI": "11.0.6",
           "Avalonia.Themes.Fluent": "11.0.6",
           "CommunityToolkit.Mvvm": "8.2.2",
+          "LeaguePackets": "1.0.0",
           "LeaguePacketsSerializer": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "8.0.0",
           "Newtonsoft.Json": "13.0.3",

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ENetUnpack.ReplayParser
-{
-    public class ChunkParserENet : ENetProtocolHandler, IChunkParser
+namespace ENetUnpack.ReplayParser;
+
+public class ChunkParserENet : ENetProtocolHandler, IChunkParser
     {
         private ENetLeagueVersion _enetLeagueVersion;
         private BlowFish _blowfish;
@@ -224,4 +224,3 @@ namespace ENetUnpack.ReplayParser
             }
         }
     }
-}

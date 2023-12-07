@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 
-namespace ENetUnpack.ReplayParser
-{
-    public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
+namespace ENetUnpack.ReplayParser;
+
+public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     {
         private BlowFish _blowfish;
 
@@ -98,4 +98,3 @@ namespace ENetUnpack.ReplayParser
             });
         }
     }
-}

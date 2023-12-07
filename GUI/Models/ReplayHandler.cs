@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ENetUnpack.ReplayParser;
+using LeaguePacketsSerializer;
 using ReplayUnhasher;
 
 namespace GUI.Models;
 
 public class ReplayHandler
 {
-    //private PacketsSerializer _serializer = new();
+    private ReplaySerializer _serializer = new();
     private Unhasher _unhasher = new();
 
     public void ParseReplay(string replayPath, ENetLeagueVersion version)
     {
         try
         {
-            //_serializer.Serialize(replayPath, version);
+            _serializer.Serialize(replayPath, version);
         }
         catch (Exception e)
         {

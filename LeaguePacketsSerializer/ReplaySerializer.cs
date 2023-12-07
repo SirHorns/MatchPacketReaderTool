@@ -1,76 +1,21 @@
-﻿using LeaguePackets;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LeaguePackets.Game;
-using GameServer.Enums;
 using ENetUnpack.ReplayParser;
+using GameServer.Enums;
+using LeaguePackets;
+using LeaguePackets.Game;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ENetPacket = ENetUnpack.ReplayParser.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
-public class Program
+public class ReplaySerializer
 {
-    public static void SerializeToFile(object what, string fileName)
-    {
-        using (StreamWriter file = File.CreateText(fileName))
-        {
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.Formatting = Formatting.Indented;
-            serializer.TypeNameHandling = TypeNameHandling.Auto;
-            serializer.Serialize(file, what);
-        }
-    }
+    private Dictionary<uint, ReplicationType> _replicationTypes = new();
 
-    
-    static Dictionary<uint, ReplicationType> replicationTypes = new Dictionary<uint, ReplicationType>();
-
-    static void SetReplicationType(BasePacket packet)
-    {
-        if (packet is S2C_CreateTurret ct)
-        {
-            replicationTypes[ct.NetID] = ReplicationType.Turret;
-        }
-        else if (packet is S2C_CreateHero ch)
-        {
-            replicationTypes[ch.NetID] = ReplicationType.Hero;
-        }
-        else if (packet is S2C_CreateNeutral cn)
-        {
-            replicationTypes[cn.NetID] = ReplicationType.Monster;
-        }
-        else if (packet is CHAR_SpawnPet sp)
-        {
-            //TODO: verify
-            replicationTypes[sp.SenderNetID] = ReplicationType.Pet;
-        }
-        else if (packet is SpawnMinionS2C sm)
-        {
-            replicationTypes[sm.NetID] = ReplicationType.Minion;
-        }
-        else if (packet is Barrack_SpawnUnit su)
-        {
-            //TODO: verify
-            replicationTypes[su.SenderNetID] = ReplicationType.LaneMinion;
-        }
-        else if (packet is OnEnterVisibilityClient vp)
-        {
-            foreach (var subpacket in vp.Packets)
-            {
-                SetReplicationType(subpacket);
-            }
-        }
-        else if (packet is Batched bp)
-        {
-            foreach (var subpacket in bp.Packets)
-            {
-                SetReplicationType(subpacket);
-            }
-        }
-    }
-    
     static uint u;
     static float f;
     static bool recording;
@@ -78,8 +23,18 @@ public class Program
     static Replicate[,] currentValues;
     static ReplicationType currentReplicationType;
 
-    
-    static void Main(string[] args)
+    private string _filePath;
+    private string _fileName;
+    private ENetLeagueVersion _version;
+
+    private JObject _metaData = new();
+    private MetaData _metaDataTest = new();
+    private List<ENetUnpack.ReplayParser.ENetPacket> _rawPackets;
+    private List<SerializedPacket> serializedPackets = new List<SerializedPacket>();
+    private List<BadPacket> hardBadPackets = new List<BadPacket>();
+    private List<BadPacket> softBadPackets = new List<BadPacket>();
+
+    public ReplaySerializer()
     {
         recording = true;
         var types = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
@@ -91,58 +46,33 @@ public class Program
         }
 
         recording = false;
+    }
 
-        var metaOnly = false;
-        var fileName = "test.lrf";
-        ENetLeagueVersion version = ENetLeagueVersion.Patch420;
+    public void Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420)
+    {
+        _filePath = filePath;
+        _fileName = Path.GetFileName(filePath);
+        _version = version;
+        
+        Read();
+        Process();
+        Stats();
+        Console.WriteLine("Skipping Writing files..");
+        //GenerateReplayJsons();
+        Console.WriteLine("Done!");
+        return;
+    }
 
-        int a = 0;
-        if (args.Length == 1 && (args[0] == "-h" || args[0] == "--help"))
-        {
-            Console.WriteLine("USAGE: LPS.exe [-m] [-v VERSION] FILE");
-            Console.WriteLine("-m, --meta-only");
-            Console.WriteLine("      Parse and save only metadata");
-            Console.WriteLine("-v, --version VERSION");
-            Console.WriteLine("      Replay version for parsing (only for .lrf files)");
-            Console.WriteLine("      The VERSION can take the values: Seasson12, Seasson34 and Patch420 (default)");
-            Console.WriteLine("The FILE can have extensions .lrf and .lpkt");
-            return;
-        }
-
-        if (args.Length > a && (args[a] == "-m" || args[a] == "--meta-only"))
-        {
-            metaOnly = true;
-            a++;
-        }
-
-        if (args.Length > a + 1 && (args[a] == "-v" || args[a] == "--version"))
-        {
-            Enum.TryParse(args[a + 1], out version);
-            a += 2;
-        }
-
-        if (args.Length > a)
-        {
-            fileName = args[a];
-            a++;
-        }
-
+    private void Read()
+    {
         Console.WriteLine("Reading file...");
-        JObject metadata = new JObject();
-        var replay = ReplayReader.ReadPackets(File.OpenRead(fileName), version, ref metadata);
-
-        Console.WriteLine("Writing meta data to file .metadata.json...");
-        SerializeToFile(metadata, fileName + ".metadata.json");
-        if (metaOnly)
-        {
-            return;
-        }
-
-        var serializedPackets = new List<SerializedPacket>();
-        var hardBadPackets = new List<BadPacket>();
-        var softBadPackets = new List<BadPacket>();
+        _rawPackets = ReplayReader.ReadPackets(File.OpenRead(_filePath), _version, ref _metaData).Packets;
+    }
+    
+    private void Process()
+    {
         Console.WriteLine("Processing raw packets...");
-        foreach (var rPacket in replay.Packets)
+        foreach (var rPacket in _rawPackets)
         {
             if (rPacket.Channel < 8)
             {
@@ -177,7 +107,7 @@ public class Program
                                 //TODO: investigate
                                 replicationType = ReplicationType.Turret;
                             }
-                            else if (!replicationTypes.TryGetValue(netID, out replicationType))
+                            else if (!_replicationTypes.TryGetValue(netID, out replicationType))
                             {
                                 Console.WriteLine($"Warning: the type of #{netID} is unknown");
                                 continue;
@@ -322,28 +252,30 @@ public class Program
                 }
             }
         }
-
-        Console.WriteLine(
-            $"Processed! Good: {serializedPackets.Count}, Soft Error: {softBadPackets.Count}, Hard Error: {hardBadPackets.Count}");
-        Console.WriteLine(
-            $"Soft bad IDs:{string.Join(",", softBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
-        Console.WriteLine(
-            $"Hard bad IDs:{string.Join(",", hardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
-
-        Console.WriteLine("Writing hard bad to file .hardbad.json...");
-        SerializeToFile(hardBadPackets, fileName + ".hardbad.json");
-
-        Console.WriteLine("Writing soft bad to file .softbad.json...");
-        SerializeToFile(softBadPackets, fileName + ".softbad.json");
-
-        Console.WriteLine("Writing serialized to file .serialized.json...");
-        SerializeToFile(serializedPackets, fileName + ".serialized.json");
-
-        Console.WriteLine("Done!");
-        return;
     }
     
-    static bool TryGet(int primaryId, int secondaryId, bool isFloat)
+    private void Stats()
+    {
+        Console.WriteLine($"Processed! Good: {serializedPackets.Count}, Soft Error: {softBadPackets.Count}, Hard Error: {hardBadPackets.Count}");
+        Console.WriteLine($"Soft bad IDs:{string.Join(",", softBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+        Console.WriteLine($"Hard bad IDs:{string.Join(",", hardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+    }
+
+    public void GenerateReplayJsons()
+    {
+        Console.WriteLine("Writing meta data to file .metadata.json...");
+        SerializeToFile(_metaData, _filePath + ".metadata.json");
+        
+        Console.WriteLine("Writing hard bad to file .hardbad.json...");
+        SerializeToFile(hardBadPackets, _filePath + ".hardbad.json");
+
+        Console.WriteLine("Writing soft bad to file .softbad.json...");
+        SerializeToFile(softBadPackets, _filePath + ".softbad.json");
+
+        Console.WriteLine("Writing serialized to file .serialized.json...");
+        SerializeToFile(serializedPackets, _filePath + ".serialized.json");
+    }
+    private bool TryGet(int primaryId, int secondaryId, bool isFloat)
     {
         //TODO: value.isFloat != isFloat
         if (recording)
@@ -370,17 +302,17 @@ public class Program
         return true;
     }
 
-    static bool TryGetUint(int primaryId, int secondaryId)
+    private bool TryGetUint(int primaryId, int secondaryId)
     {
         return TryGet(primaryId, secondaryId, false);
     }
 
-    static bool TryGetFloat(int primaryId, int secondaryId)
+    private bool TryGetFloat(int primaryId, int secondaryId)
     {
         return TryGet(primaryId, secondaryId, true);
     }
 
-    static Dictionary<string, object> GenDataDict(ReplicationType replicationType, Replicate[,] values)
+    private Dictionary<string, object> GenDataDict(ReplicationType replicationType, Replicate[,] values)
     {
         var data = new Dictionary<string, object>();
         currentReplicationType = replicationType;
@@ -576,13 +508,67 @@ public class Program
         return data;
     }
 
-    static void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId)
+    private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId)
     {
-        Console.WriteLine(
-            $"bytes = new byte[{bytes.Length}]{{ {string.Join(", ", bytes)} }}; i = {i}; " +
-            $"type = {replicationType}; primaryId = {primaryId}; secondaryId = {secondaryId}"
-        );
+        var s1 = $"bytes = new byte[{bytes.Length}]{{ {string.Join(", ", bytes)} }}; i = {i}; ";
+        var s2 = $"type = {replicationType}; primaryId = {primaryId}; secondaryId = {secondaryId}";
+        Console.WriteLine($"{s1}{s2}");
     }
 
     
+    
+    private void SetReplicationType(BasePacket packet)
+    {
+        if (packet is S2C_CreateTurret ct)
+        {
+            _replicationTypes[ct.NetID] = ReplicationType.Turret;
+        }
+        else if (packet is S2C_CreateHero ch)
+        {
+            _replicationTypes[ch.NetID] = ReplicationType.Hero;
+        }
+        else if (packet is S2C_CreateNeutral cn)
+        {
+            _replicationTypes[cn.NetID] = ReplicationType.Monster;
+        }
+        else if (packet is CHAR_SpawnPet sp)
+        {
+            //TODO: verify
+            _replicationTypes[sp.SenderNetID] = ReplicationType.Pet;
+        }
+        else if (packet is SpawnMinionS2C sm)
+        {
+            _replicationTypes[sm.NetID] = ReplicationType.Minion;
+        }
+        else if (packet is Barrack_SpawnUnit su)
+        {
+            //TODO: verify
+            _replicationTypes[su.SenderNetID] = ReplicationType.LaneMinion;
+        }
+        else if (packet is OnEnterVisibilityClient vp)
+        {
+            foreach (var subpacket in vp.Packets)
+            {
+                SetReplicationType(subpacket);
+            }
+        }
+        else if (packet is Batched bp)
+        {
+            foreach (var subpacket in bp.Packets)
+            {
+                SetReplicationType(subpacket);
+            }
+        }
+    }
+
+    private static void SerializeToFile(object objectToWrite, string filePath)
+    {
+        using var fileStream = File.CreateText(filePath);
+        var jsonSerializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented,
+            TypeNameHandling = TypeNameHandling.Auto
+        };
+        jsonSerializer.Serialize(fileStream, objectToWrite);
+    }
 }
