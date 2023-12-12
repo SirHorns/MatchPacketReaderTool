@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using LeaguePacketsSerializer;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ENetUnpack.ReplayParser;
 
 public class Replay
 {
-    [JsonProperty("metadata")]
+    [JsonProperty("MetaData")]
     public MetaData MetaData { get; set; }
-
-    private IChunkParser ChunkParser { get; set; }
-
-    public List<ENetPacket> Packets { get; set; }
-
-    public void SetChunkParser(bool isSpectator)
-    {
-        
-    }
+    [JsonProperty("SerializedPackets")]
+    public List<SerializedPacket> SerializedPackets { get; } = new();
+    [JsonProperty("HardBadPackets ")]
+    public List<BadPacket> HardBadPackets { get; } = new();
+    [JsonProperty("SoftBadPackets")]
+    public List<BadPacket> SoftBadPackets { get; } = new();
+    
+    [JsonIgnore]
+    public List<ENetPacket> RawPackets { get; set; }
+    
+    
 }

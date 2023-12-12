@@ -147,6 +147,3 @@ C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\L
 C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePacketsSerializer.dll
 C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePacketsSerializer.pdb
 C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePackets.pdb
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePacketsSerializer.deps.json
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePacketsSerializer.runtimeconfig.json
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\bin\Debug\net7.0\LeaguePacketsSerializer.exe

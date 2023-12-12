@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using ENetUnpack.ReplayParser;
 using LeaguePacketsSerializer;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ReplayUnhasher;
 
 namespace GUI.Models;
@@ -16,6 +19,7 @@ public class ReplayHandler
         try
         {
             _serializer.Serialize(replayPath, version);
+            _serializer.GenerateReplayJsons();
         }
         catch (Exception e)
         {

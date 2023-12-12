@@ -12,43 +12,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/MetaData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/DataOffset.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/MetaData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.deps.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.deps.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.exe" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/bin/Debug/net7.0/LeaguePacketsSerializer.runtimeconfig.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/Avalonia/original.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.dll" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/Debug/net7.0/GUI.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/BadPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/BadPacket.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/ENetPacket.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ENetPacketFlags.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/ENetPacketFlags.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeOnReplication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/FakeOnReplication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/FakeReplicationData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/FakeReplicationData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserENet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserSpectator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ChunkParserSpectator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/IChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/IChunkParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePackets/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePackets/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/LeaguePacketsSerializer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/LeaguePacketsSerializer.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/MetaData.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/Replay.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Replicate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/Replicate.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplicationType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Replication/ReplicationType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/SerializedPacket.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/SerializedPacket.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.genruntimeconfig.cache" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/LeaguePacketsSerializer.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/ref/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/ref/LeaguePacketsSerializer.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/refint/LeaguePacketsSerializer.dll" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/obj/Debug/net7.0/refint/LeaguePacketsSerializer.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/obj/rider.project.model.nuget.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,25 +78,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.GUI.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\bsthomas4\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\bsthomas4\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\bsthomas4\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\bsthomas4\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\bsthomas4\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\bsthomas4\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.GUI">
     <configuration name="GUI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.exe" />
@@ -179,7 +178,8 @@
       <workItem from="1699632059796" duration="3019000" />
       <workItem from="1701365393482" duration="188000" />
       <workItem from="1701366595381" duration="32074000" />
-      <workItem from="1701959555224" duration="19885000" />
+      <workItem from="1701959555224" duration="21597000" />
+      <workItem from="1702397555191" duration="12614000" />
     </task>
     <servers />
   </component>
@@ -188,24 +188,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplayParser/ReplayReader.cs</url>
-          <line>58</line>
-          <properties documentPath="C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplayParser\ReplayReader.cs" initialLine="58" containingFunctionPresentation="Method 'ReadPackets'">
-            <startOffsets>
-              <option value="1928" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1976" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

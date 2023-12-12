@@ -16,23 +16,18 @@ public class ReplaySerializer
 {
     private Dictionary<uint, ReplicationType> _replicationTypes = new();
 
-    static uint u;
-    static float f;
-    static bool recording;
-    static bool?[][,] isFloatArray;
-    static Replicate[,] currentValues;
-    static ReplicationType currentReplicationType;
+    private static uint u { get; set; }
+    static float f { get; set; }
+    static bool recording { get; set; }
+    static bool?[][,] isFloatArray { get; set; }
+    static Replicate[,] currentValues { get; set; }
+    static ReplicationType currentReplicationType { get; set; }
 
     private string _filePath;
-    private string _fileName;
     private ENetLeagueVersion _version;
 
-    private JObject _metaData = new();
-    private MetaData _metaDataTest = new();
-    private List<ENetUnpack.ReplayParser.ENetPacket> _rawPackets;
-    private List<SerializedPacket> serializedPackets = new List<SerializedPacket>();
-    private List<BadPacket> hardBadPackets = new List<BadPacket>();
-    private List<BadPacket> softBadPackets = new List<BadPacket>();
+    private readonly ReplayReader _replayReader = new();
+    private Replay Replay => _replayReader.Replay;
 
     public ReplaySerializer()
     {
@@ -51,230 +46,244 @@ public class ReplaySerializer
     public void Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420)
     {
         _filePath = filePath;
-        _fileName = Path.GetFileName(filePath);
         _version = version;
-        
-        Read();
-        Process();
-        Stats();
-        Console.WriteLine("Skipping Writing files..");
-        //GenerateReplayJsons();
-        Console.WriteLine("Done!");
-        return;
-    }
 
-    private void Read()
-    {
         Console.WriteLine("Reading file...");
-        _rawPackets = ReplayReader.ReadPackets(File.OpenRead(_filePath), _version, ref _metaData).Packets;
+        _replayReader.ReadPackets(File.OpenRead(_filePath), _version);
+        
+        Console.WriteLine("Processing raw packets...");
+        foreach (var rPacket in Replay.RawPackets)
+        {
+            ParsePacket(rPacket);
+        }
+        
+        Console.WriteLine("Finished Serializing Replay!");
+        Console.WriteLine("[Processed]");
+        Console.WriteLine($"- Good: {Replay.SerializedPackets.Count}");
+        Console.WriteLine($"- Soft: {Replay.SoftBadPackets.Count}");
+        Console.WriteLine($"- Hard: {Replay.HardBadPackets.Count}");
+        Console.WriteLine(
+            $"Soft bad IDs:{string.Join(",", Replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+        Console.WriteLine(
+            $"Hard bad IDs:{string.Join(",", Replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
     }
     
-    private void Process()
+    private void ParsePacket(ENetUnpack.ReplayParser.ENetPacket rPacket)
     {
-        Console.WriteLine("Processing raw packets...");
-        foreach (var rPacket in _rawPackets)
+        if (rPacket.Channel >= 8)
         {
-            if (rPacket.Channel < 8)
+            return;
+        }
+
+        int rawId = rPacket.Bytes[0];
+        if (rawId == 254)
+        {
+            rawId = rPacket.Bytes[5] | rPacket.Bytes[6] << 8;
+        }
+
+        try
+        {
+            var basePacket = BasePacket.Create(rPacket.Bytes, (ChannelID)rPacket.Channel);
+            object packetToSerialize = basePacket;
+            
+            if (basePacket is OnReplication replication)
             {
-                int rawID = rPacket.Bytes[0];
-                if (rawID == 254)
+                packetToSerialize = OnReplication(replication);
+            }
+            else
+            {
+                SetReplicationType(basePacket);
+            }
+
+            Serialized(rawId, packetToSerialize, rPacket);
+
+            if (rPacket.Channel > 0 && basePacket.ExtraBytes.Length > 0)
+            {
+                SoftBad(rawId, rPacket, basePacket);
+            }
+
+            if (basePacket is not IGamePacketsList list)
+            {
+                return;
+            }
+
+            SoftBadLoop(list, rPacket);
+        }
+        catch (Exception exception)
+        {
+            HardBad(rawId, rPacket, exception);
+        }
+    }
+
+    private object OnReplication(OnReplication onReplication)
+    {
+        var packetToSerialize = new FakeOnReplication
+        {
+            SyncID = onReplication.SyncID,
+            SenderNetID = onReplication.SenderNetID,
+            ExtraBytes = onReplication.ExtraBytes
+        };
+
+        foreach (var rd in onReplication.ReplicationData)
+        {
+            var netId = rd.UnitNetID;
+            var values = new Replicate[6, 32];
+            var replicationType = ReplicationType.Unknown;
+            if (netId >= 0xFF000000)
+            {
+                replicationType = ReplicationType.Building;
+            }
+            else if (false /*netID >= 0x40000000*/)
+            {
+                //TODO: investigate
+                replicationType = ReplicationType.Turret;
+            }
+            else if (!_replicationTypes.TryGetValue(netId, out replicationType))
+            {
+                //Console.WriteLine($"WARNING: The type of NetId: #{netId} is Unknown ");
+                continue;
+            }
+
+            for (byte primaryId = 0; primaryId < 6; primaryId++)
+            {
+                uint secondaryIdArray = rd.Data[primaryId].Item1;
+                if (secondaryIdArray == 0)
                 {
-                    rawID = rPacket.Bytes[5] | rPacket.Bytes[6] << 8;
+                    continue;
                 }
 
-                try
+                int i = 0;
+                var bytes = rd.Data[primaryId].Item2;
+
+                for (byte secondaryId = 0; secondaryId < 32; secondaryId++)
                 {
-                    var packet = BasePacket.Create(rPacket.Bytes, (ChannelID)rPacket.Channel);
-                    object packetToSerialize = packet;
-
-                    if (packet is OnReplication or)
+                    if (((secondaryIdArray >> secondaryId) & 1) == 0)
                     {
-                        var p = new FakeOnReplication();
-                        p.SyncID = or.SyncID;
-                        p.SenderNetID = or.SenderNetID;
-                        p.ExtraBytes = or.ExtraBytes;
-                        foreach (var rd in or.ReplicationData)
+                        continue;
+                    }
+
+                    bool? isFloat = isFloatArray[(int)replicationType][primaryId, secondaryId];
+                    if (isFloat == null)
+                    {
+                        Console.WriteLine(
+                            $"Warning: the type for [{replicationType}][{primaryId}, {secondaryId}] is unknown");
+                        DumpState(bytes, i, replicationType, primaryId, secondaryId);
+                        break;
+                    }
+                    else if (isFloat == true)
+                    {
+                        try
                         {
-                            uint netID = rd.UnitNetID;
-                            var values = new Replicate[6, 32];
-                            var replicationType = ReplicationType.Unknown;
-                            if (netID >= 0xFF000000)
+                            float value = 0;
+                            if (bytes[i] == 0xFF)
                             {
-                                replicationType = ReplicationType.Building;
+                                i++;
                             }
-                            else if (false /*netID >= 0x40000000*/)
+                            else
                             {
-                                //TODO: investigate
-                                replicationType = ReplicationType.Turret;
-                            }
-                            else if (!_replicationTypes.TryGetValue(netID, out replicationType))
-                            {
-                                Console.WriteLine($"Warning: the type of #{netID} is unknown");
-                                continue;
-                            }
-
-                            for (byte primaryId = 0; primaryId < 6; primaryId++)
-                            {
-                                uint secondaryIdArray = rd.Data[primaryId].Item1;
-                                if (secondaryIdArray == 0)
+                                int startIndex = i;
+                                if (bytes[i] == 0xFE)
                                 {
-                                    continue;
+                                    startIndex++;
                                 }
 
-                                int i = 0;
-                                var bytes = rd.Data[primaryId].Item2;
-
-                                for (byte secondaryId = 0; secondaryId < 32; secondaryId++)
-                                {
-                                    if (((secondaryIdArray >> secondaryId) & 1) == 0)
-                                    {
-                                        continue;
-                                    }
-
-                                    bool? isFloat = isFloatArray[(int)replicationType][primaryId, secondaryId];
-                                    if (isFloat == null)
-                                    {
-                                        Console.WriteLine(
-                                            $"Warning: the type for [{replicationType}][{primaryId}, {secondaryId}] is unknown");
-                                        DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                                        break;
-                                    }
-                                    else if (isFloat == true)
-                                    {
-                                        try
-                                        {
-                                            float value = 0;
-                                            if (bytes[i] == 0xFF)
-                                            {
-                                                i++;
-                                            }
-                                            else
-                                            {
-                                                int startIndex = i;
-                                                if (bytes[i] == 0xFE)
-                                                {
-                                                    startIndex++;
-                                                }
-
-                                                value = BitConverter.ToSingle(
-                                                    bytes,
-                                                    startIndex
-                                                );
-                                                i = startIndex + 4;
-                                            }
-
-                                            values[primaryId, secondaryId] = new Replicate(value);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        try
-                                        {
-                                            uint value = 0;
-                                            int j = 0;
-                                            for (; (bytes[i] & 0x80) != 0; i++, j += 7)
-                                            {
-                                                value |= ((uint)bytes[i] & 0x7f) << j;
-                                            }
-
-                                            value |= (uint)bytes[i] << j;
-                                            i++;
-                                            values[primaryId, secondaryId] = new Replicate(value);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                                        }
-                                    }
-                                }
+                                value = BitConverter.ToSingle(
+                                    bytes,
+                                    startIndex
+                                );
+                                i = startIndex + 4;
                             }
 
-                            p.ReplicationData.Add(new FakeReplicationData(netID, GenDataDict(replicationType, values)));
+                            values[primaryId, secondaryId] = new Replicate(value);
                         }
-
-                        packetToSerialize = p;
+                        catch (Exception e)
+                        {
+                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
+                        }
                     }
                     else
                     {
-                        SetReplicationType(packet);
-                    }
-
-                    serializedPackets.Add(new SerializedPacket
-                    {
-                        RawID = rawID,
-                        Packet = packetToSerialize,
-                        Time = rPacket.Time,
-                        ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : (ChannelID?)null,
-                        RawChannel = rPacket.Channel,
-                    });
-                    if (rPacket.Channel > 0 && packet.ExtraBytes.Length > 0)
-                    {
-                        softBadPackets.Add(new BadPacket()
+                        try
                         {
-                            RawID = rawID,
-                            Raw = rPacket.Bytes,
-                            RawChannel = rPacket.Channel,
-                            Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}",
-                        });
-                    }
-
-                    if (packet is IGamePacketsList list)
-                    {
-                        foreach (var packet2 in list.Packets)
-                        {
-                            if (rPacket.Channel > 0 && packet2.ExtraBytes.Length > 0)
+                            uint value = 0;
+                            int j = 0;
+                            for (; (bytes[i] & 0x80) != 0; i++, j += 7)
                             {
-                                softBadPackets.Add(new BadPacket()
-                                {
-                                    RawID = (int)packet2.ID,
-                                    Raw = rPacket.Bytes,
-                                    RawChannel = rPacket.Channel,
-                                    Error =
-                                        $"Extra bytes in {packet2.GetType().Name}: {Convert.ToBase64String(packet2.ExtraBytes)}",
-                                });
+                                value |= ((uint)bytes[i] & 0x7f) << j;
                             }
+
+                            value |= (uint)bytes[i] << j;
+                            i++;
+                            values[primaryId, secondaryId] = new Replicate(value);
+                        }
+                        catch (Exception e)
+                        {
+                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
                         }
                     }
                 }
-                catch (Exception exception)
-                {
-                    hardBadPackets.Add(new BadPacket()
-                    {
-                        RawID = rawID,
-                        Raw = rPacket.Bytes,
-                        RawChannel = rPacket.Channel,
-                        Error = exception.ToString(),
-                    });
-                }
             }
+
+            packetToSerialize.ReplicationData.Add(new FakeReplicationData(netId, GenDataDict(replicationType, values)));
+        }
+
+        return packetToSerialize;
+    }
+
+    private void Serialized(int rawId, object packetToSerialize, ENetUnpack.ReplayParser.ENetPacket rPacket)
+    {
+        Replay.SerializedPackets.Add(new SerializedPacket
+        {
+            RawID = rawId,
+            Packet = packetToSerialize,
+            Time = rPacket.Time,
+            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : (ChannelID?)null,
+            RawChannel = rPacket.Channel,
+        });
+    }
+
+    private void SoftBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, BasePacket packet)
+    {
+        Replay.SoftBadPackets.Add(new BadPacket()
+        {
+            RawID = rawId,
+            Raw = rPacket.Bytes,
+            RawChannel = rPacket.Channel,
+            Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}",
+        });
+    }
+
+    private void SoftBadLoop(IGamePacketsList list, ENetUnpack.ReplayParser.ENetPacket rPacket)
+    {
+        foreach (var packet2 in list.Packets)
+        {
+            if (rPacket.Channel <= 0 || packet2.ExtraBytes.Length <= 0)
+            {
+                continue;
+            }
+
+            var error = $"Extra bytes in {packet2.GetType().Name}: {Convert.ToBase64String(packet2.ExtraBytes)}";
+            Replay.SoftBadPackets.Add(new BadPacket()
+            {
+                RawID = (int)packet2.ID,
+                Raw = rPacket.Bytes,
+                RawChannel = rPacket.Channel,
+                Error = error,
+            });
         }
     }
-    
-    private void Stats()
+
+    private void HardBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, Exception exception)
     {
-        Console.WriteLine($"Processed! Good: {serializedPackets.Count}, Soft Error: {softBadPackets.Count}, Hard Error: {hardBadPackets.Count}");
-        Console.WriteLine($"Soft bad IDs:{string.Join(",", softBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
-        Console.WriteLine($"Hard bad IDs:{string.Join(",", hardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+        Replay.HardBadPackets.Add(new BadPacket()
+        {
+            RawID = rawId,
+            Raw = rPacket.Bytes,
+            RawChannel = rPacket.Channel,
+            Error = exception.ToString(),
+        });
     }
 
-    public void GenerateReplayJsons()
-    {
-        Console.WriteLine("Writing meta data to file .metadata.json...");
-        SerializeToFile(_metaData, _filePath + ".metadata.json");
-        
-        Console.WriteLine("Writing hard bad to file .hardbad.json...");
-        SerializeToFile(hardBadPackets, _filePath + ".hardbad.json");
-
-        Console.WriteLine("Writing soft bad to file .softbad.json...");
-        SerializeToFile(softBadPackets, _filePath + ".softbad.json");
-
-        Console.WriteLine("Writing serialized to file .serialized.json...");
-        SerializeToFile(serializedPackets, _filePath + ".serialized.json");
-    }
     private bool TryGet(int primaryId, int secondaryId, bool isFloat)
     {
         //TODO: value.isFloat != isFloat
@@ -515,51 +524,54 @@ public class ReplaySerializer
         Console.WriteLine($"{s1}{s2}");
     }
 
-    
-    
+
     private void SetReplicationType(BasePacket packet)
     {
-        if (packet is S2C_CreateTurret ct)
+        switch (packet)
         {
-            _replicationTypes[ct.NetID] = ReplicationType.Turret;
-        }
-        else if (packet is S2C_CreateHero ch)
-        {
-            _replicationTypes[ch.NetID] = ReplicationType.Hero;
-        }
-        else if (packet is S2C_CreateNeutral cn)
-        {
-            _replicationTypes[cn.NetID] = ReplicationType.Monster;
-        }
-        else if (packet is CHAR_SpawnPet sp)
-        {
-            //TODO: verify
-            _replicationTypes[sp.SenderNetID] = ReplicationType.Pet;
-        }
-        else if (packet is SpawnMinionS2C sm)
-        {
-            _replicationTypes[sm.NetID] = ReplicationType.Minion;
-        }
-        else if (packet is Barrack_SpawnUnit su)
-        {
-            //TODO: verify
-            _replicationTypes[su.SenderNetID] = ReplicationType.LaneMinion;
-        }
-        else if (packet is OnEnterVisibilityClient vp)
-        {
-            foreach (var subpacket in vp.Packets)
-            {
-                SetReplicationType(subpacket);
-            }
-        }
-        else if (packet is Batched bp)
-        {
-            foreach (var subpacket in bp.Packets)
-            {
-                SetReplicationType(subpacket);
-            }
+            case S2C_CreateTurret ct:
+                _replicationTypes[ct.NetID] = ReplicationType.Turret;
+                break;
+            case S2C_CreateHero ch:
+                _replicationTypes[ch.NetID] = ReplicationType.Hero;
+                break;
+            case S2C_CreateNeutral cn:
+                _replicationTypes[cn.NetID] = ReplicationType.Monster;
+                break;
+            case CHAR_SpawnPet sp:
+                //TODO: verify
+                _replicationTypes[sp.SenderNetID] = ReplicationType.Pet;
+                break;
+            case SpawnMinionS2C sm:
+                _replicationTypes[sm.NetID] = ReplicationType.Minion;
+                break;
+            case Barrack_SpawnUnit su:
+                //TODO: verify
+                _replicationTypes[su.SenderNetID] = ReplicationType.LaneMinion;
+                break;
+            case OnEnterVisibilityClient vp:
+                foreach (var subPacket in vp.Packets)
+                {
+                    SetReplicationType(subPacket);
+                }
+
+                break;
+            case Batched bp:
+                foreach (var subPacket in bp.Packets)
+                {
+                    SetReplicationType(subPacket);
+                }
+
+                break;
         }
     }
+
+    public void GenerateReplayJsons()
+    {
+        Console.WriteLine("Writing Replay to json file...");
+        SerializeToFile(Replay, _filePath + ".json");
+    }
+
 
     private static void SerializeToFile(object objectToWrite, string filePath)
     {
@@ -567,7 +579,7 @@ public class ReplaySerializer
         var jsonSerializer = new JsonSerializer
         {
             Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = TypeNameHandling.Auto,
         };
         jsonSerializer.Serialize(fileStream, objectToWrite);
     }
