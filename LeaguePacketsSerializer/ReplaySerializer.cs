@@ -7,8 +7,6 @@ using GameServer.Enums;
 using LeaguePackets;
 using LeaguePackets.Game;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using ENetPacket = ENetUnpack.ReplayParser.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
@@ -27,7 +25,7 @@ public class ReplaySerializer
     private ENetLeagueVersion _version;
 
     private readonly ReplayReader _replayReader = new();
-    private Replay Replay => _replayReader.Replay;
+    public Replay Replay => _replayReader.Replay;
 
     public ReplaySerializer()
     {
@@ -43,7 +41,7 @@ public class ReplaySerializer
         recording = false;
     }
 
-    public void Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420)
+    public void Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420, bool writeToFile = false)
     {
         _filePath = filePath;
         _version = version;
@@ -66,6 +64,14 @@ public class ReplaySerializer
             $"Soft bad IDs:{string.Join(",", Replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
         Console.WriteLine(
             $"Hard bad IDs:{string.Join(",", Replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+
+        if (!writeToFile)
+        {
+            return;
+        }
+        
+        Console.WriteLine("Writing Replay to json file...");
+        SerializeToFile(Replay, _filePath + ".json");
     }
     
     private void ParsePacket(ENetUnpack.ReplayParser.ENetPacket rPacket)
@@ -95,7 +101,7 @@ public class ReplaySerializer
                 SetReplicationType(basePacket);
             }
 
-            Serialized(rawId, packetToSerialize, rPacket);
+            SerializePacket(rawId, packetToSerialize, rPacket);
 
             if (rPacket.Channel > 0 && basePacket.ExtraBytes.Length > 0)
             {
@@ -230,27 +236,29 @@ public class ReplaySerializer
         return packetToSerialize;
     }
 
-    private void Serialized(int rawId, object packetToSerialize, ENetUnpack.ReplayParser.ENetPacket rPacket)
+    private void SerializePacket(int rawId, object packetToSerialize, ENetUnpack.ReplayParser.ENetPacket rPacket)
     {
-        Replay.SerializedPackets.Add(new SerializedPacket
+        var pkt = new SerializedPacket
         {
             RawID = rawId,
             Packet = packetToSerialize,
             Time = rPacket.Time,
-            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : (ChannelID?)null,
+            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : null,
             RawChannel = rPacket.Channel,
-        });
+        };
+        Replay.SerializedPackets.Add(pkt);
     }
 
     private void SoftBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, BasePacket packet)
     {
-        Replay.SoftBadPackets.Add(new BadPacket()
+        var softBad = new BadPacket()
         {
             RawID = rawId,
             Raw = rPacket.Bytes,
             RawChannel = rPacket.Channel,
-            Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}",
-        });
+            Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}"
+        };
+        Replay.SoftBadPackets.Add(softBad);
     }
 
     private void SoftBadLoop(IGamePacketsList list, ENetUnpack.ReplayParser.ENetPacket rPacket)
@@ -275,13 +283,14 @@ public class ReplaySerializer
 
     private void HardBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, Exception exception)
     {
-        Replay.HardBadPackets.Add(new BadPacket()
+        var hardBad = new BadPacket()
         {
             RawID = rawId,
             Raw = rPacket.Bytes,
             RawChannel = rPacket.Channel,
             Error = exception.ToString(),
-        });
+        };
+        Replay.HardBadPackets.Add(hardBad);
     }
 
     private bool TryGet(int primaryId, int secondaryId, bool isFloat)
@@ -554,32 +563,22 @@ public class ReplaySerializer
                 {
                     SetReplicationType(subPacket);
                 }
-
                 break;
             case Batched bp:
                 foreach (var subPacket in bp.Packets)
                 {
                     SetReplicationType(subPacket);
                 }
-
                 break;
         }
     }
-
-    public void GenerateReplayJsons()
-    {
-        Console.WriteLine("Writing Replay to json file...");
-        SerializeToFile(Replay, _filePath + ".json");
-    }
-
-
+    
     private static void SerializeToFile(object objectToWrite, string filePath)
     {
         using var fileStream = File.CreateText(filePath);
         var jsonSerializer = new JsonSerializer
         {
-            Formatting = Formatting.Indented,
-            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.Indented
         };
         jsonSerializer.Serialize(fileStream, objectToWrite);
     }

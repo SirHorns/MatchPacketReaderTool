@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text;
+using LeaguePacketsSerializer;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ReplayUnhasher;
 
@@ -83,7 +86,46 @@ public class Unhasher
         };
         Console.WriteLine("Finished Unhasing Replay!");
     }
+    
+    public async Task UnhashReplay(JArray packets, string outputPath)
+    {
+        Console.WriteLine("Unhashing Replay...");
+        
+        for (i = 0; i < packets.Count; i++)
+        {
+            var packetInfo = packets[i].SelectToken("Packet").ToArray();
 
+            for (k = 0; k < packetInfo.Count(); k++)
+            {
+                ProcessProperty(packetInfo[k] as JProperty);
+            }
+        };
+        
+        Console.WriteLine("Finished Unhasing Replay!");
+        
+        using var fileStream = File.CreateText(outputPath.Replace(".lrf", "_Unhashed.json"));
+        var jsonSerializer = new JsonSerializer
+        {
+            Formatting = Formatting.Indented
+        };
+        jsonSerializer.Serialize(fileStream, packets);
+        
+        GC.Collect();
+    }
+
+    public string Unhash(String json)
+    {
+        var token = JToken.Parse(json);
+        var packetInfo = token.SelectToken("Packet").ToArray();
+
+        for (var i = 0; i < packetInfo.Count(); i++)
+        {
+            ProcessProperty(packetInfo[i] as JProperty);
+        }
+
+        return token.ToString();
+    }
+    
     public void WriteJsonToFile()
     {
         string outputPath = $"{Path.GetFullPath(Path.GetDirectoryName(_filePath))}\\{Path.GetFileNameWithoutExtension(_filePath)}_Unhashed.json";

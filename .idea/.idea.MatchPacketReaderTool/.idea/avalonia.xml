@@ -4,6 +4,7 @@
     <option name="projectPerEditor">
       <map>
         <entry key="App.axaml" value="MatchPacketReaderTool.csproj" />
+        <entry key="GUI/Views/KeyCheck.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Views/MainWindow.axaml" value="GUI/GUI.csproj" />
         <entry key="Icons.axaml" value="MatchPacketReaderTool.csproj" />
         <entry key="MatchPacketReaderTool/Views/MainWindow.axaml" value="MatchPacketReaderTool/MatchPacketReaderTool.csproj" />

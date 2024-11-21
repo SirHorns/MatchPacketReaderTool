@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ENetUnpack.ReplayParser;
 using LeaguePacketsSerializer;
@@ -13,23 +13,58 @@ public class ReplayHandler
 {
     private ReplaySerializer _serializer = new();
     private Unhasher _unhasher = new();
+    private string[] _packetArray;
+    public JArray JPackets { get; private set; }
 
-    public void ParseReplay(string replayPath, ENetLeagueVersion version)
+    public void ParseReplay(string replayPath, ENetLeagueVersion version, bool writeToFile = false)
     {
+        if (string.IsNullOrEmpty(replayPath))
+        {
+            return;
+        }
+        
         try
         {
-            _serializer.Serialize(replayPath, version);
-            _serializer.GenerateReplayJsons();
+            _serializer.Serialize(replayPath, version, true);
+            _packetArray = new string[_serializer.Replay.SerializedPackets.Count];
+            //var ja = JsonConvert.SerializeObject(_serializer.Replay.SerializedPackets);
+            //JPackets = JArray.Parse(ja) ;
+            UnhashReplay(_serializer.Replay.SerializedPackets);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            _serializer = new ReplaySerializer();
         }
     }
 
-    public void UnhashReplay()
+    public void UnhashReplay(string filePath)
     {
         Task.Run(()=> _unhasher.UnhashReplay());
+    }
+    
+    public void UnhashReplay(List<SerializedPacket> packets)
+    {
+        Task.Run(() =>
+        {
+            var total = packets.Count;
+            var chunks = Math.Round(total * 0.05f, 0);
+            double trigger = 0;
+            double mark = chunks;
+            List<string> pktsjson = new();
+            Parallel.ForEach(packets, pkt =>
+            {
+                var p = JsonConvert.SerializeObject(pkt);
+                pktsjson.Add(_unhasher.Unhash(p));
+                if (trigger >= mark)
+                {
+                    Console.WriteLine($"{trigger}/{total}");
+                    mark += chunks;
+                }
+
+                trigger++;
+            });
+        });
+        return;
     }
 }

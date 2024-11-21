@@ -18,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private ReplayHandler _replayHandler = new();
 
     [ObservableProperty] private string? _fileText;
+    [ObservableProperty] private bool _isWorking;
     
     [RelayCommand]
     private void OpenLrf()
@@ -38,15 +39,15 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private void ParseReplay()
+    private async Task ParseReplay(CancellationToken token)
     {
-        
+        await Task.Run(()=> { _replayHandler.ParseReplay(FileText, ENetLeagueVersion.Patch420); }, token);
     }
 
     [RelayCommand]
-    private void UnhashReplay()
+    private async Task UnhashReplay(CancellationToken token)
     {
-        
+        await Task.Run(()=> { _replayHandler.UnhashReplay(FileText); }, token);
     }
     
      
@@ -56,28 +57,20 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            var fileservice = App.Current?.Services?.GetService<FilesService>();
-            if (fileservice is null)
+            var filesService = App.Current?.Services?.GetService<FilesService>();
+            if (filesService is null)
             {
                 throw new NullReferenceException("Missing File Service instance.");
             }
 
-            var file = await fileservice.OpenFileAsync(FileType.LRF);
+            var file = await filesService.OpenFileAsync(FileType.LRF);
             if (file is null)
             {
                 return;
             }
 
             FileText = file.Path.AbsolutePath;
-
             
-            
-            await Task.Run(()=>
-            {
-                _replayHandler.ParseReplay(FileText, ENetLeagueVersion.Patch420);
-                _replayHandler.UnhashReplay();
-            }, token);
-
             //await using var readStream = await file.OpenReadAsync();
             //using var reader = new StreamReader(readStream);
             //FileText = await reader.ReadToEndAsync(token);

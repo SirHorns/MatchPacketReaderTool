@@ -13,10 +13,12 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GUI
-build_property.ProjectDir = C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\GUI\
+build_property.ProjectDir = T:\usr\Documents\GitHub\MatchPacketReaderTool\GUI\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[C:/Users/bsthomas4/Documents/GitHub/MatchPacketReaderTool/GUI/App.axaml]
+[T:/usr/Documents/GitHub/MatchPacketReaderTool/GUI/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[C:/Users/bsthomas4/Documents/GitHub/MatchPacketReaderTool/GUI/Views/MainWindow.axaml]
+[T:/usr/Documents/GitHub/MatchPacketReaderTool/GUI/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

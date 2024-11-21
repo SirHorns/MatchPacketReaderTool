@@ -14,8 +14,12 @@
         <viewModels:MainWindowViewModel/>
     </Design.DataContext>
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button Command="{Binding OpenLrfFileCommand}" Content="Open .lrf"/>
+    <StackPanel VerticalAlignment="Center">
+        <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
+        
+        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding OpenLrfFileCommand}" Content="Open .lrf"/>
+        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
+        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
     </StackPanel>
 
 </Window>

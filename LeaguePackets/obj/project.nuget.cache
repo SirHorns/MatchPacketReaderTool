@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "9Ffzx6sK+X/L+ql332iDV2Ctj7B13qVbgQPPa6u5WKqi6+bkuxAL4MdjO55uh+rXzrjCaH+u0C5MEnUsk3odOQ==",
+  "dgSpecHash": "5a8u8KHBAUc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\bsthomas4\\Documents\\GitHub\\MatchPacketReaderTool\\LeaguePackets\\LeaguePackets.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "T:\\usr\\Documents\\GitHub\\MatchPacketReaderTool\\LeaguePackets\\LeaguePackets.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\bsthomas4\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.20\\microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
+    "C:\\Users\\bsthomas4\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.20\\microsoft.windowsdesktop.app.ref.7.0.20.nupkg.sha512",
+    "C:\\Users\\bsthomas4\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.20\\microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"
+  ],
   "logs": []
 }

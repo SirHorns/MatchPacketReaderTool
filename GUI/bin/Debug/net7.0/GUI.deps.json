@@ -1011,7 +1011,10 @@
       },
       "LeaguePackets/1.0.0": {
         "runtime": {
-          "LeaguePackets.dll": {}
+          "LeaguePackets.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "LeaguePacketsSerializer/1.0.0": {
@@ -1020,15 +1023,22 @@
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "LeaguePacketsSerializer.dll": {}
+          "LeaguePacketsSerializer.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "ReplayNamesUnhasher/1.0.0": {
         "dependencies": {
+          "LeaguePacketsSerializer": "1.0.0",
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "ReplayNamesUnhasher.dll": {}
+          "ReplayNamesUnhasher.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

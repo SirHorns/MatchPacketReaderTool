@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using LeaguePackets.LoadScreen;
@@ -11,6 +12,14 @@ namespace LeaguePackets
 {
     public abstract class BasePacket
     {
+        public string PacketType { get; set; }
+
+        public BasePacket()
+        {
+            var type = GetType();
+            PacketType = type.Name;
+        }
+
         public byte[] ExtraBytes { get; set; } = new byte[0];
 
         protected abstract void ReadHeader(ByteReader reader);

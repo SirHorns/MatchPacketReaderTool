@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = ReplayNamesUnhasher
-build_property.ProjectDir = C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ReplayNamesUnhasher\
+build_property.ProjectDir = T:\usr\Documents\GitHub\MatchPacketReaderTool\ReplayNamesUnhasher\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
