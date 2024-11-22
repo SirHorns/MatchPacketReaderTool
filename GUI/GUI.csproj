@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -33,5 +33,12 @@
       <ProjectReference Include="..\LeaguePacketsSerializer\LeaguePacketsSerializer.csproj" />
       <ProjectReference Include="..\LeaguePackets\LeaguePackets.csproj" />
       <ProjectReference Include="..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Update="SpectatorReplay_2715373.lrf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

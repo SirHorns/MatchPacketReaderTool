@@ -11,7 +11,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     {
         private BlowFish _blowfish;
 
-        public List<ENetPacket> Packets { get; } =  new List<ENetPacket>();
+        public List<ENetPacket> Packets { get; } =  new();
 
         public ChunkParserSpectator(byte[] key, int matchID)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,29 +8,15 @@ namespace LeaguePacketsSerializer.ReplayParser
 {
     public abstract class HttpProtocolHandler
     {
-        enum HttpState
-        {
-            Done,
-            GetText,
-            GetBinary,
-            ContinueText,
-            ContinueBinary,
-        }
-
         private HttpState _httpState = HttpState.Done;
-        private List<byte> _buffer = new List<byte>();
-        private long _bufferExpectedLength = 0;
+        private readonly List<byte> _buffer = new();
+        private long _bufferExpectedLength;
+        
+        private Regex RE_CONTENT_LEN = new("Content-Length: ([0-9]+)", RegexOptions.IgnoreCase);
 
-        public virtual void HandleTextPacket(string data, float time)
-        {
-
-        }
-
-        public virtual void HandleBinaryPacket(byte[] data, float time)
-        {
-
-        }
-
+        private byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
+        
+        
         public void Read(byte[] data, float time)
         {
             switch(_httpState)
@@ -87,7 +74,8 @@ namespace LeaguePacketsSerializer.ReplayParser
             {
                 throw new IOException("Buffer overrun!");
             }
-            else if (_buffer.Count == _bufferExpectedLength)
+            
+            if (_buffer.Count == _bufferExpectedLength)
             {
                 HandleTextPacket(Encoding.UTF8.GetString(_buffer.ToArray()), time);
                 _httpState = HttpState.Done;
@@ -95,114 +83,125 @@ namespace LeaguePacketsSerializer.ReplayParser
                 _bufferExpectedLength = 0;
             }
         }
-
-
+        
+        
         private void HandleDone(byte[] data, float time)
         {
-            if (data[0] == 'H' && data[1] == 'T' && data[2] == 'T' && data[3] == 'P')
+            var req = Encoding.UTF8.GetString(data).Split(' ');
+
+            var httpReq = req[0];
+            var replayReq = req[1];
+            
+            switch (httpReq)
             {
-                HandleHttp(data, time);
+                case "HTTP":
+                    HandleHttp(data, time);
+                    break;
+                case "GET":
+                    Get(replayReq);
+                    break;
+                case "POST":
+                    Console.WriteLine(replayReq);
+                    _httpState = HttpState.GetText;
+                    break;
+                case "HEAD":
+                case "OPTIONS":
+                    break;
+                default:
+                    Console.WriteLine(httpReq);
+                    Console.WriteLine("Bad Chunk?");
+                    break;
             }
-            else if (data[0] == 'G' && data[1] == 'E' && data[2] == 'T' && data[3] == ' ')
+        }
+
+        private void Get(string request)
+        {
+            // /observer-mode/rest/consumer/<api-call>/
+            if (request.Equals("\r\n"))
             {
-                var requestText = Encoding.UTF8.GetString(data);
-                if (requestText.Contains("\r\n"))
-                {
-                    _httpState = HttpState.Done;
-                }
-                else if (requestText.StartsWith("GET /observer-mode/rest/consumer/getGameDataChunk"))
-                {
+                _httpState = HttpState.Done;
+                return;
+            }
+            var api = request.Split("/");
+            switch (api[4])
+            {
+                case "version":
+                case "getGameMetaData":
+                case "getLastChunkInfo":
+                case "getKeyFrame":
+                    _httpState = HttpState.GetText;
+                    break;
+                case "getGameDataChunk":
                     _httpState = HttpState.GetBinary;
+                    break;
+                default:
+                    Console.WriteLine(request);
+                    break;
+            }
+        }
+        
+        private void HandleHttp(byte[] data, float time)
+        {
+            using var stream = new MemoryStream(data);
+            int index = 0;
+            int matchCount = 0;
+            for(; index < data.Length && matchCount != 4; index ++)
+            {
+                if(data[index] == HTTP_END[matchCount])
+                {
+                    matchCount++;
                 }
                 else
                 {
-                    _httpState = HttpState.GetText;
+                    matchCount = 0;
                 }
             }
-            else if (data[0] == 'P' && data[1] == 'O' && data[2] == 'S' && data[3] == 'T' && data[4] == ' ')
+            if(matchCount != 4)
             {
-                var requestText = Encoding.UTF8.GetString(data);
-                _httpState = HttpState.GetText;
+                throw new IOException("Failed to find http end in stream!");
             }
-            // HEAD
-            else if (data[0] == 'H' && data[1] == 'E' && data[2] == 'A' && data[3] == 'D' && data[4] == ' ')
-            {
 
+            using var binary = new BinaryReader(stream, Encoding.UTF8, true);
+            var http = Encoding.UTF8.GetString(binary.ReadExactBytes(index));
+            var contentLengthMatch = RE_CONTENT_LEN.Match(http);
+            if(!contentLengthMatch.Success)
+            {
+                return;
             }
-            // OPTIONS
-            else if (data[0] == 'O' && data[1] == 'P' && data[2] == 'T' && data[3] == 'I' && data[4] == 'O' && data[5] == 'N' && data[6] == 'S' && data[7] == ' ')
+            var contentLength = long.Parse(contentLengthMatch.Groups[1].Value);
+            var content = binary.ReadExactBytes((int)binary.BytesLeft());
+            if (!http.Contains("application/octet-stream"))
             {
-
+                if (content.Length < contentLength)
+                {
+                    _buffer.AddRange(content);
+                    _bufferExpectedLength = contentLength;
+                    _httpState = HttpState.ContinueText;
+                }
+                else
+                {
+                    HandleTextPacket(Encoding.UTF8.GetString(content), time);
+                }
             }
             else
             {
-                throw new IOException("Bad chunk start!");
-            }
-        }
-
-        private static readonly Regex RE_CONTENT_LEN = new Regex("Content-Length: ([0-9]+)", RegexOptions.IgnoreCase);
-
-        private static byte[] HTTP_END = new byte[]{ 0x0D, 0x0A, 0x0D, 0x0A };
-
-        private void HandleHttp(byte[] data, float time)
-        {
-            using (var stream = new MemoryStream(data))
-            {
-                int index = 0;
-                int matchCount = 0;
-                for(; index < data.Length && matchCount != 4; index ++)
+                if (content.Length < contentLength)
                 {
-                    if(data[index] == HTTP_END[matchCount])
-                    {
-                        matchCount++;
-                    }
-                    else
-                    {
-                        matchCount = 0;
-                    }
+                    _buffer.AddRange(content);
+                    _bufferExpectedLength = contentLength;
+                    _httpState = HttpState.ContinueBinary;
                 }
-                if(matchCount != 4)
-                {
-                    throw new IOException("Failed to find http end in stream!");
-                }
-                using (var binary = new BinaryReader(stream, Encoding.UTF8, true))
-                {
-                    var http = Encoding.UTF8.GetString(binary.ReadExactBytes(index));
-                    var contentLengthMatch = RE_CONTENT_LEN.Match(http);
-                    if(!contentLengthMatch.Success)
-                    {
-                        return;
-                    }
-                    var contentLength = long.Parse(contentLengthMatch.Groups[1].Value);
-                    var content = binary.ReadExactBytes((int)binary.BytesLeft());
-                    if (!http.Contains("application/octet-stream"))
-                    {
-                        if (content.Length < contentLength)
-                        {
-                            _buffer.AddRange(content);
-                            _bufferExpectedLength = contentLength;
-                            _httpState = HttpState.ContinueText;
-                        }
-                        else
-                        {
-                            HandleTextPacket(Encoding.UTF8.GetString(content), time);
-                        }
-                    }
-                    else
-                    {
-                        if (content.Length < contentLength)
-                        {
-                            _buffer.AddRange(content);
-                            _bufferExpectedLength = contentLength;
-                            _httpState = HttpState.ContinueBinary;
-                        }
-                        else
-                        { 
-                            HandleBinaryPacket(content, time);
-                        }
-                    }
+                else
+                { 
+                    HandleBinaryPacket(content, time);
                 }
             }
         }
+        
+        
+        
+        public virtual void HandleTextPacket(string data, float time) { }
+
+        public virtual void HandleBinaryPacket(byte[] data, float time) { }
     }
 }

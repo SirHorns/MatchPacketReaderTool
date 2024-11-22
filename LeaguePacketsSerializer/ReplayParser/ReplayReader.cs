@@ -10,18 +10,19 @@ namespace LeaguePacketsSerializer.ReplayParser
     {
         public Replay Replay { get; private set; }
 
-        public void Read(Stream stream, ENetLeagueVersion? enetLeagueVersion)
+        public Replay Read(Stream stream, ENetLeagueVersion? enetLeagueVersion)
         {
             using var reader = new BinaryReader(stream);
             
             // Basic header
             var bh = BasicHeader.Read(reader);
-
+            
+            
 
             if(bh.Unused == 'n' && bh.Version == 'f' && bh.Compressed == 'o' && bh.Reserved == '\0')
             {
                 Replay = Nfo(reader, bh);
-                return;
+                return Replay;
             } 
             
             Replay = new Replay()
@@ -79,6 +80,7 @@ namespace LeaguePacketsSerializer.ReplayParser
 
             Replay.Chunks = chunks;
             Replay.RawPackets = chunkParser.Packets;
+            return Replay;
         }
 
         

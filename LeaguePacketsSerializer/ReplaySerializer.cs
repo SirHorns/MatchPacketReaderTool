@@ -50,7 +50,7 @@ public class ReplaySerializer
         _version = version;
 
         Console.WriteLine("Reading file...");
-        _replayReader.Read(File.OpenRead(_filePath), _version);
+        _replay = _replayReader.Read(File.OpenRead(_filePath), _version);
         
         Console.WriteLine("Processing raw packets...");
         foreach (var rPacket in _replay.RawPackets)
@@ -75,6 +75,8 @@ public class ReplaySerializer
     private void PrintResults(Replay replay)
     {
         Console.WriteLine("[Processed]");
+        Console.WriteLine($"- Chunks: {replay.Chunks.Count}");
+        Console.WriteLine($"===Packets===");
         Console.WriteLine($"- Good: {replay.SerializedPackets.Count}");
         Console.WriteLine($"- Soft: {replay.SoftBadPackets.Count}");
         Console.WriteLine($"- Hard: {replay.HardBadPackets.Count}");
