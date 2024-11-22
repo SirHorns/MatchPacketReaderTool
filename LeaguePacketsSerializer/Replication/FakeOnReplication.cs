@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using LeaguePackets;
 
-namespace LeaguePacketsSerializer;
+namespace LeaguePacketsSerializer.Replication;
 
 public class FakeOnReplication
 {

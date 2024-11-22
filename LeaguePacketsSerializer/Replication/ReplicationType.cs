@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer;
+namespace LeaguePacketsSerializer.Replication;
 
 public enum ReplicationType
 {

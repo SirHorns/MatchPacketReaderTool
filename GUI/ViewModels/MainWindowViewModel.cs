@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ENetUnpack.ReplayParser;
 using GUI.Enums;
 using GUI.Models;
 using GUI.Services;
+using LeaguePacketsSerializer.ReplayParser;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GUI.ViewModels;

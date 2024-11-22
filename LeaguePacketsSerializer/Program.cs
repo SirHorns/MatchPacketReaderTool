@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LeaguePackets.Game;
-using GameServer.Enums;
-using ENetUnpack.ReplayParser;
+using LeaguePacketsSerializer.GameServer.Enums;
+using LeaguePacketsSerializer.Packets;
+using LeaguePacketsSerializer.ReplayParser;
+using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;
 
@@ -130,7 +132,7 @@ public class Program
         ReplayReader r = new ReplayReader();
         Console.WriteLine("Reading file...");
         JObject metadata = new JObject();
-        r.ReadPackets(File.OpenRead(fileName), version);
+        r.Read(File.OpenRead(fileName), version);
 
         Console.WriteLine("Writing meta data to file .metadata.json...");
         SerializeToFile(metadata, fileName + ".metadata.json");

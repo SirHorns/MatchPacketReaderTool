@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameServer.Enums
+namespace LeaguePacketsSerializer.GameServer.Enums
 {
     /// <summary>
     /// Enumerator containing all(?) possible spell flags found in spell data. Used in determining how a spell functions.

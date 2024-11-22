@@ -16,7 +16,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace ENetUnpack.ReplayParser
+namespace LeaguePacketsSerializer.ReplayParser
 {
     public class BlowFish
     {

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace ENetUnpack.ReplayParser
+namespace LeaguePacketsSerializer.ReplayParser
 {
     public abstract class HttpProtocolHandler
     {
@@ -135,8 +130,7 @@ namespace ENetUnpack.ReplayParser
 
             }
             // OPTIONS
-            else if (data[0] == 'O' && data[1] == 'P' && data[2] == 'T' && data[3] == 'I'
-                && data[4] == 'O' && data[5] == 'N' && data[6] == 'S' && data[7] == ' ')
+            else if (data[0] == 'O' && data[1] == 'P' && data[2] == 'T' && data[3] == 'I' && data[4] == 'O' && data[5] == 'N' && data[6] == 'S' && data[7] == ' ')
             {
 
             }

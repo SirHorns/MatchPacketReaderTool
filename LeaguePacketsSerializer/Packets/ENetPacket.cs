@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer;
+namespace LeaguePacketsSerializer.Packets;
 
 public class ENetPacket
 {

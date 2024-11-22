@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ENetUnpack.ReplayParser;
+namespace LeaguePacketsSerializer.ReplayParser;
 
 public class DataOffset
 {

@@ -1,9 +1,0 @@
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\bin\Debug\ENetUnpack.pdb
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\bin\Debug\Newtonsoft.Json.dll
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\bin\Debug\Newtonsoft.Json.xml
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\obj\Debug\ENetUnpack.csproj.AssemblyReference.cache
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\obj\Debug\ENetUnpack.csproj.CoreCompileInputs.cache
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\obj\Debug\ENetUnpack.csproj.CopyComplete
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\obj\Debug\ENetUnpack.pdb
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\bin\Debug\ENetUnpack.dll
-C:\Users\bsthomas4\Documents\GitHub\MatchPacketReaderTool\ENetUnpack\obj\Debug\ENetUnpack.dll

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ENetUnpack.ReplayParser;
 using LeaguePacketsSerializer;
+using LeaguePacketsSerializer.Packets;
+using LeaguePacketsSerializer.ReplayParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReplayUnhasher;
@@ -25,11 +26,11 @@ public class ReplayHandler
         
         try
         {
-            _serializer.Serialize(replayPath, version, true);
-            _packetArray = new string[_serializer.Replay.SerializedPackets.Count];
-            //var ja = JsonConvert.SerializeObject(_serializer.Replay.SerializedPackets);
+            var res= _serializer.Serialize(replayPath, version, true);
+            _packetArray = new string[res.SerializedPackets.Count];
+            //var ja = JsonConvert.SerializeObject(res.SerializedPackets);
             //JPackets = JArray.Parse(ja) ;
-            UnhashReplay(_serializer.Replay.SerializedPackets);
+            UnhashReplay(res.SerializedPackets);
         }
         catch (Exception e)
         {

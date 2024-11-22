@@ -1,6 +1,6 @@
 using System;
 
-namespace LeaguePacketsSerializer;
+namespace LeaguePacketsSerializer.Packets;
 
 [Flags]
 public enum ENetPacketFlags

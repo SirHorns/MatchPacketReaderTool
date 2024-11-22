@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LeaguePacketsSerializer;
+namespace LeaguePacketsSerializer.Replication;
 
 public class FakeReplicationData
 {

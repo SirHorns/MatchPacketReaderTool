@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ENetUnpack.ReplayParser;
-using GameServer.Enums;
 using LeaguePackets;
 using LeaguePackets.Game;
+using LeaguePacketsSerializer.GameServer.Enums;
+using LeaguePacketsSerializer.Packets;
+using LeaguePacketsSerializer.ReplayParser;
+using LeaguePacketsSerializer.Replication;
 using Newtonsoft.Json;
+using ENetPacket = LeaguePacketsSerializer.ReplayParser.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
@@ -24,8 +27,8 @@ public class ReplaySerializer
     private string _filePath;
     private ENetLeagueVersion _version;
 
-    private readonly ReplayReader _replayReader = new();
-    public Replay Replay => _replayReader.Replay;
+    private ReplayReader _replayReader = new();
+    private Replay _replay { get; set; }
 
     public ReplaySerializer()
     {
@@ -41,40 +44,45 @@ public class ReplaySerializer
         recording = false;
     }
 
-    public void Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420, bool writeToFile = false)
+    public Replay Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420, bool writeToFile = false)
     {
         _filePath = filePath;
         _version = version;
 
         Console.WriteLine("Reading file...");
-        _replayReader.ReadPackets(File.OpenRead(_filePath), _version);
+        _replayReader.Read(File.OpenRead(_filePath), _version);
         
         Console.WriteLine("Processing raw packets...");
-        foreach (var rPacket in Replay.RawPackets)
+        foreach (var rPacket in _replay.RawPackets)
         {
             ParsePacket(rPacket);
         }
         
         Console.WriteLine("Finished Serializing Replay!");
-        Console.WriteLine("[Processed]");
-        Console.WriteLine($"- Good: {Replay.SerializedPackets.Count}");
-        Console.WriteLine($"- Soft: {Replay.SoftBadPackets.Count}");
-        Console.WriteLine($"- Hard: {Replay.HardBadPackets.Count}");
-        Console.WriteLine(
-            $"Soft bad IDs:{string.Join(",", Replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
-        Console.WriteLine(
-            $"Hard bad IDs:{string.Join(",", Replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
-
-        if (!writeToFile)
+        _replay = _replayReader.Replay;
+        _replayReader = null;
+        
+        PrintResults(_replay);
+        
+        if (writeToFile)
         {
-            return;
+            SerializeToFile(_replay);
         }
         
-        Console.WriteLine("Writing Replay to json file...");
-        SerializeToFile(Replay, _filePath + ".json");
+        return _replay;
+    }
+
+    private void PrintResults(Replay replay)
+    {
+        Console.WriteLine("[Processed]");
+        Console.WriteLine($"- Good: {replay.SerializedPackets.Count}");
+        Console.WriteLine($"- Soft: {replay.SoftBadPackets.Count}");
+        Console.WriteLine($"- Hard: {replay.HardBadPackets.Count}");
+        Console.WriteLine($"Soft bad IDs:{string.Join(",", replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
+        Console.WriteLine($"Hard bad IDs:{string.Join(",", replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct())}");
     }
     
-    private void ParsePacket(ENetUnpack.ReplayParser.ENetPacket rPacket)
+    private void ParsePacket(ENetPacket rPacket)
     {
         if (rPacket.Channel >= 8)
         {
@@ -236,20 +244,21 @@ public class ReplaySerializer
         return packetToSerialize;
     }
 
-    private void SerializePacket(int rawId, object packetToSerialize, ENetUnpack.ReplayParser.ENetPacket rPacket)
+    private void SerializePacket(int rawId, object packetToSerialize, ENetPacket rPacket)
     {
         var pkt = new SerializedPacket
         {
             RawID = rawId,
+            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : null,
             Packet = packetToSerialize,
             Time = rPacket.Time,
-            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : null,
+            
             RawChannel = rPacket.Channel,
         };
-        Replay.SerializedPackets.Add(pkt);
+        _replay.SerializedPackets.Add(pkt);
     }
 
-    private void SoftBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, BasePacket packet)
+    private void SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)
     {
         var softBad = new BadPacket()
         {
@@ -258,10 +267,10 @@ public class ReplaySerializer
             RawChannel = rPacket.Channel,
             Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}"
         };
-        Replay.SoftBadPackets.Add(softBad);
+        _replay.SoftBadPackets.Add(softBad);
     }
 
-    private void SoftBadLoop(IGamePacketsList list, ENetUnpack.ReplayParser.ENetPacket rPacket)
+    private void SoftBadLoop(IGamePacketsList list, ENetPacket rPacket)
     {
         foreach (var packet2 in list.Packets)
         {
@@ -271,7 +280,7 @@ public class ReplaySerializer
             }
 
             var error = $"Extra bytes in {packet2.GetType().Name}: {Convert.ToBase64String(packet2.ExtraBytes)}";
-            Replay.SoftBadPackets.Add(new BadPacket()
+            _replay.SoftBadPackets.Add(new BadPacket()
             {
                 RawID = (int)packet2.ID,
                 Raw = rPacket.Bytes,
@@ -281,7 +290,7 @@ public class ReplaySerializer
         }
     }
 
-    private void HardBad(int rawId, ENetUnpack.ReplayParser.ENetPacket rPacket, Exception exception)
+    private void HardBad(int rawId, ENetPacket rPacket, Exception exception)
     {
         var hardBad = new BadPacket()
         {
@@ -290,7 +299,7 @@ public class ReplaySerializer
             RawChannel = rPacket.Channel,
             Error = exception.ToString(),
         };
-        Replay.HardBadPackets.Add(hardBad);
+        _replay.HardBadPackets.Add(hardBad);
     }
 
     private bool TryGet(int primaryId, int secondaryId, bool isFloat)
@@ -532,8 +541,7 @@ public class ReplaySerializer
         var s2 = $"type = {replicationType}; primaryId = {primaryId}; secondaryId = {secondaryId}";
         Console.WriteLine($"{s1}{s2}");
     }
-
-
+    
     private void SetReplicationType(BasePacket packet)
     {
         switch (packet)
@@ -573,13 +581,17 @@ public class ReplaySerializer
         }
     }
     
-    private static void SerializeToFile(object objectToWrite, string filePath)
+    private void SerializeToFile(Replay replay)
     {
-        using var fileStream = File.CreateText(filePath);
+        Console.WriteLine("Writing Replay to json file...");
+        Directory.CreateDirectory("ParsedReplay");
+        var path = $"ParsedReplay//{Path.GetFileNameWithoutExtension(_filePath)}.json";
+        
+        using var fileStream = File.CreateText(path);
         var jsonSerializer = new JsonSerializer
         {
             Formatting = Formatting.Indented
         };
-        jsonSerializer.Serialize(fileStream, objectToWrite);
+        jsonSerializer.Serialize(fileStream, replay);
     }
 }

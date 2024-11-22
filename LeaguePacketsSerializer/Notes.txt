@@ -1,0 +1,5 @@
+https://www.google.com/search?q=league+of+legends+replay+chunks&rlz=1C1GCEA_enUS1060US1065&oq=league+of+legends+replay+chunks&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQIRigATIHCAIQIRigATIHCAMQIRigATIHCAQQIRigAdIBCjE4NDMxMWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8
+https://github.com/ryancole/LeagueReplayReader/tree/master
+https://www.unknowncheats.me/forum/league-of-legends/431458-parsing-keyframes-chunks.html#google_vignette
+https://github.com/EloGank/lol-replay-downloader
+https://stackoverflow.com/questions/22827221/league-of-legends-read-chunks-keyframes-through-its-restful-api
