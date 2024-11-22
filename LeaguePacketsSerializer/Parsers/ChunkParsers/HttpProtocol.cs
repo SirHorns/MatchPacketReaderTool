@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using LeaguePacketsSerializer.Enums;
 
-namespace LeaguePacketsSerializer.ReplayParser
+namespace LeaguePacketsSerializer.Parsers.ChunkParsers
 {
     public abstract class HttpProtocolHandler
     {
@@ -15,10 +17,16 @@ namespace LeaguePacketsSerializer.ReplayParser
         private Regex RE_CONTENT_LEN = new("Content-Length: ([0-9]+)", RegexOptions.IgnoreCase);
 
         private byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
+
+        protected List<Chunk> _chunks = new List<Chunk>();
         
+        protected Chunk _currentChunk;
         
-        public void Read(byte[] data, float time)
+        protected void Read(DataSegment dataSegment)
         {
+            var data = dataSegment.Data; 
+            var time = dataSegment.Time;
+            
             switch(_httpState)
             {
                 case HttpState.GetBinary:
@@ -39,16 +47,21 @@ namespace LeaguePacketsSerializer.ReplayParser
             }
         }
 
-        private void HandleGetBinary(byte[] data, float time)
-        {
-            HandleBinaryPacket(data, time);
-            _httpState = HttpState.Done;
-        }
-
         private void HandleGetText(byte[] data, float time)
         {
-            HandleTextPacket(Encoding.UTF8.GetString(data), time);
+            var text = Encoding.UTF8.GetString(data);
+            _currentChunk.Json = text;
+            //HandleTextPacket(text, time);
             _httpState = HttpState.Done;
+            _chunks.Add(_currentChunk);
+        }
+        
+        private void HandleGetBinary(byte[] data, float time)
+        {
+            _currentChunk.Data = data;
+            HandleBinaryPacket(data, time);
+            _httpState = HttpState.Done;
+            _chunks.Add(_currentChunk);
         }
 
         private void HandleContinueBinary(byte[] data, float time)
@@ -62,6 +75,7 @@ namespace LeaguePacketsSerializer.ReplayParser
             {
                 HandleBinaryPacket(_buffer.ToArray(), time);
                 _httpState = HttpState.Done;
+                _chunks.Add(_currentChunk);
                 _buffer.Clear();
                 _bufferExpectedLength = 0;
             }
@@ -79,6 +93,7 @@ namespace LeaguePacketsSerializer.ReplayParser
             {
                 HandleTextPacket(Encoding.UTF8.GetString(_buffer.ToArray()), time);
                 _httpState = HttpState.Done;
+                _chunks.Add(_currentChunk);
                 _buffer.Clear();
                 _bufferExpectedLength = 0;
             }
@@ -87,15 +102,18 @@ namespace LeaguePacketsSerializer.ReplayParser
         
         private void HandleDone(byte[] data, float time)
         {
+            _currentChunk = new Chunk();
             var req = Encoding.UTF8.GetString(data).Split(' ');
 
             var httpReq = req[0];
             var replayReq = req[1];
+
+            _currentChunk.Http = replayReq;
             
             switch (httpReq)
             {
                 case "HTTP":
-                    HandleHttp(data, time);
+                    Http(data, time);
                     break;
                 case "GET":
                     Get(replayReq);
@@ -105,7 +123,10 @@ namespace LeaguePacketsSerializer.ReplayParser
                     _httpState = HttpState.GetText;
                     break;
                 case "HEAD":
+                    Head();
+                    break;
                 case "OPTIONS":
+                    Options();
                     break;
                 default:
                     Console.WriteLine(httpReq);
@@ -114,33 +135,7 @@ namespace LeaguePacketsSerializer.ReplayParser
             }
         }
 
-        private void Get(string request)
-        {
-            // /observer-mode/rest/consumer/<api-call>/
-            if (request.Equals("\r\n"))
-            {
-                _httpState = HttpState.Done;
-                return;
-            }
-            var api = request.Split("/");
-            switch (api[4])
-            {
-                case "version":
-                case "getGameMetaData":
-                case "getLastChunkInfo":
-                case "getKeyFrame":
-                    _httpState = HttpState.GetText;
-                    break;
-                case "getGameDataChunk":
-                    _httpState = HttpState.GetBinary;
-                    break;
-                default:
-                    Console.WriteLine(request);
-                    break;
-            }
-        }
-        
-        private void HandleHttp(byte[] data, float time)
+        private void Http(byte[] data, float time)
         {
             using var stream = new MemoryStream(data);
             int index = 0;
@@ -198,10 +193,40 @@ namespace LeaguePacketsSerializer.ReplayParser
             }
         }
         
-        
-        
-        public virtual void HandleTextPacket(string data, float time) { }
+        private void Get(string request)
+        {
+            // /observer-mode/rest/consumer/<api-call>/
+            if (request.Equals("\r\n"))
+            {
+                _httpState = HttpState.Done;
+                _chunks.Add(_currentChunk);
+                return;
+            }
+            var api = request.Split("/");
+            switch (api[4])
+            {
+                case "version":
+                case "getGameMetaData":
+                case "getLastChunkInfo":
+                case "getKeyFrame":
+                    _httpState = HttpState.GetText;
+                    break;
+                case "getGameDataChunk":
+                    _httpState = HttpState.GetBinary;
+                    break;
+                default:
+                    Console.WriteLine(request);
+                    break;
+            }
+        }
 
-        public virtual void HandleBinaryPacket(byte[] data, float time) { }
+        private void Head(){}
+        private void Options(){}
+        
+        
+
+        protected virtual void HandleTextPacket(string data, float time) { }
+
+        protected virtual void HandleBinaryPacket(byte[] data, float time) { }
     }
 }

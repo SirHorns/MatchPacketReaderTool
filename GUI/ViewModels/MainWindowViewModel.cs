@@ -8,17 +8,29 @@ using CommunityToolkit.Mvvm.Input;
 using GUI.Enums;
 using GUI.Models;
 using GUI.Services;
-using LeaguePacketsSerializer.ReplayParser;
+using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GUI.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    [ObservableProperty] private ReplayInfoVM _replayInfoVm;
+    
+    
     private ReplayHandler _replayHandler = new();
+    
+    
 
     [ObservableProperty] private string? _fileText;
     [ObservableProperty] private bool _isWorking;
+
+
+    public MainWindowViewModel()
+    {
+        ReplayInfoVm = new ReplayInfoVM();
+    }
+    
     
     [RelayCommand]
     private void OpenLrf()
@@ -35,19 +47,37 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenJson()
     {
-        
     }
     
     [RelayCommand]
     private async Task ParseReplay(CancellationToken token)
     {
-        await Task.Run(()=> { _replayHandler.ParseReplay(FileText, ENetLeagueVersion.Patch420); }, token);
+        if (string.IsNullOrEmpty(FileText))
+        {
+            return;
+        }
+        IsWorking = true;
+        await Task.Run(() =>
+        {
+            _replayHandler.ParseReplay(FileText, ENetLeagueVersion.Patch420);
+            ReplayInfoVm.Results = _replayHandler.Replay.ReplayResultInfo;
+        }, token);
+        IsWorking = false;
     }
 
     [RelayCommand]
     private async Task UnhashReplay(CancellationToken token)
     {
-        await Task.Run(()=> { _replayHandler.UnhashReplay(FileText); }, token);
+        if (string.IsNullOrEmpty(FileText))
+        {
+            return;
+        }
+        IsWorking = true;
+        await Task.Run(() =>
+        {
+            _replayHandler.UnhashReplay(FileText); 
+        }, token);
+        IsWorking = false;
     }
     
      

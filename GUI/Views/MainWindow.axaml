@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:GUI.ViewModels"
+        xmlns:controls="clr-namespace:GUI.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/sota-logo.ico"
+        Icon="/Assets/Images/sota-logo.ico"
         Title="GUI">
 
     <Design.DataContext>
@@ -15,11 +16,12 @@
     </Design.DataContext>
 
     <StackPanel VerticalAlignment="Center">
-        <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
-        
         <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding OpenLrfFileCommand}" Content="Open .lrf"/>
         <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
         <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
+        
+        <controls:ReplayInfo DataContext="{Binding ReplayInfoVm}"/>
+        <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
     </StackPanel>
 
 </Window>

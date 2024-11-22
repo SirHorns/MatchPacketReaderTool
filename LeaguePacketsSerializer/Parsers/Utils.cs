@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace LeaguePacketsSerializer.ReplayParser
+namespace LeaguePacketsSerializer.Parsers
 {
     public static class Utils
     {

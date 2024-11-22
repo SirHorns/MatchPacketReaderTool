@@ -5,12 +5,13 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
-namespace LeaguePacketsSerializer.ReplayParser;
+namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
 
 public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     {
         private BlowFish _blowfish;
 
+        public List<Chunk> Chunks => _chunks;
         public List<ENetPacket> Packets { get; } =  new();
 
         public ChunkParserSpectator(byte[] key, int matchID)
@@ -19,27 +20,29 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
 
             _blowfish = new BlowFish(keyBlowfish.Decrypt(key).Take(16).ToArray());
         }
-
-        public override void HandleBinaryPacket(byte[] data, float timeHttp)
+        
+        public void Parse(byte[] data)
         {
-            var decrypted = _blowfish.Decrypt(data);
-            using var decompressed = new MemoryStream();
-            using (var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress))
+            List<DataSegment> dataSegments = new List<DataSegment>();
+            // Read "chunks" from stream and hand them over to parser
+            using var chunksReader = new BinaryReader(new MemoryStream(data));
+            while (chunksReader.BaseStream.Position < chunksReader.BaseStream.Length)
             {
-                compressed.CopyTo(decompressed);
+                dataSegments.Add(DataSegment.Read(chunksReader));
             }
-            decompressed.Seek(0, SeekOrigin.Begin);
-            using (var reader = new BinaryReader(decompressed))
+            
+            foreach (var ds in dataSegments)
             {
-                ReadSpectatorChunks(reader);
+                Read(ds);
             }
         }
 
-        public void ReadSpectatorChunks(BinaryReader reader)
+        private void ReadSpectatorChunks(BinaryReader reader)
         {
-            float time = 0.0f;
+            var time = 0.0f;
             byte packetType = 0;
-            int blockparam = 0;
+            var blockParam = 0;
+            
             while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
                 byte marker = reader.ReadByte();
@@ -72,31 +75,47 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
                 
                 if ((flags & 0x2) == 0)
                 {
-                    blockparam = reader.ReadInt32();
+                    blockParam = reader.ReadInt32();
                 }
                 else
                 {
-                    blockparam += reader.ReadByte();
+                    blockParam += reader.ReadByte();
                 }
                 
                 var packetData = reader.ReadExactBytes(length);
-                AddPacket(packetType, channel, blockparam, packetData, time);
+                AddPacket(packetType, channel, blockParam, packetData, time);
             }
         }
-
-
+        
         private void AddPacket(byte packetType, byte channel, int blockParam, byte[] data, float time)
         {
-            var buffer = new List<byte>();
-            buffer.Add(packetType);
+            var buffer = new List<byte> { packetType };
             buffer.AddRange(BitConverter.GetBytes(blockParam));
             buffer.AddRange(data);
-            Packets.Add(new ENetPacket
+            var pkt = new ENetPacket
             {
                 Channel = channel,
                 Bytes = buffer.ToArray(),
                 Flags = ENetPacketFlags.None,
                 Time = time,
-            });
+            };
+            Packets.Add(pkt);
+            _currentChunk.ENetPackets.Add(pkt);
+        }
+
+
+        protected override void HandleBinaryPacket(byte[] data, float timeHttp)
+        {
+            var decrypted = _blowfish.Decrypt(data);
+            using var decompressed = new MemoryStream();
+            using (var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress))
+            {
+                compressed.CopyTo(decompressed);
+            }
+            decompressed.Seek(0, SeekOrigin.Begin);
+            using (var reader = new BinaryReader(decompressed))
+            {
+                ReadSpectatorChunks(reader);
+            }
         }
     }

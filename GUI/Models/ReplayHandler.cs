@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LeaguePacketsSerializer;
 using LeaguePacketsSerializer.Packets;
-using LeaguePacketsSerializer.ReplayParser;
+using LeaguePacketsSerializer.Parsers;
+using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReplayUnhasher;
@@ -16,6 +17,7 @@ public class ReplayHandler
     private Unhasher _unhasher = new();
     private string[] _packetArray;
     public JArray JPackets { get; private set; }
+    public Replay Replay { get; private set; }
 
     public void ParseReplay(string replayPath, ENetLeagueVersion version, bool writeToFile = false)
     {
@@ -31,6 +33,7 @@ public class ReplayHandler
             //var ja = JsonConvert.SerializeObject(res.SerializedPackets);
             //JPackets = JArray.Parse(ja) ;
             UnhashReplay(res.SerializedPackets);
+            Replay = res;
         }
         catch (Exception e)
         {

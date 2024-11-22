@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace LeaguePacketsSerializer.ReplayParser;
+namespace LeaguePacketsSerializer.Parsers;
 
 public class MetaData
 {

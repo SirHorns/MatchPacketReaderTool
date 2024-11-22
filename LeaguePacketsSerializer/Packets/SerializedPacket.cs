@@ -16,5 +16,5 @@ public class SerializedPacket
 
     
     public float Time { get; set; }
-    public object Packet { get; set; }
+    public object Data { get; set; }
 }

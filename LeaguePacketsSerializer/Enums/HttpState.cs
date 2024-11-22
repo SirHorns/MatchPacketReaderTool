@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer.ReplayParser;
+namespace LeaguePacketsSerializer.Enums;
 
 public enum HttpState
 {

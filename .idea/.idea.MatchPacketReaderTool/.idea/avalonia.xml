@@ -4,8 +4,11 @@
     <option name="projectPerEditor">
       <map>
         <entry key="App.axaml" value="MatchPacketReaderTool.csproj" />
+        <entry key="GUI/App.axaml" value="GUI/GUI.csproj" />
+        <entry key="GUI/Controls/ReplayInfo.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Views/KeyCheck.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Views/MainWindow.axaml" value="GUI/GUI.csproj" />
+        <entry key="GUI/Views/ReplayInfo.axaml" value="GUI/GUI.csproj" />
         <entry key="Icons.axaml" value="MatchPacketReaderTool.csproj" />
         <entry key="MatchPacketReaderTool/Views/MainWindow.axaml" value="MatchPacketReaderTool/MatchPacketReaderTool.csproj" />
         <entry key="Views/FilterView.axaml" value="MatchPacketReaderTool.csproj" />

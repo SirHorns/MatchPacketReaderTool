@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace LeaguePacketsSerializer.ReplayParser
+namespace LeaguePacketsSerializer.Parsers.ChunkParsers
 {
 
     [Flags]

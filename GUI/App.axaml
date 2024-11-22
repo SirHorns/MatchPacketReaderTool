@@ -12,4 +12,8 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+             
+    <Application.Resources>
+        <FontFamily x:Key="KanitFont">Assets/Fonts#Kanit</FontFamily>
+    </Application.Resources>
 </Application>

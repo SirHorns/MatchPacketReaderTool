@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeaguePacketsSerializer.ReplayParser
+namespace LeaguePacketsSerializer.Parsers
 {
     // BDO starts for Black Desert online
     public static class BDODecompress
@@ -12,7 +12,7 @@ namespace LeaguePacketsSerializer.ReplayParser
             public int Length { get; private set; }
             public Command(byte[] input, int inputIndex)
             {
-                uint raw = BitConverter.ToUInt32(input, inputIndex);
+                var raw = BitConverter.ToUInt32(input, inputIndex);
                 switch(raw & 0x03)
                 {
                     case 0:

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace LeaguePacketsSerializer.ReplayParser;
+namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
 
 public class ChunkParserENet : ENetProtocolHandler, IChunkParser
     {
         private ENetLeagueVersion _enetLeagueVersion;
         private BlowFish _blowfish;
 
+        public List<DataSegment> DataSegments { get; } = new List<DataSegment>();
+        public List<Chunk> Chunks { get; } = new List<Chunk>();
         public List<ENetPacket> Packets { get; } = new List<ENetPacket>();
 
         public ChunkParserENet(ENetLeagueVersion eNetLeagueVersion, byte[] key)
@@ -214,11 +216,25 @@ public class ChunkParserENet : ENetProtocolHandler, IChunkParser
             return true;
         }
 
-        public void Read(byte[] data, float time)
+        private void Read(byte[] data, float time)
         {
-            using(var reader = new BinaryReader(new MemoryStream(data)))
+            using var reader = new BinaryReader(new MemoryStream(data));
+            Read(reader, time, _enetLeagueVersion);
+        }
+
+        public void Parse(byte[] data)
+        {
+            // Read "chunks" from stream and hand them over to parser
+            using var chunksReader = new BinaryReader(new MemoryStream(data));
+            while (chunksReader.BaseStream.Position < chunksReader.BaseStream.Length)
             {
-                Read(reader, time, _enetLeagueVersion);
+                var chunk = DataSegment.Read(chunksReader);
+                DataSegments.Add(chunk);
+            }
+
+            foreach (var chunk in DataSegments)
+            {
+                Read(chunk.Data, chunk.Time);
             }
         }
     }

@@ -8,7 +8,8 @@ using System.Linq;
 using LeaguePackets.Game;
 using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Packets;
-using LeaguePacketsSerializer.ReplayParser;
+using LeaguePacketsSerializer.Parsers;
+using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;
@@ -279,7 +280,7 @@ public class Program
                     serializedPackets.Add(new SerializedPacket
                     {
                         RawID = rawID,
-                        Packet = packetToSerialize,
+                        Data = packetToSerialize,
                         Time = rPacket.Time,
                         ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : (ChannelID?)null,
                         RawChannel = rPacket.Channel,

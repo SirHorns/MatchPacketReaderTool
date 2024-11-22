@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace LeaguePacketsSerializer.ReplayParser;
+namespace LeaguePacketsSerializer.Parsers;
 
 public class BasicHeader
 {

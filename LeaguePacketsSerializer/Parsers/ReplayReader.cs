@@ -2,9 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Newtonsoft.Json;
 
-namespace LeaguePacketsSerializer.ReplayParser
+namespace LeaguePacketsSerializer.Parsers
 {
     public class ReplayReader
     {
@@ -63,22 +64,8 @@ namespace LeaguePacketsSerializer.ReplayParser
             {                    
                 chunkParser = new ChunkParserENet(eNetLeagueVersion, Replay.MetaData.EncryptionKey);
             }
-
-            var chunks = new List<Chunk>();
-            
-            // Read "chunks" from stream and hand them over to parser
-            using (var chunksReader = new BinaryReader(new MemoryStream(data)))
-            {
-                while (chunksReader.BaseStream.Position < chunksReader.BaseStream.Length)
-                {
-                    var chunk = Chunk.Read(chunksReader);
-                    chunks.Add(chunk);
-                    chunkParser.Read(chunk.Data, chunk.Time);
-                    chunk.Pad = chunksReader.ReadByte();
-                }
-            }
-
-            Replay.Chunks = chunks;
+            chunkParser.Parse(data);
+            Replay.Chunks = chunkParser.Chunks;
             Replay.RawPackets = chunkParser.Packets;
             return Replay;
         }

@@ -6,7 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <ApplicationIcon>Assets\sota-logo.ico</ApplicationIcon>
+        <ApplicationIcon>Assets\Images\sota-logo.ico</ApplicationIcon>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,16 +15,16 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.6" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
+        <PackageReference Include="Avalonia" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.1" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview2" />
         <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
@@ -40,5 +40,36 @@
       <None Update="SpectatorReplay_2715373.lrf">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Update="Controls\ReplayInfo.axaml.cs">
+        <DependentUpon>ReplayInfo.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Black.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-BlackItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Bold.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-BoldItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-ExtraBold.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-ExtraBoldItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-ExtraLight.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-ExtraLightItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Italic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Light.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-LightItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Medium.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-MediumItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Regular.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-SemiBold.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-SemiBoldItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-Thin.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\Kanit-ThinItalic.ttf" />
+      <UpToDateCheckInput Remove="Assets\Fonts\GoogleFonts\Kanit\OFL.txt" />
     </ItemGroup>
 </Project>
