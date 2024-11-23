@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GUI.ViewModels"
+             x:DataType="vm:ChunkVM"
+             x:Class="GUI.Controls.SpectatorChunk">
+    
+    <StackPanel>
+        
+        <TextBox IsEnabled="False" Text="{Binding SelectedChunk.Json}"></TextBox>
+        
+    </StackPanel>
+    
+</UserControl>

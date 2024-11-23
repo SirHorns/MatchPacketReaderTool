@@ -116,7 +116,7 @@ public class Unhasher
     public string Unhash(String json)
     {
         var token = JToken.Parse(json);
-        var packetInfo = token.SelectToken("Packet").ToArray();
+        var packetInfo = token.SelectToken("Data").ToArray();
 
         for (var i = 0; i < packetInfo.Count(); i++)
         {

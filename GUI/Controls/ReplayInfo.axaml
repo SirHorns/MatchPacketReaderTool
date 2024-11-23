@@ -2,12 +2,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:GUI.ViewModels"
              x:Class="GUI.Controls.ReplayInfo"
-             x:DataType="vm:ReplayInfoVM">
-    <StackPanel>
+             x:DataType="vm:ReplayInfoVM"
+             Width="150"
+             Height="300">
+    
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock
             FontSize="15"
             FontFamily="{StaticResource KanitFont}"  
             Text="== Replay Info =="/>
+        
+        <StackPanel Orientation="Horizontal">
+            <TextBlock 
+                FontSize="15"
+                FontFamily="{StaticResource KanitFont}"
+                Text="Chunks: "/>
+            <TextBlock Text="{Binding Results.Chunks}"/>
+        </StackPanel>
+        
         <Grid
             RowDefinitions="40, 40 , 40, 40" 
             ColumnDefinitions="Auto,Auto">

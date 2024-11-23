@@ -21,7 +21,7 @@ public class Replay
     
     [JsonProperty("Results")]
 
-    public ReplayResultInfo ReplayResultInfo { get; internal set; }
+    public ReplayInfo Info { get; internal set; }
 
     [JsonIgnore]
     public List<ENetPacket> RawPackets { get; set; }

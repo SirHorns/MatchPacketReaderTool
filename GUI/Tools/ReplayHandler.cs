@@ -17,7 +17,7 @@ public class ReplayHandler
     private Unhasher _unhasher = new();
     private string[] _packetArray;
     public JArray JPackets { get; private set; }
-    public Replay Replay { get; private set; }
+    public Replay? Replay { get; private set; }
 
     public void ParseReplay(string replayPath, ENetLeagueVersion version, bool writeToFile = false)
     {

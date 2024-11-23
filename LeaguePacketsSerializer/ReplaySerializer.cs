@@ -14,7 +14,7 @@ using ENetPacket = LeaguePacketsSerializer.Parsers.ChunkParsers.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
-public record ReplayResultInfo(int Chunks, int Good, int Soft, int Hard, string SoftBadIds, string HardBadIds);
+public record ReplayInfo(int Chunks, int Good, int Soft, int Hard, string SoftBadIds, string HardBadIds);
 
 public class ReplaySerializer
 {
@@ -65,7 +65,7 @@ public class ReplaySerializer
         _replay = _replayReader.Replay;
         _replayReader = null;
         
-        _replay.ReplayResultInfo = PrintResults(_replay);
+        _replay.Info = PrintResults(_replay);
         
         if (writeToFile)
         {
@@ -588,9 +588,9 @@ public class ReplaySerializer
         jsonSerializer.Serialize(fileStream, replay);
     }
     
-    private ReplayResultInfo PrintResults(Replay replay)
+    private ReplayInfo PrintResults(Replay replay)
     {
-        var info = new ReplayResultInfo(
+        var info = new ReplayInfo(
             replay.Chunks.Count, 
             replay.SerializedPackets.Count, 
             replay.SoftBadPackets.Count,

@@ -1,11 +1,10 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:GUI.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:GUI.ViewModels"
         xmlns:controls="clr-namespace:GUI.Controls"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="1280"
+        Height="720"
         x:Class="GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/Images/sota-logo.ico"
@@ -15,13 +14,18 @@
         <viewModels:MainWindowViewModel/>
     </Design.DataContext>
 
-    <StackPanel VerticalAlignment="Center">
-        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding OpenLrfFileCommand}" Content="Open .lrf"/>
-        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
-        <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
-        
-        <controls:ReplayInfo DataContext="{Binding ReplayInfoVm}"/>
-        <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding SelectReplayFileCommand}" Content="Open .lrf"/>
+                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
+                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
+            </StackPanel>
+            <controls:ReplayInfo DataContext="{Binding ReplayInfoVm}"/>
+            <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
+        </StackPanel>
     </StackPanel>
+    
+    
 
 </Window>

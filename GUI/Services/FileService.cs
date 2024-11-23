@@ -15,7 +15,7 @@ public class FilesService
         _target = target;
     }
 
-    public async Task<IStorageFile?> OpenFileAsync(FileType type)
+    internal async Task<IStorageFile?> OpenReplayFileAsync(FileType type)
     {
         var fpo = new FilePickerOpenOptions()
         {
@@ -26,13 +26,13 @@ public class FilesService
         switch (type)
         {
             case FileType.LRF:
-                fpo.FileTypeFilter = new FilePickerFileType[] { new(".lrf") { Patterns = new[] { "*.lrf" } } };
+                fpo.FileTypeFilter = [new FilePickerFileType(".lrf") { Patterns = ["*.lrf"] }];
                 break;
             case FileType.RLRF:
-                fpo.FileTypeFilter = new FilePickerFileType[] { new(".plrf") { Patterns = new[] { "*.plrf" } } };
+                fpo.FileTypeFilter = [new FilePickerFileType(".plrf") { Patterns = ["*.plrf"] }];
                 break;
             case FileType.JSON:
-                fpo.FileTypeFilter = new FilePickerFileType[] { new(".json") { Patterns = new[] { "*.json" } } };
+                fpo.FileTypeFilter = [new FilePickerFileType(".json") { Patterns = ["*.json"] }];
                 break;
             default:
                 return null;
@@ -43,7 +43,7 @@ public class FilesService
         return files.Count >= 1 ? files[0] : null;
     }
     
-    public async Task<IStorageFile?> OpenPlrfAsync()
+    internal async Task<IStorageFile?> OpenPlrfAsync()
     {
         var files = await _target.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
@@ -61,7 +61,7 @@ public class FilesService
         return files.Count >= 1 ? files[0] : null;
     }
 
-    public async Task<IStorageFile?> SaveFileAsync()
+    internal async Task<IStorageFile?> SaveFileAsync()
     {
         return await _target.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {

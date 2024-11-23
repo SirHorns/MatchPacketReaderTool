@@ -5,5 +5,5 @@ namespace GUI.ViewModels;
 
 public partial class ReplayInfoVM: ViewModelBase
 {
-    [ObservableProperty] private ReplayResultInfo _results;
+    [ObservableProperty] private ReplayInfo _results;
 }

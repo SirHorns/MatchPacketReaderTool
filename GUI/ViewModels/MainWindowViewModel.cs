@@ -16,74 +16,22 @@ namespace GUI.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private ReplayInfoVM _replayInfoVm;
-    
-    
-    private ReplayHandler _replayHandler = new();
-    
-    
-
-    [ObservableProperty] private string? _fileText;
     [ObservableProperty] private bool _isWorking;
 
 
+    [ObservableProperty] private ReplayModel _replayModel;
+
+    private readonly ReplayHandler _replayHandler;
+    
     public MainWindowViewModel()
     {
         ReplayInfoVm = new ReplayInfoVM();
-    }
-    
-    
-    [RelayCommand]
-    private void OpenLrf()
-    {
-        
+        _replayHandler = new ReplayHandler();
+        ReplayModel = new ReplayModel();
     }
     
     [RelayCommand]
-    private void OpenPlrf()
-    {
-        
-    }
-
-    [RelayCommand]
-    private void OpenJson()
-    {
-    }
-    
-    [RelayCommand]
-    private async Task ParseReplay(CancellationToken token)
-    {
-        if (string.IsNullOrEmpty(FileText))
-        {
-            return;
-        }
-        IsWorking = true;
-        await Task.Run(() =>
-        {
-            _replayHandler.ParseReplay(FileText, ENetLeagueVersion.Patch420);
-            ReplayInfoVm.Results = _replayHandler.Replay.ReplayResultInfo;
-        }, token);
-        IsWorking = false;
-    }
-
-    [RelayCommand]
-    private async Task UnhashReplay(CancellationToken token)
-    {
-        if (string.IsNullOrEmpty(FileText))
-        {
-            return;
-        }
-        IsWorking = true;
-        await Task.Run(() =>
-        {
-            _replayHandler.UnhashReplay(FileText); 
-        }, token);
-        IsWorking = false;
-    }
-    
-     
-
-    [RelayCommand]
-    private async Task OpenLrfFile(CancellationToken token)
+    private async Task SelectReplayFile(CancellationToken token)
     {
         try
         {
@@ -93,22 +41,55 @@ public partial class MainWindowViewModel : ViewModelBase
                 throw new NullReferenceException("Missing File Service instance.");
             }
 
-            var file = await filesService.OpenFileAsync(FileType.LRF);
+            var file = await filesService.OpenReplayFileAsync(FileType.LRF);
             if (file is null)
             {
                 return;
             }
 
-            FileText = file.Path.AbsolutePath;
-            
-            //await using var readStream = await file.OpenReadAsync();
-            //using var reader = new StreamReader(readStream);
-            //FileText = await reader.ReadToEndAsync(token);
+            ReplayModel.FilePath = file.Path.AbsolutePath;
         }
         catch (Exception e)
         {
-            //ignore
+            Console.WriteLine(e);
         }
+    }
+    
+    [RelayCommand]
+    private async Task ParseReplay(CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(ReplayModel.FilePath))
+        {
+            return;
+        }
+        IsWorking = true;
+        await Task.Run(() =>
+        {
+            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420);
+            if (_replayHandler.Replay is null)
+            {
+                return;
+            }
+            ReplayInfoVm.Results = _replayHandler.Replay.Info;
+            ReplayModel.Replay = _replayHandler.Replay;
+        }, token);
+        
+        IsWorking = false;
+    }
+
+    [RelayCommand]
+    private async Task UnhashReplay(CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(ReplayModel.FilePath))
+        {
+            return;
+        }
+        IsWorking = true;
+        await Task.Run(() =>
+        {
+            _replayHandler.UnhashReplay(ReplayModel.FilePath); 
+        }, token);
+        IsWorking = false;
     }
 
     [RelayCommand]
@@ -124,9 +105,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
 
             // Limit the text file to 1MB so that the demo wont lag.
-            if (FileText?.Length <= 1024 * 1024 * 1)
+            if (ReplayModel.FilePath?.Length <= 1024 * 1024 * 1)
             {
-                var stream = new MemoryStream(Encoding.Default.GetBytes((string)FileText));
+                var stream = new MemoryStream(Encoding.Default.GetBytes((string)ReplayModel.FilePath));
                 await using var writeStream = await file.OpenWriteAsync();
                 await stream.CopyToAsync(writeStream);
             }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using LeaguePacketsSerializer.Parsers.ChunkParsers;
 
-namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
+namespace LeaguePacketsSerializer.Parsers;
 
 public class Chunk
 {
