@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReplayUnhasher;
 
-namespace GUI.Models;
+namespace GUI.Tools;
 
 public class ReplayHandler
 {
@@ -28,7 +28,7 @@ public class ReplayHandler
         
         try
         {
-            var res= _serializer.Serialize(replayPath, version, true);
+            var res= _serializer.Serialize(replayPath, version, writeToFile);
             _packetArray = new string[res.SerializedPackets.Count];
             //var ja = JsonConvert.SerializeObject(res.SerializedPackets);
             //JPackets = JArray.Parse(ja) ;
@@ -42,6 +42,14 @@ public class ReplayHandler
         }
     }
 
+    public void UnhashReplay()
+    {
+        Task.Run(() =>
+        {
+            
+        });
+    }
+    
     public void UnhashReplay(string filePath)
     {
         Task.Run(()=> _unhasher.UnhashReplay());
@@ -62,7 +70,7 @@ public class ReplayHandler
                 pktsjson.Add(_unhasher.Unhash(p));
                 if (trigger >= mark)
                 {
-                    Console.WriteLine($"{trigger}/{total}");
+                    //Console.WriteLine($"{trigger}/{total}");
                     mark += chunks;
                 }
 

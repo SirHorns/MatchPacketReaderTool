@@ -295,6 +295,8 @@ public class ReplaySerializer
         _replay.HardBadPackets.Add(hardBad);
     }
 
+    
+    
     private bool TryGet(int primaryId, int secondaryId, bool isFloat)
     {
         //TODO: value.isFloat != isFloat

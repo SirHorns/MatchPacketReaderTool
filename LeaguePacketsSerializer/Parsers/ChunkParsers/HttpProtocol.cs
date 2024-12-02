@@ -22,10 +22,10 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
         
         protected Chunk _currentChunk;
         
-        protected void Read(DataSegment dataSegment)
+        protected void Read(DataSegment segment)
         {
-            var data = dataSegment.Data; 
-            var time = dataSegment.Time;
+            var data = segment.Data; 
+            var time = segment.Time;
             
             switch(_httpState)
             {
@@ -43,6 +43,9 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     break;
                 case HttpState.ContinueText:
                     HandleContinueText(data, time);
+                    break;
+                default:
+                    // ignore
                     break;
             }
         }
@@ -71,14 +74,17 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             {
                 throw new IOException("Buffer overrun!");
             }
-            else if(_buffer.Count == _bufferExpectedLength)
+
+            if (_buffer.Count != _bufferExpectedLength)
             {
-                HandleBinaryPacket(_buffer.ToArray(), time);
-                _httpState = HttpState.Done;
-                _chunks.Add(_currentChunk);
-                _buffer.Clear();
-                _bufferExpectedLength = 0;
+                return;
             }
+            
+            HandleBinaryPacket(_buffer.ToArray(), time);
+            _httpState = HttpState.Done;
+            _chunks.Add(_currentChunk);
+            _buffer.Clear();
+            _bufferExpectedLength = 0;
         }
 
         private void HandleContinueText(byte[] data, float time)
@@ -88,15 +94,17 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             {
                 throw new IOException("Buffer overrun!");
             }
-            
-            if (_buffer.Count == _bufferExpectedLength)
+
+            if (_buffer.Count != _bufferExpectedLength)
             {
-                HandleTextPacket(Encoding.UTF8.GetString(_buffer.ToArray()), time);
-                _httpState = HttpState.Done;
-                _chunks.Add(_currentChunk);
-                _buffer.Clear();
-                _bufferExpectedLength = 0;
+                return;
             }
+            
+            HandleTextPacket(Encoding.UTF8.GetString(_buffer.ToArray()), time);
+            _httpState = HttpState.Done;
+            _chunks.Add(_currentChunk);
+            _buffer.Clear();
+            _bufferExpectedLength = 0;
         }
         
         
@@ -119,7 +127,7 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     Get(replayReq);
                     break;
                 case "POST":
-                    Console.WriteLine(replayReq);
+                    Console.WriteLine($"Http POST?: \n {replayReq}" );
                     _httpState = HttpState.GetText;
                     break;
                 case "HEAD":
@@ -138,8 +146,8 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
         private void Http(byte[] data, float time)
         {
             using var stream = new MemoryStream(data);
-            int index = 0;
-            int matchCount = 0;
+            var index = 0;
+            var matchCount = 0;
             for(; index < data.Length && matchCount != 4; index ++)
             {
                 if(data[index] == HTTP_END[matchCount])
@@ -215,13 +223,20 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     _httpState = HttpState.GetBinary;
                     break;
                 default:
-                    Console.WriteLine(request);
+                    Console.WriteLine($"Where did this GET come from?: \n {request}");
                     break;
             }
         }
 
-        private void Head(){}
-        private void Options(){}
+        private void Head()
+        {
+            // ignore
+        }
+
+        private void Options()
+        {
+            // ignore
+        }
         
         
 

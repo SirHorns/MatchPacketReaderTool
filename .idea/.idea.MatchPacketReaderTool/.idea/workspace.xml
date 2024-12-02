@@ -12,24 +12,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="lotsa work">
-      <change afterPath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Models/ChunkModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Models/PacketModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/Models/ReplayModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GUI/ViewModels/ChunkVM.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/Controls/ReplayInfo.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/ReplayInfo.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Models/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Services/FileService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Services/FileService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserSpectator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserSpectator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/DataSegment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/DataSegment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +43,7 @@
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/SirHorns/MatchPacketReaderTool.git",
-    "accountId": "d1192b13-801b-4d7c-9ee0-d018c5120e2a"
+    "accountId": "b5a2f5c8-fd68-49dc-96c7-4eb28708ca48"
   }
 }]]></component>
   <component name="HighlightingSettingsPerFile">
@@ -83,12 +75,13 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.GUI.executor": "Run",
+    ".NET Project.GUI.executor": "Debug",
     ".NET Project.Serializer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.53450054",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
@@ -190,6 +183,7 @@
       <workItem from="1732223259029" duration="10247000" />
       <workItem from="1732252213283" duration="5525000" />
       <workItem from="1732293156696" duration="24186000" />
+      <workItem from="1733113161453" duration="5899000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <option name="closed" value="true" />
@@ -220,5 +214,24 @@
     <MESSAGE value="commit" />
     <MESSAGE value="lotsa work" />
     <option name="LAST_COMMIT_MESSAGE" value="lotsa work" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs</url>
+          <line>29</line>
+          <properties documentPath="C:\Users\Valkyrie\Documents\Projects\LoL\MatchPacketReaderTool\LeaguePacketsSerializer\Parsers\ChunkParsers\HttpProtocol.cs" containingFunctionPresentation="Method 'Read'">
+            <startOffsets>
+              <option value="896" />
+            </startOffsets>
+            <endOffsets>
+              <option value="914" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

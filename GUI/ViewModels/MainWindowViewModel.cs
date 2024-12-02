@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using GUI.Enums;
 using GUI.Models;
 using GUI.Services;
+using GUI.Tools;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,10 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private ReplayInfoVM _replayInfoVm;
     [ObservableProperty] private bool _isWorking;
-
-
     [ObservableProperty] private ReplayModel _replayModel;
-
     private readonly ReplayHandler _replayHandler;
     
     public MainWindowViewModel()
@@ -29,6 +27,15 @@ public partial class MainWindowViewModel : ViewModelBase
         _replayHandler = new ReplayHandler();
         ReplayModel = new ReplayModel();
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     [RelayCommand]
     private async Task SelectReplayFile(CancellationToken token)
@@ -70,7 +77,9 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 return;
             }
-            ReplayInfoVm.Results = _replayHandler.Replay.Info;
+
+            var info = _replayHandler.Replay.Info;
+            ReplayInfoVm.SetResults(info);
             ReplayModel.Replay = _replayHandler.Replay;
         }, token);
         

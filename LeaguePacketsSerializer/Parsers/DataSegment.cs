@@ -9,12 +9,12 @@ public class DataSegment
     public byte[] Data { get; private init; }
     public byte Pad { get; private init; }
 
-    public static DataSegment Read(BinaryReader chunksReader)
+    public static DataSegment Read(BinaryReader reader)
     {
-        var t = chunksReader.ReadSingle();
-        var l = chunksReader.ReadInt32();
-        var d = chunksReader.ReadExactBytes(l);
-        var p = chunksReader.ReadByte();
+        var t = reader.ReadSingle();
+        var l = reader.ReadInt32();
+        var d = reader.ReadExactBytes(l);
+        var p = reader.ReadByte();
         
         return new DataSegment()
         {

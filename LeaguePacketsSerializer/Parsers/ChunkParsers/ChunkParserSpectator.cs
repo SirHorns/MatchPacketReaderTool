@@ -23,17 +23,17 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         
         public void Parse(byte[] data)
         {
-            List<DataSegment> dataSegments = new List<DataSegment>();
+            var dataSegments = new List<DataSegment>();
             // Read "chunks" from stream and hand them over to parser
-            using var chunksReader = new BinaryReader(new MemoryStream(data));
-            while (chunksReader.BaseStream.Position < chunksReader.BaseStream.Length)
+            using var reader = new BinaryReader(new MemoryStream(data));
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
-                dataSegments.Add(DataSegment.Read(chunksReader));
+                dataSegments.Add(DataSegment.Read(reader));
             }
             
-            foreach (var ds in dataSegments)
+            foreach (var segment in dataSegments)
             {
-                Read(ds);
+                Read(segment);
             }
         }
 
@@ -102,8 +102,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
             Packets.Add(pkt);
             _currentChunk.ENetPackets.Add(pkt);
         }
-
-
+        
         protected override void HandleBinaryPacket(byte[] data, float timeHttp)
         {
             var decrypted = _blowfish.Decrypt(data);

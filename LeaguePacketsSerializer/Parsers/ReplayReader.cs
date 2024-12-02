@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -58,10 +59,12 @@ namespace LeaguePacketsSerializer.Parsers
             IChunkParser chunkParser;
             if(Replay.MetaData.SpectatorMode)
             {
+                Console.WriteLine("[Spectator Mode Replay]");
                 chunkParser = new ChunkParserSpectator(Replay.MetaData.EncryptionKey, Replay.MetaData.MatchId);
             }
             else
-            {                    
+            {     
+                Console.WriteLine("[ENet Mode Replay]");
                 chunkParser = new ChunkParserENet(eNetLeagueVersion, Replay.MetaData.EncryptionKey);
             }
             chunkParser.Parse(data);
