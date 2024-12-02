@@ -11,7 +11,6 @@ public class ChunkParserENet : ENetProtocolHandler, IChunkParser
         private BlowFish _blowfish;
 
         public List<DataSegment> DataSegments { get; } = new List<DataSegment>();
-        public List<Chunk> Chunks { get; } = new List<Chunk>();
         public List<ENetPacket> Packets { get; } = new List<ENetPacket>();
 
         public ChunkParserENet(ENetLeagueVersion eNetLeagueVersion, byte[] key)

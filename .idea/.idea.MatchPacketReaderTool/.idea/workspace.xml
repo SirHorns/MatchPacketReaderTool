@@ -11,17 +11,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="lotsa work">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Controls/ReplayInfo.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/ReplayInfo.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" afterDir="false" />
+    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/GameDataChunk.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/GameKey.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/GameMetaData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/KeyFrame.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/LastChunkInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Objects/PendingAvailableChunkInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Models/PacketModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Models/PacketModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserSpectator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserSpectator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/DataSegment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/DataSegment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,12 +45,12 @@
     &quot;assignee&quot;: &quot;SirHorns&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SirHorns/MatchPacketReaderTool.git",
-    "accountId": "b5a2f5c8-fd68-49dc-96c7-4eb28708ca48"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SirHorns/MatchPacketReaderTool.git&quot;,
+    &quot;accountId&quot;: &quot;b5a2f5c8-fd68-49dc-96c7-4eb28708ca48&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29ea32a76b2a6b8eb246f247df6a6a86d887384b4c31db2a35effccdd86c24/JsonSerializerInternalReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c7da56581ee7b20208f09e80b735961e4d5d7b9e5562bfdec94a75c57b391/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
@@ -73,25 +78,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.GUI.executor": "Debug",
-    ".NET Project.Serializer.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.53450054",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.GUI.executor&quot;: &quot;Debug&quot;,
+    &quot;.NET Project.Serializer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.53450054&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Project.GUI">
     <configuration name="GUI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.exe" />
@@ -213,7 +218,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="commit" />
     <MESSAGE value="lotsa work" />
-    <option name="LAST_COMMIT_MESSAGE" value="lotsa work" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -221,14 +226,7 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs</url>
           <line>29</line>
-          <properties documentPath="C:\Users\Valkyrie\Documents\Projects\LoL\MatchPacketReaderTool\LeaguePacketsSerializer\Parsers\ChunkParsers\HttpProtocol.cs" containingFunctionPresentation="Method 'Read'">
-            <startOffsets>
-              <option value="896" />
-            </startOffsets>
-            <endOffsets>
-              <option value="914" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\Valkyrie\Documents\Projects\LoL\MatchPacketReaderTool\LeaguePacketsSerializer\Parsers\ChunkParsers\HttpProtocol.cs" containingFunctionPresentation="Method 'Read'" />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

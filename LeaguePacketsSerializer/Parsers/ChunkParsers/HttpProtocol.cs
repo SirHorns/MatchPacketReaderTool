@@ -2,15 +2,74 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using LeaguePacketsSerializer.Enums;
 
 namespace LeaguePacketsSerializer.Parsers.ChunkParsers
 {
+    public enum RequestTypes
+    {
+        NONE,
+        VERSION,
+        GAME_META_DATA,
+        LAST_CHUNK_INFO,
+        KEY_FRAME,
+        GAME_DATA_CHUNK
+    }
+
+    public class Section
+    {
+        public RequestTypes Type { get; internal set; }
+
+        public string Http { get; internal set; }
+        
+        public byte[] Data { get; internal set; }
+        public float Time { get; internal set; }
+        
+
+        public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)
+        {
+            Type = type ?? section.Type;
+            Http = http ?? section.Http;
+            Data = data ?? section.Data;
+            Time = time ?? section.Time;
+            return this;
+        }
+    }
+
+    public class VersionSection : Section
+    {
+        public string Text { get; internal set; }
+    }
+
+    public class MetaDataSection : Section
+    {
+        public int Unknown { get; internal set; }
+        public string Json { get; internal set; }
+    }
+    
+    public class LastChunkInfoSection : Section
+    {
+        public int Unknown { get; internal set; }
+        public string Json { get; internal set; }
+    }
+
+    public class KeyFrameSection : Section
+    {
+        public int ID { get; internal set; }
+    }
+
+    public class GameDataSection : Section
+    {
+        public int ID { get; internal set; }
+        public Chunk Chunk { get; internal set; } = new Chunk();
+    }
+
     public abstract class HttpProtocolHandler
     {
         private HttpState _httpState = HttpState.Done;
+        public RequestTypes CurrentRequest = RequestTypes.NONE;
+        
         private readonly List<byte> _buffer = new();
         private long _bufferExpectedLength;
         
@@ -18,11 +77,11 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
 
         private byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
 
-        protected List<Chunk> _chunks = new List<Chunk>();
-        
-        protected Chunk _currentChunk;
-        
-        protected void Read(DataSegment segment)
+
+        protected List<Section> _sections = new();
+        protected Section CurrentSection { get; private set; }
+
+        protected void ParseDataSegment(DataSegment segment)
         {
             var data = segment.Data; 
             var time = segment.Time;
@@ -30,10 +89,10 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             switch(_httpState)
             {
                 case HttpState.GetBinary:
-                    HandleGetBinary(data, time);
+                    HandleGetBinary(data);
                     break;
                 case HttpState.GetText:
-                    HandleGetText(data, time);
+                    HandleGetText(data);
                     break;
                 case HttpState.Done:
                     HandleDone(data, time);
@@ -50,85 +109,30 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             }
         }
 
-        private void HandleGetText(byte[] data, float time)
-        {
-            var text = Encoding.UTF8.GetString(data);
-            _currentChunk.Json = text;
-            //HandleTextPacket(text, time);
-            _httpState = HttpState.Done;
-            _chunks.Add(_currentChunk);
-        }
-        
-        private void HandleGetBinary(byte[] data, float time)
-        {
-            _currentChunk.Data = data;
-            HandleBinaryPacket(data, time);
-            _httpState = HttpState.Done;
-            _chunks.Add(_currentChunk);
-        }
-
-        private void HandleContinueBinary(byte[] data, float time)
-        {
-            _buffer.AddRange(data);
-            if(_buffer.Count > _bufferExpectedLength)
-            {
-                throw new IOException("Buffer overrun!");
-            }
-
-            if (_buffer.Count != _bufferExpectedLength)
-            {
-                return;
-            }
-            
-            HandleBinaryPacket(_buffer.ToArray(), time);
-            _httpState = HttpState.Done;
-            _chunks.Add(_currentChunk);
-            _buffer.Clear();
-            _bufferExpectedLength = 0;
-        }
-
-        private void HandleContinueText(byte[] data, float time)
-        {
-            _buffer.AddRange(data);
-            if (_buffer.Count > _bufferExpectedLength)
-            {
-                throw new IOException("Buffer overrun!");
-            }
-
-            if (_buffer.Count != _bufferExpectedLength)
-            {
-                return;
-            }
-            
-            HandleTextPacket(Encoding.UTF8.GetString(_buffer.ToArray()), time);
-            _httpState = HttpState.Done;
-            _chunks.Add(_currentChunk);
-            _buffer.Clear();
-            _bufferExpectedLength = 0;
-        }
-        
         
         private void HandleDone(byte[] data, float time)
         {
-            _currentChunk = new Chunk();
+            CurrentSection = new Section();
+            
             var req = Encoding.UTF8.GetString(data).Split(' ');
 
             var httpReq = req[0];
             var replayReq = req[1];
 
-            _currentChunk.Http = replayReq;
+            CurrentSection.Http = replayReq;
+            CurrentSection.Data = data;
+            CurrentSection.Time = time;
             
             switch (httpReq)
             {
                 case "HTTP":
-                    Http(data, time);
+                    Http(data);
                     break;
                 case "GET":
                     Get(replayReq);
                     break;
                 case "POST":
-                    Console.WriteLine($"Http POST?: \n {replayReq}" );
-                    _httpState = HttpState.GetText;
+                    Post(replayReq);
                     break;
                 case "HEAD":
                     Head();
@@ -138,12 +142,114 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     break;
                 default:
                     Console.WriteLine(httpReq);
-                    Console.WriteLine("Bad Chunk?");
+                    Console.WriteLine("[BAD_REQ]");
                     break;
             }
         }
 
-        private void Http(byte[] data, float time)
+        private void HandleGetText(byte[] data)
+        {
+            HandleTextPacket(data);
+            SetHttpState(HttpState.Done);
+            _sections.Add(CurrentSection);
+        }
+        
+        private void HandleGetBinary(byte[] data)
+        {
+            HandleBinaryPacket(data);
+            SetHttpState(HttpState.Done);
+            _sections.Add(CurrentSection);
+        }
+        
+        private void Get(string request)
+        {
+            // /observer-mode/rest/consumer/<api-call>/
+            if (request.Equals("\r\n"))
+            {
+                SetHttpState(HttpState.Done);
+                _sections.Add(CurrentSection);
+                return;
+            }
+            var api = request.Split("/");
+            switch (api[4])
+            {
+                case "version":
+                    SetCurrentRequest(RequestTypes.VERSION);
+                    SetHttpState(HttpState.GetText);
+                    CurrentSection = new VersionSection()
+                    {
+                        
+                    }.Copy(CurrentSection, type: RequestTypes.VERSION);
+                    break;
+                case "getGameMetaData":
+                    SetCurrentRequest(RequestTypes.GAME_META_DATA);
+                    SetHttpState(HttpState.GetText);
+                    CurrentSection = new MetaDataSection()
+                    {
+                        Unknown = int.Parse(CurrentSection.Http.Split("/")[^2])
+                    }.Copy(CurrentSection, type: RequestTypes.GAME_META_DATA);
+                    break;
+                case "getLastChunkInfo":
+                    SetCurrentRequest(RequestTypes.LAST_CHUNK_INFO);
+                    SetHttpState(HttpState.GetText);
+                    CurrentSection = new LastChunkInfoSection()
+                    {
+                        Unknown = int.Parse(CurrentSection.Http.Split("/")[^2])
+                    }.Copy(CurrentSection, type: RequestTypes.LAST_CHUNK_INFO);
+                    break;
+                case "getKeyFrame":
+                    SetCurrentRequest(RequestTypes.KEY_FRAME);
+                    SetHttpState(HttpState.GetText);
+                    CurrentSection = new KeyFrameSection()
+                    {
+                        ID = int.Parse(CurrentSection.Http.Split("/")[^2])
+                    }.Copy(CurrentSection, type: RequestTypes.KEY_FRAME);
+                    break;
+                case "getGameDataChunk":
+                    SetCurrentRequest(RequestTypes.GAME_DATA_CHUNK);
+                    SetHttpState(HttpState.GetBinary);
+                    var id = int.Parse(CurrentSection.Http.Split("/")[^2]);
+                    CurrentSection = new GameDataSection
+                    {
+                        ID = id,
+                        Chunk = new Chunk()
+                        {
+                            ID = id
+                        }
+                    }.Copy(CurrentSection, type: RequestTypes.GAME_DATA_CHUNK);
+                    break;
+                default:
+                    CurrentSection.Type = RequestTypes.NONE;
+                    Console.WriteLine(request);
+                    break;
+            }
+        }
+
+        private void Post(string request)
+        {
+            Console.WriteLine(request);
+            SetHttpState(HttpState.GetText);
+        }
+        
+        private void SetHttpState(HttpState state)
+        {
+            _httpState = state;
+        }
+
+        private void SetCurrentRequest(RequestTypes type)
+        {
+            CurrentRequest = type;
+        }
+        
+        //
+        
+        protected virtual void HandleTextPacket(byte[] data) { }
+
+        protected virtual void HandleBinaryPacket(byte[] data) { }
+        
+        // Haven't seen these triggered yet
+        
+        private void Http(byte[] data)
         {
             using var stream = new MemoryStream(data);
             var index = 0;
@@ -173,17 +279,19 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             }
             var contentLength = long.Parse(contentLengthMatch.Groups[1].Value);
             var content = binary.ReadExactBytes((int)binary.BytesLeft());
+            
+            
             if (!http.Contains("application/octet-stream"))
             {
                 if (content.Length < contentLength)
                 {
                     _buffer.AddRange(content);
                     _bufferExpectedLength = contentLength;
-                    _httpState = HttpState.ContinueText;
+                    SetHttpState(HttpState.ContinueText);
                 }
                 else
                 {
-                    HandleTextPacket(Encoding.UTF8.GetString(content), time);
+                    HandleTextPacket(content);
                 }
             }
             else
@@ -192,56 +300,57 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                 {
                     _buffer.AddRange(content);
                     _bufferExpectedLength = contentLength;
-                    _httpState = HttpState.ContinueBinary;
+                    SetHttpState(HttpState.ContinueBinary);
                 }
                 else
                 { 
-                    HandleBinaryPacket(content, time);
+                    HandleBinaryPacket(content);
                 }
             }
         }
         
-        private void Get(string request)
+        private void Head(){}
+        
+        private void Options(){}
+        
+        private void HandleContinueBinary(byte[] data, float time)
         {
-            // /observer-mode/rest/consumer/<api-call>/
-            if (request.Equals("\r\n"))
+            _buffer.AddRange(data);
+            if(_buffer.Count > _bufferExpectedLength)
             {
-                _httpState = HttpState.Done;
-                _chunks.Add(_currentChunk);
+                throw new IOException("Buffer overrun!");
+            }
+
+            if (_buffer.Count != _bufferExpectedLength)
+            {
                 return;
             }
-            var api = request.Split("/");
-            switch (api[4])
+            
+            HandleBinaryPacket(_buffer.ToArray());
+            SetHttpState(HttpState.Done);
+            _sections.Add(CurrentSection);
+            _buffer.Clear();
+            _bufferExpectedLength = 0;
+        }
+        
+        private void HandleContinueText(byte[] data, float time)
+        {
+            _buffer.AddRange(data);
+            if (_buffer.Count > _bufferExpectedLength)
             {
-                case "version":
-                case "getGameMetaData":
-                case "getLastChunkInfo":
-                case "getKeyFrame":
-                    _httpState = HttpState.GetText;
-                    break;
-                case "getGameDataChunk":
-                    _httpState = HttpState.GetBinary;
-                    break;
-                default:
-                    Console.WriteLine($"Where did this GET come from?: \n {request}");
-                    break;
+                throw new IOException("Buffer overrun!");
             }
+
+            if (_buffer.Count != _bufferExpectedLength)
+            {
+                return;
+            }
+            
+            HandleTextPacket(_buffer.ToArray());
+            SetHttpState(HttpState.Done);
+            _sections.Add(CurrentSection);
+            _buffer.Clear();
+            _bufferExpectedLength = 0;
         }
-
-        private void Head()
-        {
-            // ignore
-        }
-
-        private void Options()
-        {
-            // ignore
-        }
-        
-        
-
-        protected virtual void HandleTextPacket(string data, float time) { }
-
-        protected virtual void HandleBinaryPacket(byte[] data, float time) { }
     }
 }

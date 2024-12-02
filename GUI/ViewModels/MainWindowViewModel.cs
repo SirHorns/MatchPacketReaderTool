@@ -72,7 +72,7 @@ public partial class MainWindowViewModel : ViewModelBase
         IsWorking = true;
         await Task.Run(() =>
         {
-            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420);
+            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420, true);
             if (_replayHandler.Replay is null)
             {
                 return;

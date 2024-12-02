@@ -6,8 +6,6 @@
     
     <StackPanel>
         
-        <TextBox IsEnabled="False" Text="{Binding SelectedChunk.Json}"></TextBox>
-        
     </StackPanel>
     
 </UserControl>

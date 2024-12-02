@@ -68,7 +68,12 @@ namespace LeaguePacketsSerializer.Parsers
                 chunkParser = new ChunkParserENet(eNetLeagueVersion, Replay.MetaData.EncryptionKey);
             }
             chunkParser.Parse(data);
-            Replay.Chunks = chunkParser.Chunks;
+
+            if (chunkParser is ChunkParserSpectator chunkParserSpectator)
+            {
+                Replay.Chunks = chunkParserSpectator.GetChunks();
+            }
+            
             Replay.RawPackets = chunkParser.Packets;
             return Replay;
         }
