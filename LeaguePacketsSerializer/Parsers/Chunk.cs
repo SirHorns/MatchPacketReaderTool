@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 

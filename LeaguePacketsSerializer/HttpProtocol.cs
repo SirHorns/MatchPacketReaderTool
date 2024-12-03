@@ -4,8 +4,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using LeaguePacketsSerializer.Enums;
+using LeaguePacketsSerializer.Parsers;
 
-namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
+namespace LeaguePacketsSerializer;
 
 public abstract class HttpProtocolHandler
     {

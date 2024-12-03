@@ -4,13 +4,15 @@ using System.IO;
 using System.Linq;
 using LeaguePackets;
 using LeaguePackets.Game;
+using LeaguePacketsSerializer.ENet;
+using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using LeaguePacketsSerializer.Replication;
 using Newtonsoft.Json;
-using ENetPacket = LeaguePacketsSerializer.Parsers.ChunkParsers.ENetPacket;
+using ENetPacket = LeaguePacketsSerializer.ENet.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
@@ -21,7 +23,7 @@ public class ReplaySerializer
     private string _filePath;
     private ENetLeagueVersion _version;
 
-    private ReplayReader _replayReader = new();
+    private ReplayReader _replayReader;
     private PacketsSerializer _packetsSerializer;
     private Replay _replay { get; set; }
 
@@ -33,6 +35,7 @@ public class ReplaySerializer
 
     public Replay Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420, bool writeToFile = false)
     {
+        _replayReader = new ReplayReader();
         _filePath = filePath;
         _version = version;
 
@@ -45,7 +48,9 @@ public class ReplaySerializer
         _packetsSerializer.ParsePackets(_replay);
         
         _replayReader = null;
-        _replay.Info = PrintResults(_replay);
+        _replay.Update();
+        _replay.Info = GetResults(_replay);
+        PrintResults(_replay.Info);
         
         if (writeToFile)
         {
@@ -70,17 +75,21 @@ public class ReplaySerializer
         };
         jsonSerializer.Serialize(fileStream, replay);
     }
-    
-    private ReplayInfo PrintResults(Replay replay)
+
+    private ReplayInfo GetResults(Replay replay)
     {
-        var info = new ReplayInfo(
+        var  info = new ReplayInfo(
             replay.Chunks.Count, 
             replay.SerializedPackets.Count, 
             replay.SoftBadPackets.Count,
             replay.HardBadPackets.Count,
             string.Join(",", replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct()),
             string.Join(",", replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct()));
-        
+        return info;
+    }
+    
+    private void PrintResults(ReplayInfo info)
+    {
         Console.WriteLine("[Processed]");
         Console.WriteLine($"- Chunks: {info.Chunks}");
         Console.WriteLine($"===Packets===");
@@ -89,7 +98,5 @@ public class ReplaySerializer
         Console.WriteLine($"- Hard: {info.Hard}");
         Console.WriteLine($"Soft bad IDs:{info.SoftBadIds}");
         Console.WriteLine($"Hard bad IDs:{info.HardBadIds}");
-        
-        return info;
     }
 }

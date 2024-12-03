@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using LeaguePackets;
 using LeaguePackets.Game;
+using LeaguePacketsSerializer.ENet;
+using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
@@ -15,21 +17,35 @@ public class PacketsSerializer
     private readonly Dictionary<uint, ReplicationType> _replicationTypes = new();
     
     private Chunk _currentChunk;
+    private Replay _replay;
     
     public void ParsePackets(Replay replay)
     {
-        Console.WriteLine("Processing raw packets...");
-        foreach (var chunk in replay.Chunks)
+        Console.WriteLine("Processing packets...");
+
+        _replay = replay;
+        
+        if (replay.Type == ReplayType.ENET)
         {
-            foreach (var ePacket in chunk.ENetPackets)
+            foreach (var ePacket in replay.RawPackets)
             {
-                _currentChunk = chunk;
                 ParsePacket(ePacket);
             }
         }
+        else
+        {
+            foreach (var chunk in replay.Chunks)
+            {
+                foreach (var ePacket in chunk.ENetPackets)
+                {
+                    _currentChunk = chunk;
+                    ParsePacket(ePacket);
+                }
+            }
+            _currentChunk = null;
+        }
 
-        //_currentChunk = null;
-
+        _replay = null;
         Console.WriteLine("Finished Serializing Replay!");
     }
     
@@ -246,7 +262,14 @@ public class PacketsSerializer
             
             RawChannel = rPacket.Channel,
         };
-        _currentChunk.SerializedPackets.Add(pkt);
+        if (_replay.Type == ReplayType.ENET)
+        {
+            _replay.SerializedPackets.Add(pkt);
+        }
+        else
+        {
+            _currentChunk.SerializedPackets.Add(pkt);
+        }
     }
 
     private void SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)
@@ -258,7 +281,14 @@ public class PacketsSerializer
             RawChannel = rPacket.Channel,
             Error = $"Extra bytes: {Convert.ToBase64String(packet.ExtraBytes)}"
         };
-        _currentChunk.SoftBadPackets.Add(softBad);
+        if (_replay.Type == ReplayType.ENET)
+        {
+            _replay.SoftBadPackets.Add(softBad);
+        }
+        else
+        {
+            _currentChunk.SoftBadPackets.Add(softBad);
+        }
     }
 
     private void SoftBadLoop(IGamePacketsList list, ENetPacket rPacket)
@@ -271,13 +301,21 @@ public class PacketsSerializer
             }
 
             var error = $"Extra bytes in {packet2.GetType().Name}: {Convert.ToBase64String(packet2.ExtraBytes)}";
-            _currentChunk.SoftBadPackets.Add(new BadPacket()
+            var softBad = new BadPacket()
             {
                 RawID = (int)packet2.ID,
                 Raw = rPacket.Bytes,
                 RawChannel = rPacket.Channel,
                 Error = error,
-            });
+            };
+            if (_replay.Type == ReplayType.ENET)
+            {
+                _replay.SoftBadPackets.Add(softBad);
+            }
+            else
+            {
+                _currentChunk.SoftBadPackets.Add(softBad);
+            }
         }
     }
 
@@ -290,7 +328,14 @@ public class PacketsSerializer
             RawChannel = rPacket.Channel,
             Error = exception.ToString(),
         };
-        _currentChunk.HardBadPackets.Add(hardBad);
+        if (_replay.Type == ReplayType.ENET)
+        {
+            _replay.HardBadPackets.Add(hardBad);
+        }
+        else
+        {
+            _currentChunk.HardBadPackets.Add(hardBad);
+        }
     }
     
     private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId)

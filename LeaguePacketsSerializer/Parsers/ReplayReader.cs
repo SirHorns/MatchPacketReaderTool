@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 
@@ -79,10 +80,11 @@ namespace LeaguePacketsSerializer.Parsers
             
             _replay = new Replay()
             {
+                Type = Type,
                 BasicHeader = BasicHeader,
                 MetaData = MetaData,
                 RawPackets = RawPackets,
-                Chunks = Chunks,
+                Chunks = Chunks ?? new List<Chunk>(),
             };
 
             if (ChunkParser is SpectatorChunkParser spectator)
@@ -161,7 +163,7 @@ namespace LeaguePacketsSerializer.Parsers
             Console.WriteLine("[ENet Mode Replay]");
             
             Type = ReplayType.ENET;
-            var parser = new ChunkParserENet(enetLeagueVersion, MetaData.EncryptionKey);
+            var parser = new ENetChunkParser(enetLeagueVersion, MetaData.EncryptionKey);
             ChunkParser = parser;
             parser.Read(data);
         }

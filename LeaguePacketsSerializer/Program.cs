@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LeaguePackets.Game;
+using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;

@@ -11,25 +11,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/DataDict.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Enums/ReplayType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Enums/RequestTypes.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/PacketsSerializer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Sections.cs" afterDir="false" />
+    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="big work">
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetCommandFlag.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetLeagueVersion.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetPacket.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetPacketFlags.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocol.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolAcknowledge.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolBandwidthLimit.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolCommandHeader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolConnect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolDisconnect.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolHeader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolPing.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendFragment.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendReliable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendUnreliable.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendUnsequenced.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolThrottleConfigure.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolVerifyConnect.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Packets/ENetPacket.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/PacketsSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/PacketsSerializer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserSpectator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/SpectatorChunkParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ENetChunkParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ENetProtocol.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/HttpProtocol.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/MetaData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/MetaData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/SpectatorChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/SpectatorChunkParser.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/Unhasher.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +80,7 @@
     <setting file="file://$PROJECT_DIR$/GUI/ViewModels/ChunkVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/Views/MainWindow.axaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/Chunk.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/Replay.cs" root0="SKIP_HIGHLIGHTING" />
@@ -87,7 +104,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.GUI.executor": "Debug",
+    ".NET Project.GUI.executor": "Run",
     ".NET Project.Serializer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -212,7 +229,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732308548890</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="big work">
+      <option name="closed" value="true" />
+      <created>1733247776080</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1733247776080</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -224,20 +249,21 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="commit" />
     <MESSAGE value="lotsa work" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="big work" />
+    <option name="LAST_COMMIT_MESSAGE" value="big work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs</url>
-          <line>56</line>
+          <line>60</line>
           <properties documentPath="T:\usr\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplaySerializer.cs" containingFunctionPresentation="Method 'Serialize'">
             <startOffsets>
-              <option value="1694" />
+              <option value="1811" />
             </startOffsets>
             <endOffsets>
-              <option value="1709" />
+              <option value="1826" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="39" />

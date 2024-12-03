@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LeaguePacketsSerializer;
+using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
