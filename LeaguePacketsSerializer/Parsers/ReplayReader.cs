@@ -3,47 +3,51 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
-using Newtonsoft.Json;
 
 namespace LeaguePacketsSerializer.Parsers
 {
     public class ReplayReader
     {
-        public Replay Replay { get; private set; }
+        private Replay _replay;
+        private bool _constructed = false;
+        
+        public ReplayType Type { get; private set; } = ReplayType.NAN;
 
-        public Replay Read(Stream stream, ENetLeagueVersion? enetLeagueVersion)
+        public BasicHeader BasicHeader { get; internal set; }
+        public MetaData MetaData { get; private set; }
+        public List<ENetPacket> RawPackets { get; private set; }
+        public List<Chunk> Chunks { get; private set; }
+
+
+        public IChunkParser ChunkParser { get; private set; }
+        
+
+        public void Read(Stream stream, ENetLeagueVersion? enetLeagueVersion)
         {
+            _constructed = false;
+            _replay = null;
+            
             using var reader = new BinaryReader(stream);
+            BasicHeader = BasicHeader.Read(reader);
             
-            // Basic header
-            var bh = BasicHeader.Read(reader);
-            
-            
-
-            if(bh.Unused == 'n' && bh.Version == 'f' && bh.Compressed == 'o' && bh.Reserved == '\0')
+            if(BasicHeader.Unused == 'n' && BasicHeader.Version == 'f' && BasicHeader.Compressed == 'o' && BasicHeader.Reserved == '\0')
             {
-                Replay = Nfo(reader, bh);
-                return Replay;
+                Type = ReplayType.NFO;
+                Nfo(reader);
+                return;
             } 
             
-            Replay = new Replay()
-            {
-                BasicHeader = bh
-            };
+            MetaData = MetaData.Read(reader);
             
-            // JSON data
-            var jsonLength = reader.ReadInt32();
-            var json = reader.ReadExactBytes(jsonLength);
-            var jsonString = Encoding.UTF8.GetString(json);
-            Replay.MetaData = JsonConvert.DeserializeObject<MetaData>(jsonString);
             //TODO: Extend Replay return it?
             
             // Binary data offset start position
             var offsetStart = stream.Position;
 
             // Stream data
-            var dataOffset = Replay.MetaData.DataIndex.First(kvp => kvp.Key == "stream").Value;
+            var dataOffset = MetaData.DataIndex.First(kvp => kvp.Key == "stream").Value;
             var data = reader.ReadExactBytes(dataOffset.Size);
 
             if((data[0] & 0x4C) != 0)
@@ -51,43 +55,54 @@ namespace LeaguePacketsSerializer.Parsers
                 data = BDODecompress.Decompress(data);
             }
 
-            // FIXME: detect correct league version
-            // TODO: determining where exact breaking changes in league ENet are??
-            var eNetLeagueVersion = enetLeagueVersion ?? ENetLeagueVersion.Seasson12;
-
             // Type of parser spectator or in-game/ENet
-            IChunkParser chunkParser;
-            if(Replay.MetaData.SpectatorMode)
+            if(MetaData.SpectatorMode)
             {
-                Console.WriteLine("[Spectator Mode Replay]");
-                chunkParser = new ChunkParserSpectator(Replay.MetaData.EncryptionKey, Replay.MetaData.MatchId);
+                Spectator(data);
             }
             else
             {     
-                Console.WriteLine("[ENet Mode Replay]");
-                chunkParser = new ChunkParserENet(eNetLeagueVersion, Replay.MetaData.EncryptionKey);
-            }
-            chunkParser.Parse(data);
-
-            if (chunkParser is ChunkParserSpectator chunkParserSpectator)
-            {
-                Replay.Chunks = chunkParserSpectator.GetChunks();
+                // FIXME: detect correct league version
+                // TODO: determining where exact breaking changes in league ENet are??
+                ENet(data, enetLeagueVersion ?? ENetLeagueVersion.Seasson12);
             }
             
-            Replay.RawPackets = chunkParser.Packets;
-            return Replay;
+            RawPackets = ChunkParser.Packets;
         }
 
-        
-
-        private static Replay Nfo(BinaryReader reader, BasicHeader bh)
+        public void ConstructReplay()
         {
-            var replay = new Replay
+            if (_constructed)
             {
-                RawPackets = new List<ENetPacket>(),
-                BasicHeader = bh
+                return;
+            }
+            
+            _replay = new Replay()
+            {
+                BasicHeader = BasicHeader,
+                MetaData = MetaData,
+                RawPackets = RawPackets,
+                Chunks = Chunks,
             };
 
+            if (ChunkParser is SpectatorChunkParser spectator)
+            {
+                _replay.Sections = spectator.Sections;
+            }
+            
+            _constructed = false;
+        }
+        
+        public Replay GetReplay()
+        {
+            return _replay;
+        }
+        
+        //
+        
+        private void Nfo(BinaryReader reader)
+        {
+            RawPackets = new List<ENetPacket>();
             var first = true;
             while(reader.BaseStream.Position < reader.BaseStream.Length)
             {
@@ -97,10 +112,8 @@ namespace LeaguePacketsSerializer.Parsers
                 var dataSize = (int)reader.ReadUInt32();
                 if(nfo)
                 {
-                    var pad = reader.ReadUInt64();
-                    var jsonData = reader.ReadExactBytes(dataSize);
-                    var jsonString = Encoding.UTF8.GetString(jsonData);
-                    replay.MetaData = JsonConvert.DeserializeObject<MetaData>(jsonString); //JObject.Parse(jsonString); //TODO: Extend Replay return it?
+                    MetaData = MetaData.ReadNFO(reader, dataSize); 
+                    //JObject.Parse(jsonString); //TODO: Extend Replay return it?
                 }
                 else
                 {
@@ -115,7 +128,7 @@ namespace LeaguePacketsSerializer.Parsers
 
                     var pktData = reader.ReadExactBytes(dataSize);
 
-                    replay.RawPackets.Add(new ENetPacket()
+                    RawPackets.Add(new ENetPacket()
                     {
                         Time = time,
                         Bytes = pktData,
@@ -130,8 +143,27 @@ namespace LeaguePacketsSerializer.Parsers
                     reader.BaseStream.Seek(16 - remain, SeekOrigin.Current);
                 }
             }
+        }
 
-            return replay;
+        private void Spectator(byte[] data)
+        {
+            Console.WriteLine("[Spectator Mode Replay]");
+            
+            Type = ReplayType.SPECTATOR;
+            var parser = new SpectatorChunkParser(MetaData.EncryptionKey, MetaData.MatchId);
+            ChunkParser = parser;
+            parser.Read(data);
+            Chunks = parser.GetChunks();
+        }
+
+        private void ENet(byte[] data, ENetLeagueVersion enetLeagueVersion)
+        {
+            Console.WriteLine("[ENet Mode Replay]");
+            
+            Type = ReplayType.ENET;
+            var parser = new ChunkParserENet(enetLeagueVersion, MetaData.EncryptionKey);
+            ChunkParser = parser;
+            parser.Read(data);
         }
     }
 }

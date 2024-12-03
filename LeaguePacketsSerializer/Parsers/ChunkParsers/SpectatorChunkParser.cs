@@ -4,42 +4,40 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using LeaguePacketsSerializer.Enums;
 
 namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
 
-public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
+public class SpectatorChunkParser : HttpProtocolHandler, IChunkParser
     {
-        private BlowFish _blowfish;
+        private readonly BlowFish _blowfish;
+        private BinaryReader _reader;
+        private List<DataSegment> _segments;
+        
         public List<ENetPacket> Packets { get; } =  new();
-        private List<string> _text = new();
 
-        private readonly List<DataSegment> _segments = new();
+        
             
-        public ChunkParserSpectator(byte[] key, int matchID)
+        public SpectatorChunkParser(byte[] key, int matchId)
         {
-            var keyBlowfish = new BlowFish(Encoding.ASCII.GetBytes(matchID.ToString()));
-
+            var keyBlowfish = new BlowFish(Encoding.ASCII.GetBytes(matchId.ToString()));
             _blowfish = new BlowFish(keyBlowfish.Decrypt(key).Take(16).ToArray());
         }
         
-        public void Parse(byte[] data)
+        public void Read(byte[] data)
         {
-            // Read "segments" from stream and hand them over to parser
-            using var reader = new BinaryReader(new MemoryStream(data));
-            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            _segments = new List<DataSegment>();
+            _reader = new BinaryReader(new MemoryStream(data));
+            
+            while (_reader.BaseStream.Position < _reader.BaseStream.Length)
             {
-                var segment = DataSegment.Read(reader);
+                var segment = DataSegment.Read(_reader);
                 _segments.Add(segment);
             }
             
-            foreach (var ds in _segments)
+            foreach (var segment in _segments)
             {
-                ParseDataSegment(ds);
-            }
-
-            foreach (var s in _sections)
-            {
-                Console.WriteLine(s.Http);
+                ReadSegment(segment);
             }
         }
 
@@ -48,7 +46,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         public List<ENetPacket> GetENetPackets()
         {
             var pkts = new List<ENetPacket>();
-            foreach (var section in _sections)
+            foreach (var section in Sections)
             {
                 if (section is GameDataSection gds)
                 {
@@ -61,7 +59,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         public List<Chunk> GetChunks()
         {
             var chunks = new List<Chunk>();
-            foreach (var section in _sections)
+            foreach (var section in Sections)
             {
                 if (section is GameDataSection gds)
                 {
@@ -164,15 +162,11 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
                     break;
             }
             
-            
-            var text = Encoding.UTF8.GetString(data);
+            // probbly a better way to do this
+            // but most non data chunks so far are at most a little over 800 bytes
             if (data.Length > 900)
             {
                 HandleBinaryPacket(data);
-            }
-            else
-            {
-                _text.Add(text);
             }
         }
 

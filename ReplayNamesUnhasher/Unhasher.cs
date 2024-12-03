@@ -40,15 +40,7 @@ public class Unhasher
     public bool LoadHashes(string manualPath = "")
     {
         Console.WriteLine("Loading Hash Map...");
-        string contentPath;
-        if (string.IsNullOrEmpty(manualPath))
-        {
-            contentPath = GetContentPath();
-        }
-        else
-        {
-            contentPath = manualPath;
-        }
+        var contentPath = string.IsNullOrEmpty(manualPath) ? GetContentPath() : manualPath;
 
         if (string.IsNullOrEmpty(contentPath) || !Directory.Exists(contentPath))
         {
@@ -58,12 +50,16 @@ public class Unhasher
         foreach (var file in Directory.GetFiles(contentPath, "*.json", SearchOption.AllDirectories))
         {
             var jsonFile = JArray.Parse(File.ReadAllText(file));
-            foreach (JObject hash in jsonFile)
+            foreach (var jToken in jsonFile)
             {
-                if (!NameHashes.ContainsKey(hash.Value<long>("Hash")))
+                var hasher = (JObject)jToken;
+                var hash = hasher.Value<long>("Hash");
+                if (NameHashes.ContainsKey(hash))
                 {
-                    NameHashes.Add(hash.Value<long>("Hash"), hash.Value<string>("Name"));
+                    continue;
                 }
+                var name = hasher.Value<string>("Name") ?? "unknown_name";
+                NameHashes.Add(hash, name);
             }
         }
         
@@ -87,7 +83,7 @@ public class Unhasher
         Console.WriteLine("Finished Unhasing Replay!");
     }
     
-    public async Task UnhashReplay(JArray packets, string outputPath)
+    public Task UnhashReplay(JArray packets, string outputPath)
     {
         Console.WriteLine("Unhashing Replay...");
         
@@ -111,16 +107,18 @@ public class Unhasher
         jsonSerializer.Serialize(fileStream, packets);
         
         GC.Collect();
+        return Task.CompletedTask;
     }
 
-    public string Unhash(String json)
+    public string Unhash(string json)
     {
         var token = JToken.Parse(json);
         var packetInfo = token.SelectToken("Data").ToArray();
 
-        for (var i = 0; i < packetInfo.Count(); i++)
+        for (var index = 0; index < packetInfo.Length; index++)
         {
-            ProcessProperty(packetInfo[i] as JProperty);
+            var jProp = packetInfo[index] as JProperty;
+            ProcessProperty(jProp);
         }
 
         return token.ToString();

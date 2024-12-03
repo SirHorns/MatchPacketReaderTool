@@ -130,10 +130,10 @@ public class Program
             a++;
         }
 
-        ReplayReader r = new ReplayReader();
+        var replayReader = new ReplayReader();
         Console.WriteLine("Reading file...");
-        JObject metadata = new JObject();
-        r.Read(File.OpenRead(fileName), version);
+        var metadata = new JObject();
+        replayReader.Read(File.OpenRead(fileName), version);
 
         Console.WriteLine("Writing meta data to file .metadata.json...");
         SerializeToFile(metadata, fileName + ".metadata.json");
@@ -145,8 +145,9 @@ public class Program
         var serializedPackets = new List<SerializedPacket>();
         var hardBadPackets = new List<BadPacket>();
         var softBadPackets = new List<BadPacket>();
+        var replay = replayReader.GetReplay();
         Console.WriteLine("Processing raw packets...");
-        foreach (var rPacket in r.Replay.RawPackets)
+        foreach (var rPacket in replay.RawPackets)
         {
             if (rPacket.Channel < 8)
             {
@@ -169,7 +170,7 @@ public class Program
                         p.ExtraBytes = or.ExtraBytes;
                         foreach (var rd in or.ReplicationData)
                         {
-                            uint netID = rd.UnitNetID;
+                            var netID = rd.UnitNetID;
                             var values = new Replicate[6, 32];
                             var replicationType = ReplicationType.Unknown;
                             if (netID >= 0xFF000000)

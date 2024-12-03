@@ -1,30 +1,89 @@
 using System.Collections.Generic;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
-using Newtonsoft.Json;
-using ENetPacket = LeaguePacketsSerializer.Parsers.ChunkParsers.ENetPacket;
 
 namespace LeaguePacketsSerializer.Parsers;
 
 public class Replay
 {
-    [JsonProperty("BasicHeader")]
-    public BasicHeader BasicHeader { get; set; }
-    [JsonProperty("MetaData")]
-    public MetaData MetaData { get; set; }
-    [JsonProperty("SerializedPackets")]
-    public List<SerializedPacket> SerializedPackets { get; } = new();
-    [JsonProperty("HardBadPackets ")]
-    public List<BadPacket> HardBadPackets { get; } = new();
-    [JsonProperty("SoftBadPackets")]
-    public List<BadPacket> SoftBadPackets { get; } = new();
+    private List<SerializedPacket> _serialized = new();
+    private List<BadPacket> _soft = new();
+    private List<BadPacket> _hard = new();
     
-    [JsonProperty("Results")]
-
+    public BasicHeader BasicHeader { get; internal set; }
+    public MetaData MetaData { get; internal set; }
+    public List<Section> Sections { get; internal set; }
+    public List<Chunk> Chunks { get; internal init; }
+    public List<ENetPacket> RawPackets { get; internal init; }
+    
     public ReplayInfo Info { get; internal set; }
 
-    [JsonIgnore]
-    public List<ENetPacket> RawPackets { get; set; }
-    [JsonIgnore]
-    public List<Chunk> Chunks { get; set; }
+    
+    public List<SerializedPacket> SerializedPackets
+    {
+        get
+        {
+            if (_serialized.Count > 0)
+            {
+                return _serialized;
+            }
+            _serialized = GetSerializedPackets();
+            return _serialized;
+        }
+    }
+    public List<BadPacket> SoftBadPackets
+    {
+        get
+        {
+            if (_soft.Count > 0)
+            {
+                return _soft;
+            }
+            _soft = GetSoftBadPackets();
+            return _soft;
+        }
+    }
+    
+    public List<BadPacket> HardBadPackets
+    {
+        get
+        {
+            if (_hard.Count > 0)
+            {
+                return _hard;
+            }
+            _hard = GetHardBadPackets();
+            return _hard;
+        }
+    }
+    
+    private List<SerializedPacket> GetSerializedPackets()
+    {
+        var list = new List<SerializedPacket>();
+        foreach (var chunk in Chunks)
+        {
+            list.AddRange(chunk.SerializedPackets);
+        }
+        return list;
+    }
+
+    private List<BadPacket> GetSoftBadPackets()
+    {
+        var list = new List<BadPacket>();
+        foreach (var chunk in Chunks)
+        {
+            list.AddRange(chunk.SoftBadPackets);
+        }
+        return list;
+    }
+
+    private List<BadPacket> GetHardBadPackets()
+    {
+        var list = new List<BadPacket>();
+        foreach (var chunk in Chunks)
+        {
+            list.AddRange(chunk.HardBadPackets);
+        }
+        return list;
+    }
 }

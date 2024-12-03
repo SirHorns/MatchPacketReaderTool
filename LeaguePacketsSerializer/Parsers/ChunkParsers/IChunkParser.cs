@@ -5,5 +5,5 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
 public interface IChunkParser
 {
     List<ENetPacket> Packets { get; }
-    void Parse(byte[] data);
+    void Read(byte[] data);
 }

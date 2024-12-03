@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace LeaguePacketsSerializer.Parsers;
@@ -35,6 +37,22 @@ public class MetaData
     public int StatsVersion { get; set; }
     public byte[] EncryptionKey { get; set; }
     public string ClientHash { get; set; }
+
+    public static MetaData Read(BinaryReader reader)
+    {
+        var jsonLength = reader.ReadInt32();
+        var json = reader.ReadExactBytes(jsonLength);
+        var jsonString = Encoding.UTF8.GetString(json);
+        return JsonConvert.DeserializeObject<MetaData>(jsonString);
+    }
+
+    public static MetaData ReadNFO(BinaryReader reader, int dataSize)
+    {
+        var pad = reader.ReadUInt64();
+        var jsonData = reader.ReadExactBytes(dataSize);
+        var jsonString = Encoding.UTF8.GetString(jsonData);
+        return JsonConvert.DeserializeObject<MetaData>(jsonString);
+    }
 }
 
 public class Screenshot

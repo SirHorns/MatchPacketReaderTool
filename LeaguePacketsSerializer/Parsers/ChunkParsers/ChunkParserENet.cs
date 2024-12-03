@@ -221,7 +221,7 @@ public class ChunkParserENet : ENetProtocolHandler, IChunkParser
             Read(reader, time, _enetLeagueVersion);
         }
 
-        public void Parse(byte[] data)
+        public void Read(byte[] data)
         {
             // Read "chunks" from stream and hand them over to parser
             using var chunksReader = new BinaryReader(new MemoryStream(data));

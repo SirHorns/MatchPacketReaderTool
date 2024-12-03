@@ -5,71 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using LeaguePacketsSerializer.Enums;
 
-namespace LeaguePacketsSerializer.Parsers.ChunkParsers
-{
-    public enum RequestTypes
-    {
-        NONE,
-        VERSION,
-        GAME_META_DATA,
-        LAST_CHUNK_INFO,
-        KEY_FRAME,
-        GAME_DATA_CHUNK
-    }
+namespace LeaguePacketsSerializer.Parsers.ChunkParsers;
 
-    public class Section
-    {
-        public RequestTypes Type { get; internal set; }
-
-        public string Http { get; internal set; }
-        
-        public byte[] Data { get; internal set; }
-        public float Time { get; internal set; }
-        
-
-        public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)
-        {
-            Type = type ?? section.Type;
-            Http = http ?? section.Http;
-            Data = data ?? section.Data;
-            Time = time ?? section.Time;
-            return this;
-        }
-    }
-
-    public class VersionSection : Section
-    {
-        public string Text { get; internal set; }
-    }
-
-    public class MetaDataSection : Section
-    {
-        public int Unknown { get; internal set; }
-        public string Json { get; internal set; }
-    }
-    
-    public class LastChunkInfoSection : Section
-    {
-        public int Unknown { get; internal set; }
-        public string Json { get; internal set; }
-    }
-
-    public class KeyFrameSection : Section
-    {
-        public int ID { get; internal set; }
-    }
-
-    public class GameDataSection : Section
-    {
-        public int ID { get; internal set; }
-        public Chunk Chunk { get; internal set; } = new Chunk();
-    }
-
-    public abstract class HttpProtocolHandler
+public abstract class HttpProtocolHandler
     {
         private HttpState _httpState = HttpState.Done;
-        public RequestTypes CurrentRequest = RequestTypes.NONE;
-        
+        public RequestTypes CurrentRequest { get; private set; } = RequestTypes.NONE;
+
         private readonly List<byte> _buffer = new();
         private long _bufferExpectedLength;
         
@@ -78,10 +20,12 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
         private byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
 
 
-        protected List<Section> _sections = new();
+        public List<Section> Sections { get; } = new();
         protected Section CurrentSection { get; private set; }
 
-        protected void ParseDataSegment(DataSegment segment)
+        
+        
+        protected void ReadSegment(DataSegment segment)
         {
             var data = segment.Data; 
             var time = segment.Time;
@@ -104,11 +48,12 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     HandleContinueText(data, time);
                     break;
                 default:
-                    // ignore
+                    Console.WriteLine("Skipped segment");
                     break;
             }
         }
 
+        
         
         private void HandleDone(byte[] data, float time)
         {
@@ -151,14 +96,14 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
         {
             HandleTextPacket(data);
             SetHttpState(HttpState.Done);
-            _sections.Add(CurrentSection);
+            Sections.Add(CurrentSection);
         }
         
         private void HandleGetBinary(byte[] data)
         {
             HandleBinaryPacket(data);
             SetHttpState(HttpState.Done);
-            _sections.Add(CurrentSection);
+            Sections.Add(CurrentSection);
         }
         
         private void Get(string request)
@@ -167,7 +112,7 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             if (request.Equals("\r\n"))
             {
                 SetHttpState(HttpState.Done);
-                _sections.Add(CurrentSection);
+                Sections.Add(CurrentSection);
                 return;
             }
             var api = request.Split("/");
@@ -186,7 +131,7 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
                     SetHttpState(HttpState.GetText);
                     CurrentSection = new MetaDataSection()
                     {
-                        Unknown = int.Parse(CurrentSection.Http.Split("/")[^2])
+                        MatchId = int.Parse(CurrentSection.Http.Split("/")[^2])
                     }.Copy(CurrentSection, type: RequestTypes.GAME_META_DATA);
                     break;
                 case "getLastChunkInfo":
@@ -328,7 +273,7 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             
             HandleBinaryPacket(_buffer.ToArray());
             SetHttpState(HttpState.Done);
-            _sections.Add(CurrentSection);
+            Sections.Add(CurrentSection);
             _buffer.Clear();
             _bufferExpectedLength = 0;
         }
@@ -348,9 +293,8 @@ namespace LeaguePacketsSerializer.Parsers.ChunkParsers
             
             HandleTextPacket(_buffer.ToArray());
             SetHttpState(HttpState.Done);
-            _sections.Add(CurrentSection);
+            Sections.Add(CurrentSection);
             _buffer.Clear();
             _bufferExpectedLength = 0;
         }
     }
-}
