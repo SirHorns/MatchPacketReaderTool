@@ -6,7 +6,10 @@
         <entry key="App.axaml" value="MatchPacketReaderTool.csproj" />
         <entry key="GUI/App.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Controls/ChunkDisplayer.axaml" value="GUI/GUI.csproj" />
+        <entry key="GUI/Controls/ChunkDisplayerControl.axaml" value="GUI/GUI.csproj" />
+        <entry key="GUI/Controls/ReplayControl.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Controls/ReplayInfo.axaml" value="GUI/GUI.csproj" />
+        <entry key="GUI/Controls/ReplayInfoControl.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Controls/SpectatorChunk.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Views/KeyCheck.axaml" value="GUI/GUI.csproj" />
         <entry key="GUI/Views/MainWindow.axaml" value="GUI/GUI.csproj" />

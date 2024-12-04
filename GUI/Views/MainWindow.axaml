@@ -3,8 +3,7 @@
         xmlns:vm="using:GUI.ViewModels"
         xmlns:viewModels="clr-namespace:GUI.ViewModels"
         xmlns:controls="clr-namespace:GUI.Controls"
-        Width="1280"
-        Height="720"
+        Width="1280" Height="720"
         x:Class="GUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/Images/sota-logo.ico"
@@ -13,22 +12,43 @@
     <Design.DataContext>
         <viewModels:MainWindowViewModel/>
     </Design.DataContext>
-
-    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-        <StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding SelectReplayFileCommand}" Content="Open .lrf"/>
-                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
-                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
-                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding StartApiServerCommand}" Content="Start API Server"/>
-
-            </StackPanel>
-            <controls:ReplayInfo DataContext="{Binding ReplayInfoVm}"/>
-            <controls:ChunkDisplayer DataContext="{Binding ReplayInfoVm}"/>
-            <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
+    
+    <SplitView IsPaneOpen="True"
+               DisplayMode="Inline"
+               OpenPaneLength="200">
+        <SplitView.Pane>
+            <Panel HorizontalAlignment="Center" VerticalAlignment="Center" Height="700">
+                <StackPanel VerticalAlignment="Center">
+                    <Button 
+                        IsEnabled="{Binding !IsWorking}"
+                        Command="{Binding SelectReplayFileCommand}" 
+                        Content="Open .lrf"/>
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="10">
+                        <StackPanel>
+                            <Button
+                                IsEnabled="{Binding !IsWorking}" 
+                                Command="{Binding ParseReplayCommand}" 
+                                Content="Parse"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Export Jsons: " VerticalAlignment="Center"/>
+                                <CheckBox IsChecked="{Binding WriteToFile}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Button IsEnabled="{Binding !IsWorking}" Command="{Binding UnhashReplayCommand}" Content="Unhash"/>
+                    <Button IsEnabled="{Binding !IsWorking}" Command="{Binding StartApiServerCommand}" Content="Start API Server"/>
+                </StackPanel>
+            </Panel>
+        </SplitView.Pane>
+        
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <controls:ReplayControl Margin="25" DataContext="{Binding ReplayControlViewModel}"/>
+            <ProgressBar IsIndeterminate="{Binding IsWorking}"/>
         </StackPanel>
-    </StackPanel>
+        
+    </SplitView>
     
-    
-
 </Window>

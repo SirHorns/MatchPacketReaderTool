@@ -10,6 +10,7 @@ using GUI.Models;
 using GUI.Services;
 using GUI.Tools;
 using LeaguePacketsSerializer.ENet;
+using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Microsoft.Extensions.DependencyInjection;
 using ReplayAPI;
@@ -18,19 +19,23 @@ namespace GUI.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    [ObservableProperty] private ReplayInfoVM _replayInfoVm;
-    [ObservableProperty] private bool _isWorking;
+    [ObservableProperty] private ReplayViewModel _replayControlViewModel;
     [ObservableProperty] private ReplayModel _replayModel;
+    
+    
+    [ObservableProperty] private bool _isWorking;
+    [ObservableProperty] private bool _writeToFile;
+    
     private readonly ReplayHandler _replayHandler;
-
     private ReplayApiServer _apiServer;
+    
     
     public MainWindowViewModel()
     {
         _apiServer = new ReplayApiServer();
         _replayHandler = new ReplayHandler();
         
-        ReplayInfoVm = new ReplayInfoVM();
+        ReplayControlViewModel = new ReplayViewModel();
         ReplayModel = new ReplayModel();
     }
     
@@ -78,20 +83,25 @@ public partial class MainWindowViewModel : ViewModelBase
         IsWorking = true;
         await Task.Run(() =>
         {
-            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420, true);
+            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420, WriteToFile);
             if (_replayHandler.Replay is null)
             {
                 return;
             }
 
-            var info = _replayHandler.Replay.Info;
-            ReplayInfoVm.SetResults(info);
-            ReplayInfoVm.ChunkList = _replayHandler.Replay.Chunks;
             ReplayModel.Replay = _replayHandler.Replay;
+            UpdateReplayVm();
+            
             ReplayService.SetReplay(_replayHandler.Replay);
         }, token);
         
         IsWorking = false;
+    }
+
+    private void UpdateReplayVm()
+    {
+        var replay = _replayHandler.Replay;
+        ReplayControlViewModel.Set(replay);
     }
 
     [RelayCommand]

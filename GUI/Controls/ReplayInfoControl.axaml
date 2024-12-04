@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GUI.ViewModels"
+             x:Class="GUI.Controls.ReplayInfoControl"
+             x:DataType="vm:ReplayViewModel">
+    
+    <StackPanel Orientation="Horizontal">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock HorizontalAlignment="Center" FontSize="15" FontFamily="{StaticResource KanitFont}" Text="== Replay Info =="/>
+        
+            <TextBlock HorizontalAlignment="Center" FontSize="15" FontFamily="{StaticResource KanitFont}" Text="{Binding Replay.Type }"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="15" FontFamily="{StaticResource KanitFont}" Text="Sections: "/>
+                <TextBlock Text="{Binding ReplayInfo.Sections}"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="15" FontFamily="{StaticResource KanitFont}" Text="Chunks: "/>
+                <TextBlock Text="{Binding ReplayInfo.Chunks}"/>
+            </StackPanel>
+        
+            <StackPanel Orientation="Horizontal">
+                <Grid RowDefinitions="40, 40 , 40, 40" ColumnDefinitions="Auto,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" FontSize="15" FontFamily="{StaticResource KanitFont}" Text="= Packets ="/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Good: "/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Soft: "/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Hard: "/>
+            
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ReplayInfo.Good}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ReplayInfo.Soft}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ReplayInfo.Hard}"/>
+                </Grid>
+                
+                <StackPanel Margin="20,0,0, 0">
+                    <TextBlock HorizontalAlignment="Center" FontSize="15" FontFamily="{StaticResource KanitFont}" Text="= IDs ="/>
+                    
+                    <TextBlock Text="Soft Bad Ids:"/>
+                    <TextBlock Text="{Binding ReplayInfo.SoftBadIds}"/>
+        
+                    <TextBlock Text="Hard Bad Ids:"/>
+                    <TextBlock Text="{Binding ReplayInfo.HardBadIds}"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+    
+</UserControl>

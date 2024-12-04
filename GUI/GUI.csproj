@@ -42,14 +42,9 @@
       <None Update="SpectatorReplay_2715373.lrf">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Compile Update="Controls\ReplayInfo.axaml.cs">
-        <DependentUpon>ReplayInfo.axaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+      <None Update="Syndra_2596859.lrf">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 

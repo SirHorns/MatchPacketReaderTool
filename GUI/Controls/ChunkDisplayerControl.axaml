@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GUI.ViewModels"
+             x:Class="GUI.Controls.ChunkDisplayerControl"
+             x:DataType="vm:ReplayViewModel"
+             Width="800"
+             Height="200">
+    
+    <Design.DataContext>
+        <vm:ReplayViewModel/>
+    </Design.DataContext>
+    
+    <Border
+        Background="Gray"
+        BorderBrush="White"
+        BorderThickness="4"
+        CornerRadius="10">
+        <StackPanel >
+            <TextBlock Margin="20 10">List of Chunks:</TextBlock>
+            
+            <ScrollViewer  IsVisible="{Binding ChunksLoaded}" HorizontalScrollBarVisibility="Visible" AllowAutoHide="False">
+                <ItemsRepeater ItemsSource="{Binding ChunkList}" Margin="20,5,20,20">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Horizontal" Spacing="5"/>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                BorderBrush="Black"
+                                BorderThickness="2"
+                                CornerRadius="3"
+                                Padding="10"
+                                Height="100"
+                                Width="160">
+                                
+                                <Grid RowDefinitions="15, 15, 15, 15, 15, 15" ColumnDefinitions="95,*">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID: "/>
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Raw: "/>
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Serialized: "/>
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="SoftBad: "/>
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="HadBad: "/>
+            
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ID}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ENetPackets.Count}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SerializedPackets.Count}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SoftBadPackets.Count}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding HardBadPackets.Count}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
+        </StackPanel>
+    </Border>
+    
+</UserControl>
