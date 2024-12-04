@@ -30,9 +30,6 @@ public class ReplayHandler
         try
         {
             var res= _serializer.Serialize(replayPath, version, writeToFile);
-            _packetArray = new string[res.SerializedPackets.Count];
-            //var ja = JsonConvert.SerializeObject(res.SerializedPackets);
-            //JPackets = JArray.Parse(ja) ;
             UnhashReplay(res.SerializedPackets);
             Replay = res;
         }
@@ -63,12 +60,13 @@ public class ReplayHandler
             var total = packets.Count;
             var chunks = Math.Round(total * 0.05f, 0);
             double trigger = 0;
-            double mark = chunks;
-            List<string> pktsjson = new();
+            var mark = chunks;
+            List<string> json = [];
+            
             Parallel.ForEach(packets, pkt =>
             {
                 var p = JsonConvert.SerializeObject(pkt);
-                pktsjson.Add(_unhasher.Unhash(p));
+                json.Add(_unhasher.Unhash(p));
                 if (trigger >= mark)
                 {
                     //Console.WriteLine($"{trigger}/{total}");

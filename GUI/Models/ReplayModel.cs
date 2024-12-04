@@ -8,5 +8,5 @@ public class ReplayModel
     public Replay Replay { get; set; }
     public string FilePath { get; set; }
 
-    public ReplayInfo Info => Replay.Info;
+    public ReplayInfo Info => Replay.ReplayInfo;
 }
