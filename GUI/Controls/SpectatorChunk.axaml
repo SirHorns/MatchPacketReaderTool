@@ -4,8 +4,21 @@
              x:DataType="vm:ChunkVM"
              x:Class="GUI.Controls.SpectatorChunk">
     
-    <StackPanel>
+    <Border 
+        Background="Gainsboro"
+        BorderBrush="Black"
+        BorderThickness="2"
+        CornerRadius="3"
+        Padding="10">
+        <StackPanel>
+            <TextBlock Text="Chunk ID"/>
         
-    </StackPanel>
+            <TextBlock Text="PacketCount"/>
+        
+            <TextBlock Text="SerializedPackets"/>
+            <TextBlock Text="SoftBad"/>
+            <TextBlock Text="HardBad"/>
+        </StackPanel>
+    </Border>
     
 </UserControl>

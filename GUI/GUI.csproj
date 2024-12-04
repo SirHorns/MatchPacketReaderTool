@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.2.1" />
+        <PackageReference Include="Avalonia.Controls.ItemsRepeater" Version="11.1.5" />
         <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.1" />
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.1" />
@@ -32,6 +33,7 @@
     <ItemGroup>
       <ProjectReference Include="..\LeaguePacketsSerializer\LeaguePacketsSerializer.csproj" />
       <ProjectReference Include="..\LeaguePackets\LeaguePackets.csproj" />
+      <ProjectReference Include="..\ReplayAPI\ReplayAPI.csproj" />
       <ProjectReference Include="..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
     </ItemGroup>
 

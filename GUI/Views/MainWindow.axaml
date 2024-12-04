@@ -20,8 +20,11 @@
                 <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding SelectReplayFileCommand}" Content="Open .lrf"/>
                 <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding ParseReplayCommand}" Content="Parse Replay"/>
                 <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding UnhashReplayCommand}" Content="Unhash Replay"/>
+                <Button IsEnabled="{Binding !IsWorking}" HorizontalAlignment="Center" Command="{Binding StartApiServerCommand}" Content="Start API Server"/>
+
             </StackPanel>
             <controls:ReplayInfo DataContext="{Binding ReplayInfoVm}"/>
+            <controls:ChunkDisplayer DataContext="{Binding ReplayInfoVm}"/>
             <ProgressBar Width="600" HorizontalAlignment="Center" IsIndeterminate="{Binding IsWorking}"/>
         </StackPanel>
     </StackPanel>

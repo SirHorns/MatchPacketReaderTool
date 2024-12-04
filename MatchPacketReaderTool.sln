@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaguePacketsSerializer", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaguePackets", "LeaguePackets\LeaguePackets.csproj", "{2E82DA04-49F2-429E-97C6-863FF08870D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayAPI", "ReplayAPI\ReplayAPI.csproj", "{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

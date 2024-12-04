@@ -55,6 +55,8 @@ namespace LeaguePacketsSerializer.Parsers
             {
                 data = BDODecompress.Decompress(data);
             }
+            
+            
 
             // Type of parser spectator or in-game/ENet
             if(MetaData.SpectatorMode)

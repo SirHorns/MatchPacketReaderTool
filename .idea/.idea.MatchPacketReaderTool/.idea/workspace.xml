@@ -5,47 +5,39 @@
     <projectFile>GUI/GUI.csproj</projectFile>
     <projectFile>LeaguePacketsSerializer/LeaguePacketsSerializer.csproj</projectFile>
     <projectFile>MatchPacketReaderTool.csproj</projectFile>
+    <projectFile profileName="GUI">ReplayAPI/ReplayAPI.csproj</projectFile>
+    <projectFile profileName="IIS Express">ReplayAPI/ReplayAPI.csproj</projectFile>
+    <projectFile profileName="http">ReplayAPI/ReplayAPI.csproj</projectFile>
     <projectFile>ReplayNamesUnhasher/ReplayNamesUnhasher.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="big work">
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetCommandFlag.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetLeagueVersion.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetPacket.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetPacketFlags.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocol.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolAcknowledge.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolBandwidthLimit.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolCommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolCommandHeader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolConnect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolDisconnect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolHeader.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolPing.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendFragment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendReliable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendUnreliable.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolSendUnsequenced.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolThrottleConfigure.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ENet/ENetProtocolVerifyConnect.cs" afterDir="false" />
+    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/GUI/Controllers/ReplayController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI/Controls/ChunkDisplayer.axaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI/Controls/ChunkDisplayer.axaml.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/GUI/Services/ReplayService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/Properties/launchSettings.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/ReplayAPI.csproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/ReplayAPI.http" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/ReplayApiServer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/appsettings.Development.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ReplayAPI/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/avalonia.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Tools/ReplayHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/GUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/GUI.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/PacketsSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/PacketsSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/ReplayInfoVM.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/LeaguePacketsSerializer.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/LeaguePacketsSerializer.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Chunk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ChunkParserENet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ENetChunkParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/ENetProtocol.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/HttpProtocol.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/IChunkParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/SpectatorChunkParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ChunkParsers/SpectatorChunkParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/Replay.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Parsers/ReplayReader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MatchPacketReaderTool.sln" beforeDir="false" afterPath="$PROJECT_DIR$/MatchPacketReaderTool.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MatchPacketReaderTool.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/MatchPacketReaderTool.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReplayNamesUnhasher/ReplayNamesUnhasher.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ReplayNamesUnhasher/ReplayNamesUnhasher.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +64,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29ea32a76b2a6b8eb246f247df6a6a86d887384b4c31db2a35effccdd86c24/JsonSerializerInternalReader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/327e3a92ae94d9dc98b3fe2b7ca1c80d784c39d6b851fb0259e784c3ae6928/Extensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c7da56581ee7b20208f09e80b735961e4d5d7b9e5562bfdec94a75c57b391/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/Controls/ReplayInfo.axaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/Controls/SpectatorChunk.axaml" root0="FORCE_HIGHLIGHTING" />
@@ -80,6 +73,7 @@
     <setting file="file://$PROJECT_DIR$/GUI/ViewModels/ChunkVM.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/GUI/Views/MainWindow.axaml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/Chunk.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/Chunk.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://T:/usr/Documents/GitHub/MatchPacketReaderTool/LeaguePacketsSerializer/Parsers/ChunkParsers/HttpProtocol.cs" root0="SKIP_HIGHLIGHTING" />
@@ -104,6 +98,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    ".NET Launch Settings Profile.ReplayAPI: GUI.executor": "Run",
+    ".NET Launch Settings Profile.ReplayAPI: http.executor": "Run",
     ".NET Project.GUI.executor": "Run",
     ".NET Project.Serializer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -122,9 +118,9 @@
 }]]></component>
   <component name="RunManager" selected=".NET Project.GUI">
     <configuration name="GUI" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net7.0/GUI.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net8.0/GUI.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GUI/bin/Debug/net7.0" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/GUI/bin/Debug/net8.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -134,7 +130,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net7.0" />
+      <option name="PROJECT_TFM" value="net8.0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -175,7 +171,39 @@
         <option name="Build" />
       </method>
     </configuration>
+    <configuration name="ReplayAPI: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ReplayAPI/ReplayAPI.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
+    <configuration name="ReplayAPI: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ReplayAPI/ReplayAPI.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
+      <option name="LAUNCH_PROFILE_NAME" value="http" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <list>
+      <item itemvalue=".NET Launch Settings Profile.ReplayAPI: IIS Express" />
+      <item itemvalue=".NET Launch Settings Profile.ReplayAPI: http" />
       <item itemvalue=".NET Project.Serializer" />
       <item itemvalue=".NET Project.Unhasher" />
       <item itemvalue=".NET Project.GUI" />
@@ -237,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733247776080</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="progress on handling all replay types, chunks, enet packets and information to help use/repurpose replay data">
+      <option name="closed" value="true" />
+      <created>1733251664489</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1733251664489</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,25 +286,7 @@
     <MESSAGE value="commit" />
     <MESSAGE value="lotsa work" />
     <MESSAGE value="big work" />
-    <option name="LAST_COMMIT_MESSAGE" value="big work" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/LeaguePacketsSerializer/ReplaySerializer.cs</url>
-          <line>60</line>
-          <properties documentPath="T:\usr\Documents\GitHub\MatchPacketReaderTool\LeaguePacketsSerializer\ReplaySerializer.cs" containingFunctionPresentation="Method 'Serialize'">
-            <startOffsets>
-              <option value="1811" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1826" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="progress on handling all replay types, chunks, enet packets and information to help use/repurpose replay data" />
+    <option name="LAST_COMMIT_MESSAGE" value="progress on handling all replay types, chunks, enet packets and information to help use/repurpose replay data" />
   </component>
 </project>

@@ -12,6 +12,7 @@ using GUI.Tools;
 using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Microsoft.Extensions.DependencyInjection;
+using ReplayAPI;
 
 namespace GUI.ViewModels;
 
@@ -21,11 +22,15 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _isWorking;
     [ObservableProperty] private ReplayModel _replayModel;
     private readonly ReplayHandler _replayHandler;
+
+    private ReplayApiServer _apiServer;
     
     public MainWindowViewModel()
     {
-        ReplayInfoVm = new ReplayInfoVM();
+        _apiServer = new ReplayApiServer();
         _replayHandler = new ReplayHandler();
+        
+        ReplayInfoVm = new ReplayInfoVM();
         ReplayModel = new ReplayModel();
     }
     
@@ -81,7 +86,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
             var info = _replayHandler.Replay.Info;
             ReplayInfoVm.SetResults(info);
+            ReplayInfoVm.ChunkList = _replayHandler.Replay.Chunks;
             ReplayModel.Replay = _replayHandler.Replay;
+            ReplayService.SetReplay(_replayHandler.Replay);
         }, token);
         
         IsWorking = false;
@@ -129,5 +136,11 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception e)
         {
         }
+    }
+
+    [RelayCommand]
+    private void StartApiServer()
+    {
+        _ = Task.Run(() => _apiServer.Run());
     }
 }
