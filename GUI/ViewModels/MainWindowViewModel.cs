@@ -27,6 +27,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _isWorking;
     [ObservableProperty] private bool _writeToFile;
     [ObservableProperty] private bool _replayLoaded;
+    [ObservableProperty] private bool _apiServerRunning;
     
     private readonly ReplayHandler _replayHandler;
     private ReplayApiServer _apiServer;
@@ -179,6 +180,12 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void StartApiServer()
     {
+        if (ApiServerRunning)
+        {
+            return;
+        }
+        
+        ApiServerRunning = true;
         _ = Task.Run(() => _apiServer.Run());
     }
 }
