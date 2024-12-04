@@ -29,9 +29,7 @@ public class ReplayHandler
         
         try
         {
-            var res= _serializer.Serialize(replayPath, version, writeToFile);
-            UnhashReplay(res.SerializedPackets);
-            Replay = res;
+            Replay = _serializer.Serialize(replayPath, version, writeToFile);
         }
         catch (Exception e)
         {
@@ -39,43 +37,28 @@ public class ReplayHandler
             _serializer = new ReplaySerializer();
         }
     }
-
-    public void UnhashReplay()
-    {
-        Task.Run(() =>
-        {
-            
-        });
-    }
     
-    public void UnhashReplay(string filePath)
+    public List<string> UnhashReplay(List<SerializedPacket> packets)
     {
-        Task.Run(()=> _unhasher.UnhashReplay());
-    }
-    
-    public void UnhashReplay(List<SerializedPacket> packets)
-    {
-        Task.Run(() =>
-        {
-            var total = packets.Count;
-            var chunks = Math.Round(total * 0.05f, 0);
-            double trigger = 0;
-            var mark = chunks;
-            List<string> json = [];
+        var total = packets.Count;
+        var chunks = Math.Round(total * 0.05f, 0);
+        double trigger = 0;
+        var mark = chunks;
+        List<string> pktsjson = [];
             
-            Parallel.ForEach(packets, pkt =>
+        Parallel.ForEach(packets, pkt =>
+        {
+            var p = JsonConvert.SerializeObject(pkt);
+            pktsjson.Add(_unhasher.Unhash(p));
+            if (trigger >= mark)
             {
-                var p = JsonConvert.SerializeObject(pkt);
-                json.Add(_unhasher.Unhash(p));
-                if (trigger >= mark)
-                {
-                    //Console.WriteLine($"{trigger}/{total}");
-                    mark += chunks;
-                }
+                //Console.WriteLine($"{trigger}/{total}");
+                mark += chunks;
+            }
 
-                trigger++;
-            });
+            trigger++;
         });
-        return;
+
+        return pktsjson;
     }
 }

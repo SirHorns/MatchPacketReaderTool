@@ -38,7 +38,7 @@
                             </StackPanel>
                         </StackPanel>
                     </Border>
-                    <Button IsEnabled="{Binding !IsWorking}" Command="{Binding UnhashReplayCommand}" Content="Unhash"/>
+                    <Button IsEnabled="{Binding ReplayLoaded}" Command="{Binding UnhashReplayCommand}" Content="Unhash"/>
                     <Button IsEnabled="{Binding !IsWorking}" Command="{Binding StartApiServerCommand}" Content="Start API Server"/>
                 </StackPanel>
             </Panel>
