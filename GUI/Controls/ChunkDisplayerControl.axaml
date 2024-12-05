@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:GUI.ViewModels"
              x:Class="GUI.Controls.ChunkDisplayerControl"
-             x:DataType="vm:ReplayViewModel"
-             Height="600"
-             Width="200">
+             x:DataType="vm:ReplayViewModel">
     
     <Design.DataContext>
         <vm:ReplayViewModel/>
@@ -14,10 +12,12 @@
         Background="Gray"
         BorderBrush="White"
         BorderThickness="4"
-        CornerRadius="10">
+        CornerRadius="10"
+        Height="250"
+        Width="130">
         <StackPanel>
-            <TextBlock Margin="20 10">List of Chunks:</TextBlock>
-            <ScrollViewer  Height="500" IsVisible="{Binding ChunksLoaded}" VerticalScrollBarVisibility="Visible" AllowAutoHide="False">
+            <TextBlock TextAlignment="Center" Margin="20 10">CHUNKS</TextBlock>
+            <ScrollViewer Height="200" IsVisible="{Binding ChunksLoaded}" VerticalScrollBarVisibility="Visible" AllowAutoHide="False">
                 <ListBox ItemsSource="{Binding ChunkList}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -25,23 +25,15 @@
                                 BorderBrush="Black"
                                 BorderThickness="2"
                                 CornerRadius="3"
-                                Padding="10"
-                                Height="100"
-                                Width="160">
+                                Padding="5"
+                                Height="30"
+                                Width="90">
                                 
-                                <Grid RowDefinitions="15, 15, 15, 15, 15, 15" ColumnDefinitions="95,*">
-                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="ID: "/>
-                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Raw: "/>
-                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Serialized: "/>
-                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="SoftBad: "/>
-                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="HadBad: "/>
-            
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding ID}"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ENetPackets.Count}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SerializedPackets.Count}"/>
-                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SoftBadPackets.Count}"/>
-                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding HardBadPackets.Count}"/>
-                                </Grid>
+                                <Panel>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="#"/>
+                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ID}"/>
+                                </Panel>
+                                
                             </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

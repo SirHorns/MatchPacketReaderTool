@@ -253,13 +253,36 @@ public class PacketsSerializer
 
     private void SerializePacket(int rawId, object packetToSerialize, ENetPacket rPacket)
     {
+        var type = "";
+
+        switch ((ChannelID)rPacket.Channel)
+        {
+            case ChannelID.Default:
+                type = "Registry";
+                break;
+            case ChannelID.ClientToServer:
+            case ChannelID.SynchClock:
+            case ChannelID.Broadcast:
+            case ChannelID.BroadcastUnreliable:
+                type = ((GamePacketID)rawId).ToString();
+                break;
+            case ChannelID.Chat:
+            case ChannelID.QuickChat:
+            case ChannelID.LoadingScreen:
+                type = ((LoadScreenPacketID)rawId).ToString();
+                break;
+            default:
+                type = "Unknown";
+                break;
+        }
+        
         var pkt = new SerializedPacket
         {
             RawID = rawId,
+            Type = type,
             ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : null,
             Data = packetToSerialize,
             Time = rPacket.Time,
-            
             RawChannel = rPacket.Channel,
         };
         if (_replay.Type == ReplayType.ENET)

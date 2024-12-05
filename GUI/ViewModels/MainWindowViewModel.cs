@@ -8,12 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using GUI.Enums;
 using GUI.Models;
 using GUI.Services;
-using GUI.Tools;
-using LeaguePacketsSerializer.ENet;
-using LeaguePacketsSerializer.Enums;
-using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using ReplayAPI;
 
 namespace GUI.ViewModels;
@@ -22,22 +17,17 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty] private ReplayViewModel _replayControlViewModel;
     [ObservableProperty] private ReplayModel _replayModel;
+    [ObservableProperty] private ApiServerModel _apiModel;
     
     
     [ObservableProperty] private bool _isWorking;
     [ObservableProperty] private bool _writeToFile;
     [ObservableProperty] private bool _replayLoaded;
-    [ObservableProperty] private bool _apiServerRunning;
-    
-    private readonly ReplayHandler _replayHandler;
-    private ReplayApiServer _apiServer;
+    [ObservableProperty] private bool _apiRunning;
     
     
     public MainWindowViewModel()
     {
-        _apiServer = new ReplayApiServer();
-        _replayHandler = new ReplayHandler();
-        
         ReplayControlViewModel = new ReplayViewModel();
         ReplayModel = new ReplayModel();
     }
@@ -80,69 +70,35 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            if (string.IsNullOrEmpty(ReplayModel.FilePath))
+            if (ReplayModel.Parse(WriteToFile))
             {
-                Console.WriteLine("No replay was given!");
-                return;
+                ReplayLoaded = true;
             }
-            
-            _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420, WriteToFile);
-            if (_replayHandler.Replay is null)
-            {
-                ReplayLoaded = false;
-                IsWorking = false;
-                return;
-            }
-
-
-            if (_writeToFile)
-            {
-                var fileName = Path.GetFileNameWithoutExtension(ReplayModel.FilePath);
-                var path = $"ParsedReplay/{fileName}/SerializedPackets.json";
-
-                if (!File.Exists(path))
-                {
-                    Console.WriteLine($"Couldn't find serialized files: {path}");
-                    IsWorking = false;
-                    return;
-                }
-
-                Console.WriteLine("Unhashing replay...");
-
-                var res = _replayHandler.UnhashReplay(_replayHandler.Replay.SerializedPackets);
-                Write($"ParsedReplay/{fileName}/UnHhshedSerializedPackets.json", res);
-
-                Console.WriteLine("Finished Unhashing replay!");
-            }
-            
-            ReplayModel.Replay = _replayHandler.Replay;
-            UpdateReplayVm();
-
-            ReplayService.SetReplay(_replayHandler.Replay);
-            
         }, token);
+
+        if (ReplayLoaded)
+        {
+            ReplayControlViewModel.Set(ReplayModel.Replay);
+        }
         
-        ReplayLoaded = true;
+        ReplayService.SetReplay(ReplayModel.Replay);
         IsWorking = false;
     }
-
-    private void UpdateReplayVm()
+    
+    [RelayCommand]
+    private Task StartApiServer()
     {
-        var replay = _replayHandler.Replay;
-        ReplayControlViewModel.Set(replay);
+        if (ApiModel.IsRunning)
+        {
+            return Task.CompletedTask;
+        }
+        
+        ApiRunning = ApiModel.IsRunning;
+        _ = Task.Run(ApiModel.Run);
+        return Task.CompletedTask;
     }
     
-    private void Write(string path, object obj)
-    {
-        using var fileStream = File.CreateText(path);
-        var jsonSerializer = new JsonSerializer
-        {
-            Formatting = Formatting.Indented
-        };
-        jsonSerializer.Serialize(fileStream, obj);
-    }
-
-    [RelayCommand]
+    /*[RelayCommand]
     private async Task SaveFile()
     {
         try
@@ -168,18 +124,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception e)
         {
+            Console.WriteLine("Failed to ");
         }
-    }
-
-    [RelayCommand]
-    private void StartApiServer()
-    {
-        if (ApiServerRunning)
-        {
-            return;
-        }
-        
-        ApiServerRunning = true;
-        _ = Task.Run(() => _apiServer.Run());
-    }
+    }*/
 }

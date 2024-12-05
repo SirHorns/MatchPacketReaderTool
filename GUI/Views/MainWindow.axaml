@@ -59,7 +59,7 @@
                         
                         <StackPanel Orientation="Horizontal">
                             <Button Margin="0,10,0,10" Command="{Binding StartApiServerCommand}" Content="Start API Server"/>
-                            <CheckBox Margin="10,0,10,0" IsEnabled="False" IsChecked="{Binding ApiServerRunning}" VerticalAlignment="Center"/>
+                            <CheckBox Margin="10,0,10,0" IsEnabled="False" IsChecked="{Binding ApiRunning}" VerticalAlignment="Center"/>
                         </StackPanel>
                         
                     </Border>
@@ -69,8 +69,14 @@
         </SplitView.Pane>
         
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <controls:ReplayControl Margin="25" DataContext="{Binding ReplayControlViewModel}"/>
-            <ProgressBar IsIndeterminate="{Binding IsWorking}"/>
+            <ProgressBar Width="1080" IsEnabled="{Binding IsWorking}" IsIndeterminate="{Binding IsWorking}"/>
+
+            <TabControl Width="1070" Height="700">
+                <TabItem Header="Replay">
+                    <controls:ReplayControl Margin="25" DataContext="{Binding ReplayControlViewModel}"/>
+                </TabItem>
+            </TabControl>
+            
         </StackPanel>
         
     </SplitView>

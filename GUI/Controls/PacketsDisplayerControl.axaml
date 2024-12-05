@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:GUI.ViewModels"
+             x:Class="GUI.Controls.PacketsDisplayerControl"
+             x:DataType="vm:ReplayViewModel"
+             Height="560"
+             Width="400">
+    
+    <Design.DataContext>
+        <vm:ReplayViewModel/>
+    </Design.DataContext>
+    
+    <Border
+        Background="Gray"
+        BorderBrush="White"
+        BorderThickness="4"
+        CornerRadius="10">
+        <StackPanel>
+            <TextBlock TextAlignment="Center" Margin="20 10">PACKETS</TextBlock>
+            <ScrollViewer  Height="500" IsVisible="{Binding ChunksLoaded}" VerticalScrollBarVisibility="Visible" AllowAutoHide="False">
+                <ListBox ItemsSource="{Binding PacketList}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border 
+                                BorderBrush="Black"
+                                BorderThickness="1"
+                                CornerRadius="3"
+                                Padding="0"
+                                Height="20"
+                                Width="280">
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Type}"/>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </StackPanel>
+    </Border>
+</UserControl>

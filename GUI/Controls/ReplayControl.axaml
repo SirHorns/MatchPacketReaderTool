@@ -8,7 +8,7 @@
     <StackPanel Orientation="Horizontal">
         <controls:ReplayInfoControl/>
         <controls:ChunkDisplayerControl/>
-        <controls:ChunkDisplayerControl/>
+        <controls:PacketsDisplayerControl/>
     </StackPanel>
     
 </UserControl>
