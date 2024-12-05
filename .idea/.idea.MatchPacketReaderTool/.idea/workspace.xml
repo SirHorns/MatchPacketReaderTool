@@ -14,8 +14,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="Reconfigured unhashing to output to a separate json file">
+    <list default="true" id="62ce0f26-00c2-49ae-b394-4b18600deb49" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MatchPacketReaderTool/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Controls/ChunkDisplayerControl.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/ChunkDisplayerControl.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/Controls/ReplayControl.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Controls/ReplayControl.axaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/MainWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUI/ViewModels/ReplayViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/ViewModels/ReplayViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/GUI/Views/MainWindow.axaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,12 +39,12 @@
     &quot;assignee&quot;: &quot;SirHorns&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/SirHorns/MatchPacketReaderTool.git",
-    "accountId": "d1192b13-801b-4d7c-9ee0-d018c5120e2a"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/SirHorns/MatchPacketReaderTool.git&quot;,
+    &quot;accountId&quot;: &quot;b5a2f5c8-fd68-49dc-96c7-4eb28708ca48&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/29ea32a76b2a6b8eb246f247df6a6a86d887384b4c31db2a35effccdd86c24/JsonSerializerInternalReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/327e3a92ae94d9dc98b3fe2b7ca1c80d784c39d6b851fb0259e784c3ae6928/Extensions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -75,26 +79,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.ReplayAPI: GUI.executor": "Run",
-    ".NET Launch Settings Profile.ReplayAPI: http.executor": "Run",
-    ".NET Project.GUI.executor": "Run",
-    ".NET Project.Serializer.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.ReplayAPI: GUI.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.ReplayAPI: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.GUI.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.Serializer.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Project.GUI">
     <configuration name="GUI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/GUI/bin/Debug/net8.0/GUI.exe" />
@@ -220,6 +224,8 @@
       <workItem from="1732293156696" duration="24186000" />
       <workItem from="1733113161453" duration="5899000" />
       <workItem from="1733337715938" duration="16074000" />
+      <workItem from="1733374925839" duration="1174000" />
+      <workItem from="1733376124409" duration="1987000" />
     </task>
     <task id="LOCAL-00001" summary="commit">
       <option name="closed" value="true" />

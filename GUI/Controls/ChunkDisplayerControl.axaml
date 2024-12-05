@@ -3,8 +3,8 @@
              xmlns:vm="using:GUI.ViewModels"
              x:Class="GUI.Controls.ChunkDisplayerControl"
              x:DataType="vm:ReplayViewModel"
-             Width="800"
-             Height="200">
+             Height="600"
+             Width="200">
     
     <Design.DataContext>
         <vm:ReplayViewModel/>
@@ -15,15 +15,11 @@
         BorderBrush="White"
         BorderThickness="4"
         CornerRadius="10">
-        <StackPanel >
+        <StackPanel>
             <TextBlock Margin="20 10">List of Chunks:</TextBlock>
-            
-            <ScrollViewer  IsVisible="{Binding ChunksLoaded}" HorizontalScrollBarVisibility="Visible" AllowAutoHide="False">
-                <ItemsRepeater ItemsSource="{Binding ChunkList}" Margin="20,5,20,20">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Horizontal" Spacing="5"/>
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
+            <ScrollViewer  Height="500" IsVisible="{Binding ChunksLoaded}" VerticalScrollBarVisibility="Visible" AllowAutoHide="False">
+                <ListBox ItemsSource="{Binding ChunkList}">
+                    <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Border 
                                 BorderBrush="Black"
@@ -48,8 +44,8 @@
                                 </Grid>
                             </Border>
                         </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </ScrollViewer>
         </StackPanel>
     </Border>

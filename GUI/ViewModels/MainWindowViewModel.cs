@@ -80,6 +80,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
+            if (string.IsNullOrEmpty(ReplayModel.FilePath))
+            {
+                Console.WriteLine("No replay was given!");
+                return;
+            }
+            
             _replayHandler.ParseReplay(ReplayModel.FilePath, ENetLeagueVersion.Patch420, WriteToFile);
             if (_replayHandler.Replay is null)
             {
@@ -88,12 +94,34 @@ public partial class MainWindowViewModel : ViewModelBase
                 return;
             }
 
+
+            if (_writeToFile)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(ReplayModel.FilePath);
+                var path = $"ParsedReplay/{fileName}/SerializedPackets.json";
+
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"Couldn't find serialized files: {path}");
+                    IsWorking = false;
+                    return;
+                }
+
+                Console.WriteLine("Unhashing replay...");
+
+                var res = _replayHandler.UnhashReplay(_replayHandler.Replay.SerializedPackets);
+                Write($"ParsedReplay/{fileName}/UnHhshedSerializedPackets.json", res);
+
+                Console.WriteLine("Finished Unhashing replay!");
+            }
+            
             ReplayModel.Replay = _replayHandler.Replay;
             UpdateReplayVm();
 
             ReplayService.SetReplay(_replayHandler.Replay);
             
         }, token);
+        
         ReplayLoaded = true;
         IsWorking = false;
     }
@@ -102,40 +130,6 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         var replay = _replayHandler.Replay;
         ReplayControlViewModel.Set(replay);
-    }
-
-    [RelayCommand]
-    private async Task UnhashReplay(CancellationToken token)
-    {
-        IsWorking = true;
-
-        await Task.Run(() =>
-        {
-            if (string.IsNullOrEmpty(ReplayModel.FilePath))
-            {
-                Console.WriteLine("No replay to unhash");
-                return;
-            }
-
-            var fileName = Path.GetFileNameWithoutExtension(ReplayModel.FilePath);
-            var path = $"ParsedReplay/{fileName}/SerializedPackets.json";
-
-            if (!File.Exists(path))
-            {
-                Console.WriteLine($"Couldn't find serialized files: {path}");
-                IsWorking = false;
-                return;
-            }
-
-            Console.WriteLine("Unhashing replay...");
-
-            var res = _replayHandler.UnhashReplay(_replayHandler.Replay.SerializedPackets);
-            Write($"ParsedReplay/{fileName}/UnHhshedSerializedPackets.json", res);
-
-            Console.WriteLine("Finished Unhashing replay!");
-        }, token);
-        
-        IsWorking = false;
     }
     
     private void Write(string path, object obj)

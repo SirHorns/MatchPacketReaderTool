@@ -22,7 +22,6 @@ public partial class ReplayViewModel: ViewModelBase
         _replayInfo = new ReplayInfo(0, 0, 0, 0, 0, "", "");
         _chunkList = [];
 
-        return;
         
         ChunksLoaded = true;
         for (var i = 1; i < 101; i++)

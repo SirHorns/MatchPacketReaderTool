@@ -47,9 +47,6 @@
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
-                        
-                            <Button Margin="0,10,0,10" IsEnabled="{Binding ReplayLoaded}" Command="{Binding UnhashReplayCommand}" Content="Unhash"/>
-
                         </StackPanel>
                     </Border>
                     

@@ -5,8 +5,9 @@
              x:Class="GUI.Controls.ReplayControl"
              x:DataType="vm:ReplayViewModel">
     
-    <StackPanel>
+    <StackPanel Orientation="Horizontal">
         <controls:ReplayInfoControl/>
+        <controls:ChunkDisplayerControl/>
         <controls:ChunkDisplayerControl/>
     </StackPanel>
     
