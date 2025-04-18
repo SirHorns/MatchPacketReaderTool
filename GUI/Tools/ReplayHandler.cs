@@ -35,6 +35,7 @@ public class ReplayHandler
         {
             Console.WriteLine(e);
             _serializer = new ReplaySerializer();
+            throw;
         }
     }
     

@@ -39,6 +39,12 @@ public class ENetChunkParser : ENetProtocolHandler, IChunkParser
             data = _blowfish.Decrypt(data);
         }
 
+        if (data.Length == 0)
+        {
+            Console.WriteLine("None Packet in stream, skipping."); // TODO: Implement tracking of these.
+            return;
+        }
+        
         if (data[0] == 0xFF && channel > 0 && channel < 5)
         {
             using var reader = new BinaryReader(new MemoryStream(data));
