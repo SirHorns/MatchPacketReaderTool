@@ -11,6 +11,7 @@ using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
+using LeaguePacketsSerializer.Readers;
 using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;

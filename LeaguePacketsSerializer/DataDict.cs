@@ -14,8 +14,7 @@ public static class DataDict
     private static ReplicationType _currentReplicationType { get; set; }
     private static bool?[][,] _floatArray { get; set; }
 
-
-    internal static void Initialize()
+    static DataDict()
     {
         _recording = true;
         var types = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
@@ -28,6 +27,7 @@ public static class DataDict
 
         _recording = false;
     }
+    
 
     internal static Dictionary<string, object> Gen(ReplicationType replicationType, Replicate[,] values)
     {

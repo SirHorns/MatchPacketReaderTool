@@ -1,4 +1,5 @@
 using System.Linq;
+using LeaguePacketsSerializer;
 using LeaguePacketsSerializer.Objects;
 using LeaguePacketsSerializer.Parsers;
 

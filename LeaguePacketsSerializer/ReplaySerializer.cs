@@ -10,70 +10,45 @@ using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Packets;
 using LeaguePacketsSerializer.Parsers;
 using LeaguePacketsSerializer.Parsers.ChunkParsers;
+using LeaguePacketsSerializer.Readers;
 using LeaguePacketsSerializer.Replication;
 using Newtonsoft.Json;
 using ENetPacket = LeaguePacketsSerializer.ENet.ENetPacket;
 
 namespace LeaguePacketsSerializer;
 
-public record ReplayInfo(int Sections, int Chunks, int Good, int Soft, int Hard, string SoftBadIds, string HardBadIds);
-
 public class ReplaySerializer
 {
-    private string _filePath;
     private ENetLeagueVersion _version;
 
     private ReplayReader _replayReader;
-    private PacketsSerializer _packetsSerializer;
-    private Replay _replay { get; set; }
 
-    public ReplaySerializer()
-    {
-        _packetsSerializer = new PacketsSerializer();
-        DataDict.Initialize();
-    }
+    public ReplaySerializer() { }
 
-    public Replay Serialize(string filePath, ENetLeagueVersion version = ENetLeagueVersion.Patch420, bool writeToFile = false)
+    public Replay Serialize(Stream stream, ENetLeagueVersion version = ENetLeagueVersion.Patch420)
     {
         _replayReader = new ReplayReader();
-        _filePath = filePath;
         _version = version;
-
-        Console.WriteLine("Reading replay file...");
-        
-        _replayReader.Read(File.OpenRead(_filePath), _version);
+        _replayReader.Read(stream, _version);
         _replayReader.ConstructReplay();
-        _replay = _replayReader.GetReplay();
-        
-        _packetsSerializer.ParsePackets(_replay);
-        
+        var replay = _replayReader.GetReplay();
+        PacketsSerializer.ParsePackets(ref replay);
         _replayReader = null;
-        _replay.Update();
-        _replay.ReplayInfo = GetResults(_replay);
-        PrintResults(_replay.ReplayInfo);
-        
-        if (writeToFile)
-        {
-            SerializeToFile(_replay);
-        }
-        
-        Console.WriteLine("Finished reading replay file!");
-        
-        return _replay;
+        return replay;
     }
 
-    private void SerializeToFile(Replay replay)
+    public void SerializeToFile(Replay replay, string filePath)
     {
         Console.WriteLine("Writing Replay to json file...");
 
-        var fileName = Path.GetFileNameWithoutExtension(_filePath);
+        var fileName = Path.GetFileNameWithoutExtension(filePath);
         Directory.CreateDirectory($"ParsedReplay//{fileName}");
         
         replay.WriteToJsons($"ParsedReplay//{fileName}");
         
         return;
         Directory.CreateDirectory("ParsedReplay");
-        var path = $"ParsedReplay//{Path.GetFileNameWithoutExtension(_filePath)}.json";
+        var path = $"ParsedReplay//{Path.GetFileNameWithoutExtension(filePath)}.json";
         
         using var fileStream = File.CreateText(path);
         var jsonSerializer = new JsonSerializer
@@ -81,30 +56,5 @@ public class ReplaySerializer
             Formatting = Formatting.Indented
         };
         jsonSerializer.Serialize(fileStream, replay);
-    }
-
-    private ReplayInfo GetResults(Replay replay)
-    {
-        var  info = new ReplayInfo(
-            replay.Sections.Count,
-            replay.Chunks.Count, 
-            replay.SerializedPackets.Count, 
-            replay.SoftBadPackets.Count,
-            replay.HardBadPackets.Count,
-            string.Join(",", replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct()),
-            string.Join(",", replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct()));
-        return info;
-    }
-    
-    private void PrintResults(ReplayInfo info)
-    {
-        Console.WriteLine("[Processed]");
-        Console.WriteLine($"- Chunks: {info.Chunks}");
-        Console.WriteLine($"===Packets===");
-        Console.WriteLine($"- Good: {info.Good}");
-        Console.WriteLine($"- Soft: {info.Soft}");
-        Console.WriteLine($"- Hard: {info.Hard}");
-        Console.WriteLine($"Soft bad IDs:{info.SoftBadIds}");
-        Console.WriteLine($"Hard bad IDs:{info.HardBadIds}");
     }
 }

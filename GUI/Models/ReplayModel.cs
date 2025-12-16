@@ -57,7 +57,7 @@ public class ReplayModel
         return true;
     }
     
-    private void WriteReplayToFile(string path, object obj)
+    private static void WriteReplayToFile(string path, object obj)
     {
         using var fileStream = File.CreateText(path);
         var jsonSerializer = new JsonSerializer

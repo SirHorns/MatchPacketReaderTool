@@ -15,33 +15,6 @@ namespace LeaguePackets.Game
         public override GamePacketID ID => GamePacketID.S2C_HeroStats;
         public byte[] Data { get; set; } = new byte[0];
 
-        public void WriteData(List<HeroStat> stats)
-        {
-            using (var writer = new ByteWriter())
-            {
-                foreach(var stat in stats)
-                {
-                    stat.Write(writer);
-                }
-                Data = writer.GetBytes();
-            }
-        }
-
-        public void ReadData(List<HeroStat> stats)
-        {
-            using (var reader = new ByteReader(Data))
-            {
-                foreach (var stat in stats)
-                {
-                    stat.Read(reader);
-                }
-                if (reader.Position != reader.Length)
-                {
-                    throw new IOException("Failed to read stats correctly!");
-                }
-            }
-        }
-
         protected override void ReadBody(ByteReader reader)
         {
 

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Packets;
-using LeaguePacketsSerializer.Parsers.ChunkParsers;
+using LeaguePacketsSerializer.Parsers;
 using Newtonsoft.Json;
 
-namespace LeaguePacketsSerializer.Parsers;
+namespace LeaguePacketsSerializer;
 
 public class Replay
 {
@@ -20,24 +22,7 @@ public class Replay
     public List<SerializedPacket> SerializedPackets { get; } = new();
     public List<BadPacket> SoftBadPackets { get; } = new();
     public List<BadPacket> HardBadPackets { get; } = new();
-
-    internal void Update()
-    {
-        if (Type == ReplayType.ENET)
-        {
-            return;
-        }
-
-        if (Type == ReplayType.SPECTATOR)
-        {
-            foreach (var chunk in Chunks)
-            {
-                SerializedPackets.AddRange(chunk.SerializedPackets);
-                SoftBadPackets.AddRange(chunk.SoftBadPackets);
-                HardBadPackets.AddRange(chunk.HardBadPackets);
-            }
-        }
-    }
+    
 
     protected record General(ReplayType Type, BasicHeader BasicHeader, ReplayInfo ReplayInfo);
     
@@ -69,7 +54,7 @@ public class Replay
         Write(path, HardBadPackets);
     }
 
-    private void Write(string path, object obj)
+    private static void Write(string path, object obj)
     {
         using var fileStream = File.CreateText(path);
         var jsonSerializer = new JsonSerializer
