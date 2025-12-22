@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ENet;
 using LeaguePackets;
 using LeaguePackets.Game;
-using LeaguePacketsSerializer.ENet;
 using LeaguePacketsSerializer.Enums;
 using LeaguePacketsSerializer.Packets;
-using LeaguePacketsSerializer.Parsers;
-using LeaguePacketsSerializer.Parsers.ChunkParsers;
 using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;
@@ -17,63 +15,9 @@ public static class PacketsSerializer
     private static readonly Dictionary<uint, ReplicationType> _replicationTypes = new();
     
     
-    public static void ParsePackets(ref Replay replay)
-    {
-        Console.WriteLine("Processing packets...");
-        
-        if (replay.Type == ReplayType.ENET)
-        {
-            foreach (var ePacket in replay.RawPackets)
-            {
-                ParsePacket(replay, ePacket);
-            }
-        }
-        else
-        {
-            foreach (var chunk in replay.Chunks)
-            {
-                foreach (var ePacket in chunk.ENetPackets)
-                {
-                    
-                    ParseChunkPacket(chunk, ePacket);
-                }
-            }
-        }
-
-        replay.ReplayInfo = new ReplayInfo(
-            replay.Sections.Count,
-            replay.Chunks.Count, 
-            replay.SerializedPackets.Count, 
-            replay.SoftBadPackets.Count,
-            replay.HardBadPackets.Count,
-            string.Join(",", replay.SoftBadPackets.Select(x => x.RawID.ToString()).Distinct()),
-            string.Join(",", replay.HardBadPackets.Select(x => x.RawID.ToString()).Distinct()));
-
-
-        switch (replay.Type)
-        {
-            case ReplayType.SPECTATOR:
-                foreach (var chunk in replay.Chunks)
-                {
-                    replay.SerializedPackets.AddRange(chunk.SerializedPackets);
-                    replay.SoftBadPackets.AddRange(chunk.SoftBadPackets);
-                    replay.HardBadPackets.AddRange(chunk.HardBadPackets);
-                }
-                break;
-            case ReplayType.NAN:
-            case ReplayType.NFO:
-            case ReplayType.ENET:
-            default:
-                return;
-        }
-        
-        replay = null;
-        Console.WriteLine("Finished Serializing Replay!");
-    }
-    
     //
     
-    private static void ParseChunkPacket(Chunk chunk, ENetPacket enetPacket)
+    /*private static void ParseChunkPacket(Chunk chunk, ENetPacket enetPacket)
     {
         if (enetPacket.Channel >= 8)
         {
@@ -124,7 +68,7 @@ public static class PacketsSerializer
             var hardBad = HardBad(rawId, enetPacket, exception);
             chunk.HardBadPackets.Add(hardBad);
         }
-    }
+    }*/
     
     private static void ParsePacket(Replay replay, ENetPacket rPacket)
     {

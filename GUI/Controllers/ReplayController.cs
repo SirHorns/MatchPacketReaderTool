@@ -1,6 +1,6 @@
 ﻿using System;
+using GUI.Models.Objects;
 using GUI.Services;
-using LeaguePacketsSerializer.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

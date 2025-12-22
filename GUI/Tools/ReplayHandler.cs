@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LeaguePacketsSerializer;
@@ -31,7 +32,7 @@ public class ReplayHandler
         
         try
         {
-            var stream = LRF.Read(replayPath);
+            var stream = File.OpenRead(replayPath);
             Replay = _serializer.Serialize(stream, version);
             PrintResults(Replay.ReplayInfo);
             if (writeToFile)

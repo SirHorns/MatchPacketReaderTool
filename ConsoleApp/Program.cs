@@ -2,26 +2,52 @@
 
 using LeaguePacketsSerializer;
 using LeagueReplayFile;
+using LeagueReplayFile.Enums;
+
 
 ReplaySerializer serializer = new();
-Console.WriteLine("Provide Path:");
+string path;
+if (args.Length == 0)
+{
+    Console.WriteLine("Provide Path:");
+    path = Console.ReadLine();
+}
+else
+{
+    path = args[0];
+}
 
-var path = Console.ReadLine();
+
 
 var dirs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories);
-var i = 0;
+var i = -1;
 foreach (var lrfPath in dirs)
 {
+    ++i;
     try
     {
-        var stream = LRF.Read(lrfPath);
-        var replay = serializer.Serialize(stream);
-        Console.WriteLine($"[{i}]: Parsed");
+        var stream = File.OpenRead(lrfPath);
+        //var replay = serializer.Serialize(lrf);
+        
+        var reader = new LRFReader();
+        Console.Write($"[{i}]: ");
+        var lrf = reader.Read(stream);
+
+        switch (lrf.Type)
+        {
+            case LRFTypes.NAN:
+                break;
+            case LRFTypes.NFO:
+                break;
+            case LRFTypes.SPECTATOR:
+                break;
+            case LRFTypes.ENET:
+                break;
+        }
     }
     catch (Exception e)
     {
-        Console.WriteLine($"[{i}]: Error");
-        continue;
+        Console.WriteLine($"[{i}]: Error - {e}");
     }
 }
 
