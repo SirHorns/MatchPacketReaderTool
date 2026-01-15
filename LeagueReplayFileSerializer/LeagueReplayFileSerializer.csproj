@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj" />
+      <ProjectReference Include="..\LeaguePackets\LeaguePackets.csproj" />
       <ProjectReference Include="..\LeagueReplayFile\LeagueReplayFile.csproj" />
-      <ProjectReference Include="..\ReplayAPI\ReplayAPI.csproj" />
     </ItemGroup>
 
 </Project>

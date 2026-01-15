@@ -1,6 +1,6 @@
 namespace LeaguePacketsSerializer;
 
-public class MatchReplayFiile
+public class LeagueReplayFileSerializer
 {
     
 }

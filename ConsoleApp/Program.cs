@@ -5,7 +5,7 @@ using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 
 
-ReplaySerializer serializer = new();
+//ReplaySerializer serializer = new();
 string path;
 if (args.Length == 0)
 {
@@ -17,37 +17,29 @@ else
     path = args[0];
 }
 
-
+List<SLRF> slrfs = [];
 
 var dirs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories);
-var i = -1;
+var count = dirs.Count();
+Console.WriteLine($"Total replays found: {count}");
+var i = 0;
 foreach (var lrfPath in dirs)
 {
     ++i;
+    var rid = $"{i}/{count}";
     try
     {
         var stream = File.OpenRead(lrfPath);
-        //var replay = serializer.Serialize(lrf);
-        
         var reader = new LRFReader();
-        Console.Write($"[{i}]: ");
         var lrf = reader.Read(stream);
-
-        switch (lrf.Type)
-        {
-            case LRFTypes.NAN:
-                break;
-            case LRFTypes.NFO:
-                break;
-            case LRFTypes.SPECTATOR:
-                break;
-            case LRFTypes.ENET:
-                break;
-        }
+        Console.Write($"[{rid}]: {lrf.Type}");
+        var serializer = new PacketsSerializer();
+        var slrf = serializer.CreateSerializedLRF(lrf);
+        slrfs.Add(slrf);
     }
     catch (Exception e)
     {
-        Console.WriteLine($"[{i}]: Error - {e}");
+        Console.WriteLine($"[{rid}]: Error - {e}");
     }
 }
 

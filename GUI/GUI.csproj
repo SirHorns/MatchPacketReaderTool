@@ -31,7 +31,6 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\LeaguePacketsSerializer\LeaguePacketsSerializer.csproj" />
       <ProjectReference Include="..\LeaguePackets\LeaguePackets.csproj" />
       <ProjectReference Include="..\LeagueReplayFile\LeagueReplayFile.csproj" />
       <ProjectReference Include="..\ReplayAPI\ReplayAPI.csproj" />

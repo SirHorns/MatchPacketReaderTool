@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LeaguePacketsSerializer\LeaguePacketsSerializer.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <_ContentIncludedByDefault Remove="bin\Debug\net8.0\appsettings.Development.json" />
       <_ContentIncludedByDefault Remove="bin\Debug\net8.0\appsettings.json" />
       <_ContentIncludedByDefault Remove="bin\Debug\net8.0\ReplayAPI.deps.json" />

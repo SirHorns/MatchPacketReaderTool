@@ -112,7 +112,8 @@ public class LRFReader: IDisposable
             else if (type is LRFTypes.ENET)
             {
                 var parser = new ChunkParserENet(version, metaData.EncryptionKey);
-                //parser.Read(data);
+                parser.Read(data);
+                lrf.Packets = parser.Packets;
             }
         }
 
