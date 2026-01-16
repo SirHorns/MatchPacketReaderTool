@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using LeaguePackets;
 using LeaguePackets.Game;
 using LeaguePacketsSerializer.Packets;
@@ -91,29 +92,115 @@ public partial class PacketsSerializer
             {
                 var unitNetID = rd.UnitNetID;
                 var data = rd.Data;
-                if (_netIdToTypesMap.TryGetValue(unitNetID, out var type))
+
+                var type = _netIdToTypesMap.GetValueOrDefault(unitNetID, GameObjectTypes.Unknown);
+                var replicationType = _replicationTypes.GetValueOrDefault(unitNetID, ReplicationType.Unknown );
+                Console.WriteLine($"[ID: {unitNetID} / Obj: {GameObjectTypes.Unknown} / Repl: {replicationType}]");
+
+                switch (replicationType)
                 {
-                    Console.WriteLine($"[{unitNetID} / {type}]");
+                    case ReplicationType.Unknown:
+                    case ReplicationType.Barracks:
+                    case ReplicationType.BarracksDampener:
+                        continue;
+                    default:
+                        break;
                 }
-                else
+
+                for (byte index = 0; index < 6; index++)
                 {
-                    Console.WriteLine($"[{unitNetID} / {GameObjectTypes.Unknown}]");
-                }
-                
-                foreach (var (pid, bytes) in data)
-                {
+                    uint pid = data[index].Item1;
                     if (pid == 0)
                     {
-                        continue; // nothing to replicate
+                        continue;
                     }
-                    Console.WriteLine($"<{pid} , [{string.Join(", ", bytes)}]>");
-                    for (int sid = 0; sid < 32; sid++)
+
+                    int readIndex = 0;
+                    var bytes = data[index].Item2;
+
+                    for (byte sid = 0; sid < 32; sid++)
                     {
                         if (((pid >> sid) & 1) == 0)
                         {
-                            continue; // unknown
+                            //continue;
                         }
-                        Console.WriteLine($"[{pid}::{sid}]");
+                        
+                        var repT = DataDict.GetReplicationValueType((int)replicationType, index, sid);
+                        bool? isFloat = false;
+                        switch (repT)
+                        {
+                            case DataDict.ReplicationDataType.FLOAT:
+                                try
+                                {
+                                    float valueFloat = 0;
+                                    if (bytes[readIndex] == 0xFF)
+                                    {
+                                        readIndex++;
+                                    }
+                                    else
+                                    {
+                                        int startIndex = readIndex;
+                                        if (bytes[readIndex] == 0xFE)
+                                        {
+                                            startIndex++;
+                                        }
+
+                                        valueFloat = BitConverter.ToSingle(bytes, startIndex);
+                                        readIndex = startIndex + 4;
+                                    }
+
+                                    Console.WriteLine($"[{index}::{sid}]: {valueFloat}f");
+                                }
+                                catch (Exception e)
+                                {
+                                    DumpState(bytes, readIndex, replicationType, index, sid, e);
+                                }
+                                isFloat = true;
+                                continue;
+                            case DataDict.ReplicationDataType.UINT:
+                                try
+                                {
+                                    uint valueUINT = 0;
+                                    int j = 0;
+                                    
+                                    for (; (bytes[readIndex] & 0x80) != 0;  j += 7)
+                                    {
+                                        valueUINT |= ((uint)bytes[readIndex] & 0x7f) << j;
+                                        readIndex++;
+                                    }
+
+                                    valueUINT |= (uint)bytes[readIndex] << j;
+                                    readIndex++;
+                                    Console.WriteLine($"[{index}::{sid}]: {valueUINT}u");
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine($"Bytes: {bytes.Length}");
+                                    DumpState(bytes, readIndex, replicationType, index, sid, e);
+                                }
+                                continue;
+                            case DataDict.ReplicationDataType.BOOL:
+                                break;
+                            case null:
+                                isFloat = null;
+                                Console.WriteLine(
+                                    $"Warning: the type for [{replicationType}][{index}, {sid}] is unknown");
+                                DumpState(bytes, readIndex, replicationType, index, sid);
+                                break;
+                        }
+                        switch (isFloat)
+                        {
+                            case true:
+                                continue;
+                            case false:
+                                
+
+                                continue;
+                            case null:
+                                
+                                break;
+                        }
+                        break;
                     }
                 }
             }
@@ -376,10 +463,17 @@ public partial class PacketsSerializer
         return hardBad;
     }
     
-    private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId)
+    private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId, Exception? e = null)
     {
-        var s1 = $"bytes = new byte[{bytes.Length}]{{ {string.Join(", ", bytes)} }}; i = {i}; ";
-        var s2 = $"type = {replicationType}; primaryId = {primaryId}; secondaryId = {secondaryId}";
-        Console.WriteLine($"{s1}{s2}");
+        
+        
+        var s1 = $"[{replicationType}]: Index: {primaryId}; SID: {secondaryId};";
+        var s2 = $"Bytes: byte[{bytes.Length}]; ReadPos: [{i}]; {{ {string.Join(", ", bytes)} }}; ";
+        Console.WriteLine($"{s1}");
+        Console.WriteLine($"{s2}");
+        if (e is not null)
+        {
+            Console.WriteLine(e);
+        }
     }
 }

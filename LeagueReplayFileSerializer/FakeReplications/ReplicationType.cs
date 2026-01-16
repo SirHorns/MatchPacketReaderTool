@@ -2,12 +2,12 @@ namespace LeaguePacketsSerializer.Replication;
 
 public enum ReplicationType
 {
-    Unknown = 0,
-    Turret = 1,
-    Building = 2,
-    Hero = 3,
-    Minion = 4,
+    Unknown,
     Prop,
-    Bot,
-    Marker
+    Barracks,
+    BarracksDampener,
+    Hero,
+    HQ,
+    Minion,
+    Turret
 }

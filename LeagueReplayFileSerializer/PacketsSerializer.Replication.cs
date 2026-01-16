@@ -32,13 +32,13 @@ public partial class PacketsSerializer
                 _replicationTypes[su.SenderNetID] = ReplicationType.Minion;
                 break;
             case SpawnBotS2C sb:
-                _replicationTypes[sb.SenderNetID] = ReplicationType.Bot;
+                //_replicationTypes[sb.SenderNetID] = ReplicationType.Bot;
                 break;
             case SpawnLevelPropS2C slp:
                 _replicationTypes[slp.SenderNetID] = ReplicationType.Prop;
                 break;
             case SpawnMarkerS2C sp:
-                _replicationTypes[sp.SenderNetID] = ReplicationType.Marker;
+                //_replicationTypes[sp.SenderNetID] = ReplicationType.Marker;
                 break;
             case IGamePacketsList parent:
                 foreach (var subPacket in parent.Packets)
@@ -72,8 +72,8 @@ public partial class PacketsSerializer
             else switch (netId)
             {
                 case >= 0xFF000000:
-                    Console.WriteLine($"Unit NetID: {netId}:{ReplicationType.Building}");
-                    replicationType = ReplicationType.Building;
+                    Console.WriteLine($"Unit NetID: {netId}:{ReplicationType.Unknown}");
+                    replicationType = ReplicationType.Unknown;
                     break;
                 case >= 0x40000000:
                     break;
@@ -104,7 +104,24 @@ public partial class PacketsSerializer
                         continue;
                     }
 
-                    bool? isFloat = DataDict.IsFloat((int)replicationType, primaryId, secondaryId);
+                    var repT = DataDict.GetReplicationValueType((int)replicationType, primaryId, secondaryId);
+                    bool? isFloat = false;
+                    switch (repT)
+                    {
+                        case DataDict.ReplicationDataType.FLOAT:
+                            isFloat = true;
+                            break;
+                        case DataDict.ReplicationDataType.UINT:
+                            break;
+                        case DataDict.ReplicationDataType.BOOL:
+                            break;
+                        case null:
+                            isFloat = null;
+                            break;
+                    }
+                    
+                    
+                    
                     if (isFloat == null)
                     {
                         Console.WriteLine(

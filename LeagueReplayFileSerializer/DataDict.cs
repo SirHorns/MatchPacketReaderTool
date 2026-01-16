@@ -10,18 +10,19 @@ public static class DataDict
     private static bool _recording;
     private static uint _u { get; set; }
     private static float _f { get; set; }
+    private static bool _b { get; set; }
     private static Replicate[,] _currentValues { get; set; }
     private static ReplicationType _currentReplicationType { get; set; }
-    private static bool?[][,] _floatArray { get; set; }
+    private static ReplicationDataType?[][,] _replicationMaps { get; set; }
 
     static DataDict()
     {
         _recording = true;
         var types = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
-        _floatArray = new bool?[types.Length][,];
+        _replicationMaps = new ReplicationDataType?[types.Length][,];
         foreach (var type in types)
         {
-            _floatArray[(int)type] = new bool?[6, 32];
+            _replicationMaps[(int)type] = new ReplicationDataType?[6, 32];
             Gen(type, null);
         }
 
@@ -29,7 +30,7 @@ public static class DataDict
     }
     
 
-    internal static Dictionary<string, object> Gen(ReplicationType replicationType, Replicate[,] values)
+    internal static Dictionary<string, object> Gen(ReplicationType replicationType, Replicate[,]? values)
     {
         var data = new Dictionary<string, object>();
         _currentReplicationType = replicationType;
@@ -44,14 +45,17 @@ public static class DataDict
             case ReplicationType.Turret:
 
                 /**/
-                if (TryGetFloat(1, 0)) data["Stats.ManaPoints.Total"] = _f; //mMaxMP
+                if (TryGetFloat(1, 0))
+                { 
+                    data["Stats.ManaPoints.Total"] = _f; //mMaxMP
+                }
                 /**/
                 if (TryGetFloat(1, 1)) data["Stats.CurrentMana"] = _f; //mMP
                 if (TryGetUint(1, 2)) data["Stats.ActionState"] = ((ActionState)_u).ToString(); //ActionState
-                if (TryGetUint(1, 3)) data["Stats.IsMagicImmune"] = _u == 1u; //MagicImmune
-                if (TryGetUint(1, 4)) data["Stats.IsInvulnerable"] = _u == 1u; //IsInvulnerable
-                if (TryGetUint(1, 5)) data["Stats.IsPhysicalImmune"] = _u == 1u; //IsPhysicalImmune
-                if (TryGetUint(1, 6)) data["Stats.IsLifestealImmune"] = _u == 1u; //IsLifestealImmune
+                if (TryGetBool(1, 3)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
+                if (TryGetBool(1, 4)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
+                if (TryGetBool(1, 5)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
+                if (TryGetBool(1, 6)) data["Stats.IsLifestealImmune"] = _b; //IsLifestealImmune
                 if (TryGetFloat(1, 7)) data["Stats.AttackDamage.BaseValue"] = _f; //mBaseAttackDamage
                 if (TryGetFloat(1, 8)) data["Stats.Armor.Total"] = _f; //mArmor
                 if (TryGetFloat(1, 9)) data["Stats.MagicResist.Total"] = _f; //mSpellBlock
@@ -68,19 +72,18 @@ public static class DataDict
                 if (TryGetFloat(3, 3)) data["Stats.PerceptionRange.PercentBonus"] = _f; //mPercentBubbleRadiusMod
                 if (TryGetFloat(3, 4)) data["Stats.GetTrueMoveSpeed()"] = _f; //mMoveSpeed
                 if (TryGetFloat(3, 5)) data["Stats.Size.Total"] = _f; //mSkinScaleCoef(mistyped as mCrit)
-                if (TryGetUint(5, 0)) data["Stats.IsTargetable"] = _u == 1u; //mIsTargetable
+                if (TryGetBool(5, 0)) data["Stats.IsTargetable"] = _b; //mIsTargetable
                 if (TryGetUint(5, 1))
                     data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
-            case ReplicationType.Building:
+            case ReplicationType.HQ:
 
                 if (TryGetFloat(1, 0)) data["Stats.CurrentHealth"] = _f; //mHP
-                if (TryGetUint(1, 1)) data["Stats.IsInvulnerable"] = _u == 1u; //IsInvulnerable
-                if (TryGetUint(5, 0)) data["Stats.IsTargetable"] = _u == 1u; //mIsTargetable
-                if (TryGetUint(5, 1))
-                    data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetBool(1, 1)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
+                if (TryGetBool(5, 0)) data["Stats.IsTargetable"] = _b; //mIsTargetable
+                if (TryGetUint(5, 1)) data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
@@ -109,10 +112,10 @@ public static class DataDict
                 }
 
                 if (TryGetUint(1, 0)) data["Stats.ActionState"] = ((ActionState)_u).ToString();
-                if (TryGetUint(1, 1)) data["Stats.IsMagicImmune"] = _u == 1u; //MagicImmune
-                if (TryGetUint(1, 2)) data["Stats.IsInvulnerable"] = _u == 1u; //IsInvulnerable
-                if (TryGetUint(1, 3)) data["Stats.IsPhysicalImmune"] = _u == 1u; //IsPhysicalImmune
-                if (TryGetUint(1, 4)) data["Stats.IsLifestealImmune"] = _u == 1u; //IsLifestealImmune
+                if (TryGetBool(1, 1)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
+                if (TryGetBool(1, 2)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
+                if (TryGetBool(1, 3)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
+                if (TryGetBool(1, 4)) data["Stats.IsLifestealImmune"] = _b; //IsLifestealImmune
                 if (TryGetFloat(1, 5)) data["Stats.AttackDamage.BaseValue"] = _f; //mBaseAttackDamage
                 if (TryGetFloat(1, 6)) data["Stats.AbilityPower.BaseValue"] = _f; //mBaseAbilityDamage
                 /**/
@@ -172,17 +175,13 @@ public static class DataDict
                 if (TryGetFloat(3, 12)) data["Stats.FlatPathfindingRadiusMod"] = _f; //mPathfindingRadiusMod
                 if (TryGetUint(3, 13)) data["Stats.Level"] = _u; //mLevelRef
                 if (TryGetUint(3, 14)) data["Owner.MinionCounter"] = _u; //mNumNeutralMinionsKilled
-                if (TryGetUint(3, 15)) data["Stats.IsTargetable"] = _u == 1u; //mIsTargetable
+                if (TryGetBool(3, 15)) data["Stats.IsTargetable"] = _b; //mIsTargetable
                 if (TryGetUint(3, 16))
                     data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
             case ReplicationType.Minion:
-                //case ReplicationType.LaneMinion:
-                //case ReplicationType.Monster:
-                //case ReplicationType.Pet:
-
                 if (TryGetFloat(1, 0)) data["Stats.CurrentHealth"] = _f; //mHP
                 if (TryGetFloat(1, 1)) data["Stats.HealthPoints.Total"] = _f; //mMaxHP
                 /**/
@@ -194,10 +193,10 @@ public static class DataDict
                 if (TryGetFloat(1, 5)) data["Stats.ManaPoints.Total"] = _f; //mMaxMP
                 if (TryGetFloat(1, 6)) data["Stats.CurrentMana"] = _f; //mMP
                 if (TryGetUint(1, 7)) data["Stats.ActionState"] = ((ActionState)_u).ToString(); //ActionState
-                if (TryGetUint(1, 8)) data["Stats.IsMagicImmune"] = _u == 1u; //MagicImmune
-                if (TryGetUint(1, 9)) data["Stats.IsInvulnerable"] = _u == 1u; //IsInvulnerable
-                if (TryGetUint(1, 10)) data["Stats.IsPhysicalImmune"] = _u == 1u; //IsPhysicalImmune
-                if (TryGetUint(1, 11)) data["Stats.IsLifestealImmune"] = _u == 1u; //IsLifestealImmune
+                if (TryGetBool(1, 8)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
+                if (TryGetBool(1, 9)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
+                if (TryGetBool(1, 10)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
+                if (TryGetBool(1, 11)) data["Stats.IsLifestealImmune"] = _b; //IsLifestealImmune
                 if (TryGetFloat(1, 12)) data["Stats.AttackDamage.BaseValue"] = _f; //mBaseAttackDamage
                 if (TryGetFloat(1, 13)) data["Stats.Armor.Total"] = _f; //mArmor
                 if (TryGetFloat(1, 14)) data["Stats.MagicResist.Total"] = _f; //mSpellBlock
@@ -215,27 +214,38 @@ public static class DataDict
                 if (TryGetFloat(3, 1)) data["Stats.PerceptionRange.PercentBonus"] = _f; //mPercentBubbleRadiusMod
                 if (TryGetFloat(3, 2)) data["Stats.GetTrueMoveSpeed()"] = _f; //mMoveSpeed
                 if (TryGetFloat(3, 3)) data["Stats.Size.Total"] = _f; //mSkinScaleCoef(mistyped as mCrit)
-                if (TryGetUint(3, 4)) data["Stats.IsTargetable"] = _u == 1u; //mIsTargetable
-                if (TryGetUint(3, 5))
-                    data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetBool(3, 4)) data["Stats.IsTargetable"] = _b; //mIsTargetable
+                if (TryGetUint(3, 5)) data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
 
-                break;
+                break; 
         }
 
         return data;
     }
-
-    internal static bool? IsFloat(int x, byte y, byte z)
+    
+    public enum ReplicationDataType
     {
-        return _floatArray[x][y, z];
+        UNKNOWN,
+        FLOAT,
+        UINT,
+        BOOL,
+        ACTION_STATE,
+        SPELL_DATA_FLAGS
+    }
+
+    internal static ReplicationDataType? GetReplicationValueType(int replicationType, byte index, byte sid)
+    {
+        var replicationSet = _replicationMaps[replicationType];
+        var res = replicationSet[index, sid];
+        return res;
     }
      
-    private static bool TryGet(int primaryId, int secondaryId, bool isFloat)
+    private static bool TryGet(int primaryId, int secondaryId, ReplicationDataType replicationDataType)
     {
         //TODO: value.isFloat != isFloat
         if (_recording)
         {
-            _floatArray[(int)_currentReplicationType][primaryId, secondaryId] = isFloat;
+            _replicationMaps[(int)_currentReplicationType][primaryId, secondaryId] = replicationDataType;
             return false;
         }
 
@@ -245,25 +255,34 @@ public static class DataDict
             return false;
         }
 
-        if (isFloat)
-        {
-            _f = value.Float;
-        }
-        else
-        {
-            _u = value.Uint;
-        }
 
+        switch (replicationDataType)
+        {
+            case ReplicationDataType.FLOAT:
+                _f = value.Float;
+                break;
+            case ReplicationDataType.UINT:
+                _u = value.Uint;
+                break;
+            case ReplicationDataType.BOOL:
+                _b = value.Bool;
+                break;
+        }
         return true;
     }
 
     private static bool TryGetUint(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, false);
+        return TryGet(primaryId, secondaryId, ReplicationDataType.UINT);
     }
 
     private static bool TryGetFloat(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, true);
+        return TryGet(primaryId, secondaryId, ReplicationDataType.FLOAT);
+    }
+    
+    private static bool TryGetBool(int primaryId, int secondaryId)
+    {
+        return TryGet(primaryId, secondaryId, ReplicationDataType.BOOL);
     }
 }
