@@ -7,9 +7,10 @@ using LeagueReplayFile.Protocols.ENet;
 
 namespace LeaguePacketsSerializer;
 
-public class PacketsSerializer
+public partial class PacketsSerializer
 {
     private readonly Dictionary<uint, ReplicationType> _replicationTypes = new();
+    private readonly SortedDictionary<uint, GameObjectTypes> _netIdToTypesMap = [];
 
 
     public SLRF CreateSerializedLRF(LRF lrf)
@@ -43,63 +44,9 @@ public class PacketsSerializer
     
     //
     
-    /*private void ParseChunkPacket(Chunk chunk, ENetPacket enetPacket)
-    {
-        if (enetPacket.Channel >= 8)
-        {
-            return;
-        }
-
-        int rawId = enetPacket.Bytes[0];
-        if (rawId == 254)
-        {
-            rawId = enetPacket.Bytes[5] | enetPacket.Bytes[6] << 8;
-        }
-
-        try
-        {
-            var basePacket = BasePacket.Create(enetPacket.Bytes, (ChannelID)enetPacket.Channel);
-            object packetToSerialize = basePacket;
-            
-            if (basePacket is OnReplication replication)
-            {
-                packetToSerialize = OnReplication(replication);
-            }
-            else
-            {
-                SetReplicationType(basePacket);
-            }
-
-            var serializedPacket = CreateSerializePacket(rawId, packetToSerialize, enetPacket);
-            chunk.SerializedPackets.Add(serializedPacket);
-            if (enetPacket.Channel > 0 && basePacket.ExtraBytes.Length > 0)
-            {
-                var softBad = SoftBad(rawId, enetPacket, basePacket);
-                chunk.SoftBadPackets.Add(softBad);
-            }
-
-            if (basePacket is not IGamePacketsList list)
-            {
-                return;
-            }
-
-            var softBads = SoftBadLoop(list, enetPacket);
-            foreach (var softBad in softBads)
-            {
-                chunk.SoftBadPackets.Add(softBad);
-            }
-        }
-        catch (Exception exception)
-        {
-            var hardBad = HardBad(rawId, enetPacket, exception);
-            chunk.HardBadPackets.Add(hardBad);
-        }
-    }*/
-
 
     private List<SerializedPacket>  Test(IList<ENetPacket> eNetPackets)
     {
-        int index = 0;
         List<SerializedPacket> serializedPackets = [];
 
         List<BasePacket?> basePackets = [];
@@ -115,17 +62,64 @@ public class PacketsSerializer
             basePackets.Add(basePacket);
         }
 
-        foreach (var basePacket in basePackets)
+        foreach (var pkt in basePackets)
         {
-            if (basePacket is null)
+            if (pkt is null)
             {
                 continue;
             }
-            RegisterUnitReplicationType(basePacket);
+            RegisterUnitReplicationType(pkt);
+            RegisterObj(pkt);
         }
 
+        List<OnReplication> replications = [];
+        
+        foreach (var packet in basePackets)
+        {
+            if (packet is not OnReplication onReplication)
+            {
+                continue;
+            }
+            replications.Add(onReplication);
+        }
 
-        for (int i = 0; i < eNetPackets.Count(); i++)
+        foreach (var replication in replications)
+        {
+            var syncId = replication.SyncID;
+            Console.WriteLine($"[{syncId}]");
+            foreach (var rd in replication.ReplicationData)
+            {
+                var unitNetID = rd.UnitNetID;
+                var data = rd.Data;
+                if (_netIdToTypesMap.TryGetValue(unitNetID, out var type))
+                {
+                    Console.WriteLine($"[{unitNetID} / {type}]");
+                }
+                else
+                {
+                    Console.WriteLine($"[{unitNetID} / {GameObjectTypes.Unknown}]");
+                }
+                
+                foreach (var (pid, bytes) in data)
+                {
+                    if (pid == 0)
+                    {
+                        continue; // nothing to replicate
+                    }
+                    Console.WriteLine($"<{pid} , [{string.Join(", ", bytes)}]>");
+                    for (int sid = 0; sid < 32; sid++)
+                    {
+                        if (((pid >> sid) & 1) == 0)
+                        {
+                            continue; // unknown
+                        }
+                        Console.WriteLine($"[{pid}::{sid}]");
+                    }
+                }
+            }
+        }
+        
+        for (var i = 0; i < eNetPackets.Count; i++)
         {
             var eNetPacket = eNetPackets[i];
             if (eNetPacket.Channel >= 8)
@@ -142,18 +136,23 @@ public class PacketsSerializer
                 serializedPackets.Add(badChannelPacket);
                 continue;
             }
-            int rawId = eNetPacket.Bytes[0];
-            if (rawId == 254)
-            {
-                rawId = eNetPacket.Bytes[5] | eNetPacket.Bytes[6] << 8;
-            }
-
+            var rawId = GetID(eNetPacket);
             var basePacket = basePackets[i];
             var serializedPacket = Parse(eNetPacket, basePacket, rawId);
             serializedPackets.Add(serializedPacket);
         }
 
         return serializedPackets;
+    }
+
+    private int GetID(ENetPacket eNetPacket)
+    {
+        int rawId = eNetPacket.Bytes[0];
+        if (rawId == 254)
+        {
+            rawId = eNetPacket.Bytes[5] | eNetPacket.Bytes[6] << 8;
+        }
+        return rawId;
     }
     
     private SerializedPacket? ParsePacket(ENetPacket eNetPacket)
@@ -192,10 +191,10 @@ public class PacketsSerializer
             
             if (basePacket is OnReplication replication)
             {
-                packetToSerialize = OnReplication(replication);
+                //packetToSerialize = OnReplication(replication);
             }
 
-            var serializedPacket = CreateSerializePacket(rawId, packetToSerialize, rPacket);
+            var serializedPacket = SerializedPacket.Create(rawId, rPacket, packetToSerialize);
 
             if (rPacket.Channel > 0 && basePacket.ExtraBytes.Length > 0)
             {
@@ -220,208 +219,113 @@ public class PacketsSerializer
         return null;
     }
     
-    private void RegisterUnitReplicationType(BasePacket packet)
+    public enum GameObjectTypes
     {
+        Unknown,
+        InfoPoint,
+        EffectEmitter,
+        LevelProp,
+        Missile,
+        ChainMissile = Missile,
+        CircleMissile = Missile,
+        LineMissile = Missile,
+        NeutralMinionCamp,
+        AttackableUnit,
+        ObjAIBase = AttackableUnit,
+        ObjAIBase_Hero = ObjAIBase,
+        ObjAIBase_Turret = ObjAIBase,
+        ObjAIBase_Minion = ObjAIBase,
+        ObjAIBase_Marker = ObjAIBase,
+        ObjAIBase_LevelProp = ObjAIBase,
+        ObjAIBase_FollowerObject = ObjAIBase,
+        ObjBuilding,
+        ObjBuilding_Shop = ObjBuilding,
+        ObjBuilding_Levelsizer  = ObjBuilding,
+        ObjBuilding_NavPoint = ObjBuilding,
+        ObjBuilding_Lake = ObjBuilding,
+        ObjBuilding_SpawnPoint = ObjBuilding,
+        ObjBuildingBarracks = ObjBuilding,
+        ObjBuilding_Animated = ObjBuilding,
+        ObjAnimated_Turret = ObjBuilding_Animated,
+        ObjAnimated_HQ = ObjBuilding_Animated,
+        ObjAnimated_BarracksDampener = ObjBuilding_Animated,
+        
+    }
+    
+    private void RegisterObj(BasePacket packet)
+    {
+        uint netID = 0;
+        GameObjectTypes type = GameObjectTypes.Unknown;
         switch (packet)
         {
-            case S2C_CreateTurret ct:
-                _replicationTypes[ct.NetID] = ReplicationType.Turret;
+            case S2C_CreateTurret pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Turret;
                 break;
-            case S2C_SpawnTurret st:
-                _replicationTypes[st.NetID] = ReplicationType.Turret;
+            case S2C_SpawnTurret pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Turret;
                 break;
-            case S2C_CreateHero ch:
-                _replicationTypes[ch.NetID] = ReplicationType.Hero;
+            case S2C_CreateHero pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Hero;
                 break;
-            case S2C_CreateNeutral cn:
-                _replicationTypes[cn.NetID] = ReplicationType.Minion;
+            case S2C_CreateNeutral pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.NeutralMinionCamp;
                 break;
-            case CHAR_SpawnPet sp:
-                _replicationTypes[sp.SenderNetID] = ReplicationType.Minion;
+            case CHAR_SpawnPet pkt:
+                netID = pkt.SenderNetID;
+                type = GameObjectTypes.AttackableUnit;
                 break;
-            case SpawnMinionS2C sm:
-                _replicationTypes[sm.NetID] = ReplicationType.Minion;
+            case SpawnMinionS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.AttackableUnit;
                 break;
-            case Barrack_SpawnUnit su:
-                _replicationTypes[su.SenderNetID] = ReplicationType.Minion;
+            case Barrack_SpawnUnit pkt:
+                netID = pkt.SenderNetID;
+                type = GameObjectTypes.AttackableUnit;
                 break;
-            case SpawnBotS2C sb:
-                _replicationTypes[sb.SenderNetID] = ReplicationType.Bot;
+            case SpawnBotS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.Unknown; // GameObjectTypes.Bot;
                 break;
-            case SpawnLevelPropS2C slp:
-                _replicationTypes[slp.SenderNetID] = ReplicationType.Prop;
+            case SpawnLevelPropS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.LevelProp;
                 break;
-            case SpawnMarkerS2C sp:
-                _replicationTypes[sp.SenderNetID] = ReplicationType.Marker;
+            case SpawnMarkerS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Marker;
+                break;
+            case S2C_ForceCreateMissile pkt:
+                return;
+                netID = pkt.MissileNetID;
+                type = GameObjectTypes.Missile;
                 break;
             case IGamePacketsList parent:
                 foreach (var subPacket in parent.Packets)
                 {
-                    RegisterUnitReplicationType(subPacket);
+                    RegisterObj(subPacket);
                 }
                 break;
+            default:
+                return;
+        }
+
+        if (netID == 0)
+        {
+            return;
+        }
+        
+        if (!_netIdToTypesMap.TryAdd(netID, type))
+        {
+            var saved = _netIdToTypesMap[netID];
+            Console.WriteLine($"Attempt Map Override :: {netID} : {saved} -> {type}");
         }
     }
     
-    private object OnReplication(OnReplication onReplication)
-    {
-        var packetToSerialize = new FakeOnReplication
-        {
-            SyncID = onReplication.SyncID,
-            SenderNetID = onReplication.SenderNetID,
-            ExtraBytes = onReplication.ExtraBytes
-        };
-
-        foreach (var data in onReplication.ReplicationData)
-        {
-            var netId = data.UnitNetID;
-            var values = new Replicate[6, 32];
-            var replicationType = ReplicationType.Unknown;
-            
-            
-            if (_replicationTypes.TryGetValue(netId, out replicationType))
-            {
-                Console.WriteLine($"Unit NetID: {netId}:{replicationType}");
-            }
-            else switch (netId)
-            {
-                case >= 0xFF000000:
-                    Console.WriteLine($"Unit NetID: {netId}:{ReplicationType.Building}");
-                    replicationType = ReplicationType.Building;
-                    break;
-                case >= 0x40000000:
-                    break;
-                    Console.WriteLine($"Unit NetID: {netId}:{ReplicationType.Turret}");
-                    //TODO: investigate
-                    replicationType = ReplicationType.Turret;
-                    break;
-                default:
-                    //Console.WriteLine($"WARNING: The type of NetId: #{netId} is Unknown ");
-                    continue;
-            }
-
-            for (byte primaryId = 0; primaryId < 6; primaryId++)
-            {
-                uint secondaryIdArray = data.Data[primaryId].Item1;
-                if (secondaryIdArray == 0)
-                {
-                    continue;
-                }
-
-                int i = 0;
-                var bytes = data.Data[primaryId].Item2;
-
-                for (byte secondaryId = 0; secondaryId < 32; secondaryId++)
-                {
-                    if (((secondaryIdArray >> secondaryId) & 1) == 0)
-                    {
-                        continue;
-                    }
-
-                    bool? isFloat = DataDict.IsFloat((int)replicationType, primaryId, secondaryId);
-                    if (isFloat == null)
-                    {
-                        Console.WriteLine(
-                            $"Warning: the type for [{replicationType}][{primaryId}, {secondaryId}] is unknown");
-                        DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                        break;
-                    }
-                    else if (isFloat == true)
-                    {
-                        try
-                        {
-                            float value = 0;
-                            if (bytes[i] == 0xFF)
-                            {
-                                i++;
-                            }
-                            else
-                            {
-                                int startIndex = i;
-                                if (bytes[i] == 0xFE)
-                                {
-                                    startIndex++;
-                                }
-
-                                value = BitConverter.ToSingle(
-                                    bytes,
-                                    startIndex
-                                );
-                                i = startIndex + 4;
-                            }
-
-                            values[primaryId, secondaryId] = new Replicate(value);
-                        }
-                        catch (Exception e)
-                        {
-                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            uint value = 0;
-                            int j = 0;
-                            for (; (bytes[i] & 0x80) != 0; i++, j += 7)
-                            {
-                                value |= ((uint)bytes[i] & 0x7f) << j;
-                            }
-
-                            value |= (uint)bytes[i] << j;
-                            i++;
-                            values[primaryId, secondaryId] = new Replicate(value);
-                        }
-                        catch (Exception e)
-                        {
-                            DumpState(bytes, i, replicationType, primaryId, secondaryId);
-                        }
-                    }
-                }
-            }
-
-            packetToSerialize.ReplicationData.Add(new FakeReplicationData(netId, DataDict.Gen(replicationType, values)));
-        }
-
-        return packetToSerialize;
-    }
-
-    private SerializedPacket CreateSerializePacket(int rawId, object packetToSerialize, ENetPacket rPacket)
-    {
-        var type = "";
-
-        switch ((ChannelID)rPacket.Channel)
-        {
-            case ChannelID.Default:
-                type = "Registry";
-                break;
-            case ChannelID.ClientToServer:
-            case ChannelID.SynchClock:
-            case ChannelID.Broadcast:
-            case ChannelID.BroadcastUnreliable:
-                type = ((GamePacketID)rawId).ToString();
-                break;
-            case ChannelID.Chat:
-            case ChannelID.QuickChat:
-            case ChannelID.LoadingScreen:
-                type = ((LoadScreenPacketID)rawId).ToString();
-                break;
-            default:
-                type = "Unknown";
-                break;
-        }
-        
-        var pkt = new SerializedPacket
-        {
-            RawID = rawId,
-            Type = type,
-            ChannelID = rPacket.Channel < 8 ? (ChannelID)rPacket.Channel : null,
-            Packet = packetToSerialize,
-            Time = rPacket.Time,
-            RawChannel = rPacket.Channel,
-        };
-        return pkt;
-    }
+    
 
     private BadPacket SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)
     {
