@@ -1,9 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using LeaguePacketsSerializer;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
+using LeagueReplayFileSerializer;
+using Newtonsoft.Json;
 
+string _serializedDirectory = "Serialized";
+
+Directory.CreateDirectory(_serializedDirectory);
 
 //ReplaySerializer serializer = new();
 string path;
@@ -16,16 +20,19 @@ else
 {
     path = args[0];
 }
-
-List<SLRF> slrfs = [];
-
 var dirs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories);
 var count = dirs.Count();
 Console.WriteLine($"Total replays found: {count}");
 var i = 0;
+
 foreach (var lrfPath in dirs)
 {
     ++i;
+    var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
+    if (File.Exists($"{_serializedDirectory}/{fileName}"))
+    {
+        Console.WriteLine($"Skipping {fileName}; Already exists.");
+    }
     var rid = $"{i}/{count}";
     try
     {
@@ -35,6 +42,8 @@ foreach (var lrfPath in dirs)
         Console.WriteLine($"[{rid}]: {lrf.Type}");
         var serializer = new LRFSerializer();
         var slrf = serializer.CreateSerializedLRF(lrf);
+        var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
+        File.WriteAllText($"{_serializedDirectory}/{fileName}", json);
     }
     catch (Exception e)
     {
