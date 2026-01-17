@@ -1,25 +1,17 @@
 using LeaguePackets;
 using LeaguePackets.Game;
 using LeaguePacketsSerializer.Packets;
-using LeaguePacketsSerializer.Replication;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFileSerializer.Replications;
-using Newtonsoft.Json;
 
 namespace LeaguePacketsSerializer;
 
 public partial class LRFSerializer
 {
-    private readonly Dictionary<uint, ReplicationType> _replicationTypes = new();
     private readonly SortedDictionary<uint, GameObjectTypes> _netIdToTypesMap = [];
-    private ReplicationDict ReplicationDict;
 
-    public LRFSerializer()
-    {
-        ReplicationDict = new ReplicationDict();
-    }
+    public LRFSerializer() { }
 
     public SLRF CreateSerializedLRF(LRF lrf)
     {
@@ -38,7 +30,7 @@ public partial class LRFSerializer
             case LRFTypes.SPECTATOR:
                 break;
             case LRFTypes.ENET:
-                var packets = ParsePackets(lrf.ENetPackets);
+                var packets = WIP(lrf.ENetPackets.ToArray());
                 slrf.Packets = packets;
                 break;
             default:
@@ -49,28 +41,7 @@ public partial class LRFSerializer
     }
     
     //
-
-    public List<SerializedPacket>  ParsePackets(IEnumerable<ENetPacket> packets)
-    {
-        WIP(packets.ToList());
-        
-        List<SerializedPacket> serialized = [];
-        foreach (var packet in packets)
-        {
-            var res = ParsePacket(packet);
-            if (res is null)
-            {
-                continue;
-            }
-            serialized.Add(res);
-        }
-
-        return serialized;
-    }
     
-    //
-    
-
     private List<SerializedPacket>  WIP(IList<ENetPacket> eNetPackets)
     {
         var serializedPackets = new List<SerializedPacket>();
@@ -143,34 +114,6 @@ public partial class LRFSerializer
         return rawId;
     }
     
-    private SerializedPacket? ParsePacket(ENetPacket eNetPacket)
-    {
-        if (eNetPacket.Channel >= 8)
-        {
-            var badChannelPacket = new SerializedPacket()
-            {
-                RawID = -1,
-                Type = "Unknown",
-                ChannelID = null,
-                RawChannel = eNetPacket.Channel,
-                Time = eNetPacket.Time,
-                Packet = eNetPacket
-            };
-            return badChannelPacket;
-        }
-
-        int rawId = eNetPacket.Bytes[0];
-        if (rawId == 254)
-        {
-            rawId = eNetPacket.Bytes[5] | eNetPacket.Bytes[6] << 8;
-        }
-
-        var basePacket = BasePacket.Create(eNetPacket.Bytes, (ChannelID)eNetPacket.Channel);
-        RegisterUnitReplicationType(basePacket);
-        var serializedPacket = Parse(eNetPacket, basePacket, rawId);
-        return serializedPacket;
-    }
-
     private SerializedPacket? Parse(ENetPacket eNetPacket, BasePacket basePacket, int rawId)
     {
         SerializedPacket? serializedPacket = new SerializedPacket()
@@ -232,93 +175,6 @@ public partial class LRFSerializer
         return serializedPacket;
     }
     
-
-    private object SerializeOnReplication(OnReplication replication)
-    {
-            var syncId = replication.SyncID;
-            //Console.WriteLine($"[{syncId}]");
-            foreach (var rd in replication.ReplicationData)
-            {
-                var unitNetID = rd.UnitNetID;
-                var data = rd.Data;
-
-                var objectType = _netIdToTypesMap.GetValueOrDefault(unitNetID, GameObjectTypes.Unknown);
-                var replicationType = _replicationTypes.GetValueOrDefault(unitNetID, ReplicationType.Unknown );
-                //Console.WriteLine($"[ID: {unitNetID} / Obj: {GameObjectTypes.Unknown} / Repl: {replicationType}]");
-
-                Replicant? owner = null;
-                
-                switch (replicationType)
-                {
-                    case ReplicationType.Unknown:
-                    case ReplicationType.Barracks:
-                    case ReplicationType.BarracksDampener:
-                        continue;
-                    case ReplicationType.Prop:
-                        break;
-                    case ReplicationType.Hero:
-                        break;
-                    case ReplicationType.HQ:
-                        owner = new HQ();
-                        break;
-                    case ReplicationType.Minion:
-                        owner = new Minion();
-                        break;
-                    case ReplicationType.Turret:
-                        break;
-                    default:
-                        break;
-                }
-                for (byte pid = 0; pid < 6; pid++)
-                {
-                    var unknown = data[pid].Item1;
-                    if (unknown == 0)
-                    {
-                        continue;
-                    }
-
-                    var index = 0;
-                    var bytes = data[pid].Item2;
-
-                    for (byte sid = 0; sid < 32; sid++)
-                    {
-                        if (((unknown >> sid) & 1) == 0)
-                        {
-                            continue; // not sure what the large unknown Tuple uints mean
-                        }
-                        
-                        var replicationDataType = ReplicationDict.GetReplicationValueType((int)replicationType, pid, sid);
-                        object? val = null; 
-                        try
-                        {
-                            val = ReplicationDict.GetValue(replicationDataType, bytes, ref index);
-                        }
-                        catch (Exception e)
-                        {
-                            //Console.WriteLine($"Failed to find replication {replicationDataType} for a {replicationType}");
-                            DumpState(bytes, index, replicationType, pid, sid, e);
-                            break;
-                        }
-
-                        if (owner is not null)
-                        {
-                            owner.SetValue(pid, sid, val);
-                        }
-                    }
-                }
-
-                if (owner is null)
-                {
-                    continue;
-                }
-
-                var json = JsonConvert.SerializeObject(owner, Formatting.Indented);
-                Console.WriteLine(json);
-            }
-
-            return null;
-    }
-
     private void RegisterGameObjectType(BasePacket packet)
     {
         uint netID = 0;
@@ -439,19 +295,5 @@ public partial class LRFSerializer
             Error = exception.ToString(),
         };
         return hardBad;
-    }
-    
-    private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId, Exception? e = null)
-    {
-        
-        
-        var s1 = $"[{replicationType}]: Index: {primaryId}; SID: {secondaryId};";
-        var s2 = $"Bytes: byte[{bytes.Length}]; ReadPos: [{i}]; {{ {string.Join(", ", bytes)} }}; ";
-        Console.WriteLine($"{s1}");
-        Console.WriteLine($"{s2}");
-        if (e is not null)
-        {
-            Console.WriteLine(e);
-        }
     }
 }

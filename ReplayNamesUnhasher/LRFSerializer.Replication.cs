@@ -6,6 +6,105 @@ namespace LeaguePacketsSerializer;
 
 public partial class LRFSerializer
 {
+    private object SerializeOnReplication(OnReplication replication)
+    {
+            var syncId = replication.SyncID;
+            //Console.WriteLine($"[{syncId}]");
+            foreach (var rd in replication.ReplicationData)
+            {
+                var unitNetID = rd.UnitNetID;
+                var data = rd.Data;
+
+                var objectType = _netIdToTypesMap.GetValueOrDefault(unitNetID, GameObjectTypes.Unknown);
+                var replicationType = _replicationTypes.GetValueOrDefault(unitNetID, ReplicationType.Unknown );
+                //Console.WriteLine($"[ID: {unitNetID} / Obj: {GameObjectTypes.Unknown} / Repl: {replicationType}]");
+
+                Replicant? owner = null;
+                
+                switch (replicationType)
+                {
+                    case ReplicationType.Unknown:
+                    case ReplicationType.Barracks:
+                    case ReplicationType.BarracksDampener:
+                        continue;
+                    case ReplicationType.Prop:
+                        break;
+                    case ReplicationType.Hero:
+                        break;
+                    case ReplicationType.HQ:
+                        owner = new HQ();
+                        break;
+                    case ReplicationType.Minion:
+                        owner = new Minion();
+                        break;
+                    case ReplicationType.Turret:
+                        break;
+                    default:
+                        break;
+                }
+                for (byte pid = 0; pid < 6; pid++)
+                {
+                    var unknown = data[pid].Item1;
+                    if (unknown == 0)
+                    {
+                        continue;
+                    }
+
+                    var index = 0;
+                    var bytes = data[pid].Item2;
+
+                    for (byte sid = 0; sid < 32; sid++)
+                    {
+                        if (((unknown >> sid) & 1) == 0)
+                        {
+                            continue; // not sure what the large unknown Tuple uints mean
+                        }
+                        
+                        var replicationDataType = ReplicationDict.GetReplicationValueType((int)replicationType, pid, sid);
+                        object? val = null; 
+                        try
+                        {
+                            val = ReplicationDict.GetValue(replicationDataType, bytes, ref index);
+                        }
+                        catch (Exception e)
+                        {
+                            //Console.WriteLine($"Failed to find replication {replicationDataType} for a {replicationType}");
+                            DumpState(bytes, index, replicationType, pid, sid, e);
+                            break;
+                        }
+
+                        if (owner is not null)
+                        {
+                            owner.SetValue(pid, sid, val);
+                        }
+                    }
+                }
+
+                if (owner is null)
+                {
+                    continue;
+                }
+
+                var json = JsonConvert.SerializeObject(owner, Formatting.Indented);
+                Console.WriteLine(json);
+            }
+
+            return null;
+    }
+    private void DumpState(byte[] bytes, int i, ReplicationType replicationType, byte primaryId, byte secondaryId, Exception? e = null)
+    {
+        
+        
+        var s1 = $"[{replicationType}]: Index: {primaryId}; SID: {secondaryId};";
+        var s2 = $"Bytes: byte[{bytes.Length}]; ReadPos: [{i}]; {{ {string.Join(", ", bytes)} }}; ";
+        Console.WriteLine($"{s1}");
+        Console.WriteLine($"{s2}");
+        if (e is not null)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    
     private void RegisterUnitReplicationType(BasePacket packet)
     {
         switch (packet)
