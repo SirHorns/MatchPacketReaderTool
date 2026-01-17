@@ -33,9 +33,8 @@ foreach (var lrfPath in dirs)
         var reader = new LRFReader();
         var lrf = reader.Read(stream);
         Console.WriteLine($"[{rid}]: {lrf.Type}");
-        var serializer = new PacketsSerializer();
+        var serializer = new LRFSerializer();
         var slrf = serializer.CreateSerializedLRF(lrf);
-        slrfs.Add(slrf);
     }
     catch (Exception e)
     {

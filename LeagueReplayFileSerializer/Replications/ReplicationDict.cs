@@ -1,36 +1,27 @@
-using System;
-using System.Collections.Generic;
 using LeaguePacketsSerializer.GameServer.Enums;
 using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;
 
-public static class DataDict
+public partial class ReplicationDict
 {
-    private static bool _recording;
-    private static uint _u { get; set; }
-    private static float _f { get; set; }
-    private static bool _b { get; set; }
-    private static Replicate[,] _currentValues { get; set; }
-    private static ReplicationType _currentReplicationType { get; set; }
-    private static ReplicationDataType?[][,] _replicationMaps { get; set; }
-
-    static DataDict()
+    internal ReplicationDict()
     {
         _recording = true;
-        var types = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
-        _replicationMaps = new ReplicationDataType?[types.Length][,];
-        foreach (var type in types)
+        var replicationTypes = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
+        _replicationMaps = new ReplicationDataType?[replicationTypes.Length][,];
+        foreach (var replicationType in replicationTypes)
         {
-            _replicationMaps[(int)type] = new ReplicationDataType?[6, 32];
-            Gen(type, null);
+            _replicationMaps[(int)replicationType] = new ReplicationDataType?[6, 32];
+            LoadMaps(replicationType, null);
         }
 
         _recording = false;
     }
+
     
 
-    internal static Dictionary<string, object> Gen(ReplicationType replicationType, Replicate[,]? values)
+    internal Dictionary<string, object> LoadMaps(ReplicationType replicationType, ReplicateHold[,]? values)
     {
         var data = new Dictionary<string, object>();
         _currentReplicationType = replicationType;
@@ -43,7 +34,6 @@ public static class DataDict
             // UpdateBool\((.*), (\d+), (\d+)\) -> if(TryGetUint($2, $3)) data["$1"] = u == 1u
 
             case ReplicationType.Turret:
-
                 /**/
                 if (TryGetFloat(1, 0))
                 { 
@@ -51,7 +41,7 @@ public static class DataDict
                 }
                 /**/
                 if (TryGetFloat(1, 1)) data["Stats.CurrentMana"] = _f; //mMP
-                if (TryGetUint(1, 2)) data["Stats.ActionState"] = ((ActionState)_u).ToString(); //ActionState
+                if (TryGetActionState(1, 2)) data["Stats.ActionState"] = _as.ToString(); //ActionState
                 if (TryGetBool(1, 3)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
                 if (TryGetBool(1, 4)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
                 if (TryGetBool(1, 5)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
@@ -73,8 +63,7 @@ public static class DataDict
                 if (TryGetFloat(3, 4)) data["Stats.GetTrueMoveSpeed()"] = _f; //mMoveSpeed
                 if (TryGetFloat(3, 5)) data["Stats.Size.Total"] = _f; //mSkinScaleCoef(mistyped as mCrit)
                 if (TryGetBool(5, 0)) data["Stats.IsTargetable"] = _b; //mIsTargetable
-                if (TryGetUint(5, 1))
-                    data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetSpellDataFlags(5, 1)) data["Stats.IsTargetableToTeam"] = _sdf.ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
@@ -83,7 +72,7 @@ public static class DataDict
                 if (TryGetFloat(1, 0)) data["Stats.CurrentHealth"] = _f; //mHP
                 if (TryGetBool(1, 1)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
                 if (TryGetBool(5, 0)) data["Stats.IsTargetable"] = _b; //mIsTargetable
-                if (TryGetUint(5, 1)) data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetSpellDataFlags(5, 1)) data["Stats.IsTargetableToTeam"] = _sdf.ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
@@ -105,13 +94,12 @@ public static class DataDict
                 {
                     if (TryGetFloat(0, 8 + i)) data[$"Stats.ManaCost[{i}]"] = _f; //ManaCost_{i}
                 }
-
                 for (var i = 0; i < 16; i++)
                 {
                     if (TryGetFloat(0, 12 + i)) data[$"Stats.ManaCost[{45 + i}]"] = _f; //ManaCost_Ex{i}
                 }
 
-                if (TryGetUint(1, 0)) data["Stats.ActionState"] = ((ActionState)_u).ToString();
+                if (TryGetActionState(1, 0)) data["Stats.ActionState"] = _as.ToString();
                 if (TryGetBool(1, 1)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
                 if (TryGetBool(1, 2)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
                 if (TryGetBool(1, 3)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
@@ -176,8 +164,7 @@ public static class DataDict
                 if (TryGetUint(3, 13)) data["Stats.Level"] = _u; //mLevelRef
                 if (TryGetUint(3, 14)) data["Owner.MinionCounter"] = _u; //mNumNeutralMinionsKilled
                 if (TryGetBool(3, 15)) data["Stats.IsTargetable"] = _b; //mIsTargetable
-                if (TryGetUint(3, 16))
-                    data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetSpellDataFlags(3, 16)) data["Stats.IsTargetableToTeam"] = _sdf.ToString(); //mIsTargetableToTeamFlags
 
                 break;
 
@@ -192,7 +179,7 @@ public static class DataDict
                 if (TryGetFloat(1, 4)) data["Stats.LifeTimeTicks"] = _f; //mLifetimeTicks
                 if (TryGetFloat(1, 5)) data["Stats.ManaPoints.Total"] = _f; //mMaxMP
                 if (TryGetFloat(1, 6)) data["Stats.CurrentMana"] = _f; //mMP
-                if (TryGetUint(1, 7)) data["Stats.ActionState"] = ((ActionState)_u).ToString(); //ActionState
+                if (TryGetActionState(1, 7)) data["Stats.ActionState"] = _as.ToString(); //ActionState
                 if (TryGetBool(1, 8)) data["Stats.IsMagicImmune"] = _b; //MagicImmune
                 if (TryGetBool(1, 9)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
                 if (TryGetBool(1, 10)) data["Stats.IsPhysicalImmune"] = _b; //IsPhysicalImmune
@@ -215,32 +202,22 @@ public static class DataDict
                 if (TryGetFloat(3, 2)) data["Stats.GetTrueMoveSpeed()"] = _f; //mMoveSpeed
                 if (TryGetFloat(3, 3)) data["Stats.Size.Total"] = _f; //mSkinScaleCoef(mistyped as mCrit)
                 if (TryGetBool(3, 4)) data["Stats.IsTargetable"] = _b; //mIsTargetable
-                if (TryGetUint(3, 5)) data["Stats.IsTargetableToTeam"] = ((SpellDataFlags)_u).ToString(); //mIsTargetableToTeamFlags
+                if (TryGetSpellDataFlags(3, 5)) data["Stats.IsTargetableToTeam"] = _sdf.ToString(); //mIsTargetableToTeamFlags
 
                 break; 
         }
 
         return data;
     }
-    
-    public enum ReplicationDataType
-    {
-        UNKNOWN,
-        FLOAT,
-        UINT,
-        BOOL,
-        ACTION_STATE,
-        SPELL_DATA_FLAGS
-    }
 
-    internal static ReplicationDataType? GetReplicationValueType(int replicationType, byte index, byte sid)
+    internal ReplicationDataType? GetReplicationValueType(int replicationType, byte index, byte sid)
     {
         var replicationSet = _replicationMaps[replicationType];
         var res = replicationSet[index, sid];
         return res;
     }
      
-    private static bool TryGet(int primaryId, int secondaryId, ReplicationDataType replicationDataType)
+    private bool TryGet(int primaryId, int secondaryId, ReplicationDataType replicationDataType)
     {
         //TODO: value.isFloat != isFloat
         if (_recording)
@@ -249,40 +226,125 @@ public static class DataDict
             return false;
         }
 
-        Replicate value = _currentValues[primaryId, secondaryId];
-        if (value == null)
+        var replicate = _currentValues[primaryId, secondaryId];
+        if (replicate == null)
         {
             return false;
         }
 
-
         switch (replicationDataType)
         {
             case ReplicationDataType.FLOAT:
-                _f = value.Float;
+                _f = (float)replicate.Value;
                 break;
             case ReplicationDataType.UINT:
-                _u = value.Uint;
+                _u = (uint)replicate.Value;
                 break;
             case ReplicationDataType.BOOL:
-                _b = value.Bool;
+                _b = (bool)replicate.Value;
                 break;
+            case ReplicationDataType.ACTION_STATE:
+                _as = (ActionState)replicate.Value;
+                break;
+            case ReplicationDataType.SPELL_DATA_FLAGS:
+                _sdf = (SpellDataFlags)replicate.Value;
+                break;
+            case ReplicationDataType.UNKNOWN:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(replicationDataType), replicationDataType, null);
         }
         return true;
     }
 
-    private static bool TryGetUint(int primaryId, int secondaryId)
+    private bool TryGetUint(int primaryId, int secondaryId)
     {
         return TryGet(primaryId, secondaryId, ReplicationDataType.UINT);
     }
 
-    private static bool TryGetFloat(int primaryId, int secondaryId)
+    private bool TryGetFloat(int primaryId, int secondaryId)
     {
         return TryGet(primaryId, secondaryId, ReplicationDataType.FLOAT);
     }
     
-    private static bool TryGetBool(int primaryId, int secondaryId)
+    private bool TryGetBool(int primaryId, int secondaryId)
     {
         return TryGet(primaryId, secondaryId, ReplicationDataType.BOOL);
+    }
+    
+    private bool TryGetActionState(int primaryId, int secondaryId)
+    {
+        return TryGet(primaryId, secondaryId, ReplicationDataType.ACTION_STATE);
+    }
+    
+    private bool TryGetSpellDataFlags(int primaryId, int secondaryId)
+    {
+        return TryGet(primaryId, secondaryId, ReplicationDataType.SPELL_DATA_FLAGS);
+    }
+
+    public object? GetValue(ReplicationDataType? replicationDataType, byte[] bytes, ref int index)
+    {
+        object? value = null;
+        switch (replicationDataType)
+        {
+            case ReplicationDataType.UNKNOWN:
+                value = "N/A";
+                break;
+            case ReplicationDataType.FLOAT:
+                value = 0;
+                if (bytes[index] == 0xFF)
+                {
+                    index++;
+                }
+                else
+                {
+                    var startIndex = index;
+                    if (bytes[index] == 0xFE)
+                    {
+                        startIndex++;
+                    }
+
+                    value = BitConverter.ToSingle(bytes, startIndex);
+                    index = startIndex + 4;
+                }
+                break;
+            case ReplicationDataType.UINT:
+                value = GetUINTValue(bytes, ref index);
+                break;
+            case ReplicationDataType.BOOL:
+                var rawBool = GetUINTValue(bytes, ref index);
+                value = rawBool == 1;
+                break;
+            case ReplicationDataType.ACTION_STATE:
+                var rawAction = GetUINTValue(bytes, ref index);
+                var actionState = Enum.Parse<ActionState>(rawAction.ToString());
+                value = actionState;
+                break;
+            case ReplicationDataType.SPELL_DATA_FLAGS:
+                var rawSpellFlags = GetUINTValue(bytes, ref index);
+                var spellDataFlags = Enum.Parse<SpellDataFlags>(rawSpellFlags.ToString());
+                value = spellDataFlags;
+                break;
+            case null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(replicationDataType), replicationDataType, null);
+        }
+
+        return value;
+    }
+
+    private uint GetUINTValue(byte[] bytes, ref int index)
+    {
+        var j = 0;
+        uint x = 0;
+        for (; (bytes[index] & 0x80) != 0;  j += 7)
+        {
+            x |= ((uint)bytes[index] & 0x7f) << j;
+            index++;
+        }
+        x |= (uint)bytes[index] << j;
+        index++;
+        return x;
     }
 }

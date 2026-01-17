@@ -4,7 +4,7 @@ using LeaguePacketsSerializer.Replication;
 
 namespace LeaguePacketsSerializer;
 
-public partial class PacketsSerializer
+public partial class LRFSerializer
 {
     private void RegisterUnitReplicationType(BasePacket packet)
     {
@@ -61,7 +61,7 @@ public partial class PacketsSerializer
         foreach (var data in onReplication.ReplicationData)
         {
             var netId = data.UnitNetID;
-            var values = new Replicate[6, 32];
+            var values = new ReplicateHold[6, 32];
             var replicationType = ReplicationType.Unknown;
             
             
@@ -104,20 +104,28 @@ public partial class PacketsSerializer
                         continue;
                     }
 
-                    var repT = DataDict.GetReplicationValueType((int)replicationType, primaryId, secondaryId);
+                    var repT = ReplicationDict.GetReplicationValueType((int)replicationType, primaryId, secondaryId);
                     bool? isFloat = false;
                     switch (repT)
                     {
-                        case DataDict.ReplicationDataType.FLOAT:
+                        case ReplicationDataType.FLOAT:
                             isFloat = true;
                             break;
-                        case DataDict.ReplicationDataType.UINT:
+                        case ReplicationDataType.UINT:
                             break;
-                        case DataDict.ReplicationDataType.BOOL:
+                        case ReplicationDataType.BOOL:
+                            break;
+                        case ReplicationDataType.UNKNOWN:
+                            break;
+                        case ReplicationDataType.ACTION_STATE:
+                            break;
+                        case ReplicationDataType.SPELL_DATA_FLAGS:
                             break;
                         case null:
                             isFloat = null;
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                     
                     
@@ -153,7 +161,7 @@ public partial class PacketsSerializer
                                 i = startIndex + 4;
                             }
 
-                            values[primaryId, secondaryId] = new Replicate(value);
+                            values[primaryId, secondaryId] = new ReplicateHold(value);
                         }
                         catch (Exception e)
                         {
@@ -173,7 +181,7 @@ public partial class PacketsSerializer
 
                             value |= (uint)bytes[i] << j;
                             i++;
-                            values[primaryId, secondaryId] = new Replicate(value);
+                            values[primaryId, secondaryId] = new ReplicateHold(value);
                         }
                         catch (Exception e)
                         {
@@ -183,7 +191,7 @@ public partial class PacketsSerializer
                 }
             }
 
-            packetToSerialize.ReplicationData.Add(new FakeReplicationData(netId, DataDict.Gen(replicationType, values)));
+            packetToSerialize.ReplicationData.Add(new FakeReplicationData(netId, ReplicationDict.LoadMaps(replicationType, values)));
         }
 
         return packetToSerialize;

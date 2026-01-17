@@ -26,7 +26,7 @@ public class SerializedPacket
         switch (channel)
         {
             case LeaguePackets.ChannelID.Default:
-                type = "Registry";
+                type = "KeyCheckPacket";
                 break;
             case LeaguePackets.ChannelID.ClientToServer:
             case LeaguePackets.ChannelID.SynchClock:

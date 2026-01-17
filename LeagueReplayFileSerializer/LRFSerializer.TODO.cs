@@ -1,6 +1,6 @@
 namespace LeaguePacketsSerializer;
 
-public partial class PacketsSerializer
+public partial class LRFSerializer
 {
     /*private void ParseChunkPacket(Chunk chunk, ENetPacket enetPacket)
 {
