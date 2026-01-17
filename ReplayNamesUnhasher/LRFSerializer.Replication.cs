@@ -6,6 +6,80 @@ namespace LeaguePacketsSerializer;
 
 public partial class LRFSerializer
 {
+    
+    private void RegisterGameObjectType(BasePacket packet)
+    {
+        uint netID = 0;
+        GameObjectTypes type = GameObjectTypes.Unknown;
+        switch (packet)
+        {
+            case S2C_CreateTurret pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Turret;
+                break;
+            case S2C_SpawnTurret pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Turret;
+                break;
+            case S2C_CreateHero pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Hero;
+                break;
+            case S2C_CreateNeutral pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.NeutralMinionCamp;
+                break;
+            case CHAR_SpawnPet pkt:
+                netID = pkt.SenderNetID;
+                type = GameObjectTypes.AttackableUnit;
+                break;
+            case SpawnMinionS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.AttackableUnit;
+                break;
+            case Barrack_SpawnUnit pkt:
+                netID = pkt.SenderNetID;
+                type = GameObjectTypes.AttackableUnit;
+                break;
+            case SpawnBotS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.Unknown; // GameObjectTypes.Bot;
+                break;
+            case SpawnLevelPropS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.LevelProp;
+                break;
+            case SpawnMarkerS2C pkt:
+                netID = pkt.NetID;
+                type = GameObjectTypes.ObjAIBase_Marker;
+                break;
+            case S2C_ForceCreateMissile pkt:
+                return;
+                netID = pkt.MissileNetID;
+                type = GameObjectTypes.Missile;
+                break;
+            case IGamePacketsList parent:
+                foreach (var subPacket in parent.Packets)
+                {
+                    RegisterGameObjectType(subPacket);
+                }
+                break;
+            default:
+                return;
+        }
+
+        if (netID == 0)
+        {
+            return;
+        }
+        
+        if (!_netIdToTypesMap.TryAdd(netID, type))
+        {
+            //var saved = _netIdToTypesMap[netID];
+            //Console.WriteLine($"Attempt Map Override :: {netID} : {saved} -> {type}");
+        }
+    }
+    
     private object SerializeOnReplication(OnReplication replication)
     {
             var syncId = replication.SyncID;

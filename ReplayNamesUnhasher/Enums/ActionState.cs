@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LeaguePacketsSerializer.GameServer.Enums
+﻿namespace LeagueReplayFileSerializer.GameServer.Enums
 {
     [Flags]
     public enum ActionState : uint
