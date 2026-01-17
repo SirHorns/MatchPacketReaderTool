@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer;
+namespace LeagueReplayFileSerializer;
 
 public partial class LRFSerializer
 {

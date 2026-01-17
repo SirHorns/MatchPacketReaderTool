@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer.Enums;
+namespace LeagueReplayFileSerializer.Enums;
 
 public enum ReplayType
 {

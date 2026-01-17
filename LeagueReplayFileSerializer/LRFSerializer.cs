@@ -1,15 +1,16 @@
 using LeaguePackets;
 using LeaguePackets.Game;
-using LeaguePacketsSerializer.Packets;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Protocols.ENet;
+using LeagueReplayFile.Structs.Sections;
+using LeagueReplayFileSerializer.Data;
+using LeagueReplayFileSerializer.Enums;
 
-namespace LeaguePacketsSerializer;
+namespace LeagueReplayFileSerializer;
 
 public partial class LRFSerializer
 {
-    private readonly SortedDictionary<uint, GameObjectTypes> _netIdToTypesMap = [];
 
     public LRFSerializer() { }
 
@@ -23,16 +24,15 @@ public partial class LRFSerializer
         };
         switch (lrf.Type)
         {
-            case LRFTypes.NAN:
+            case LRFTypes.SPECTATOR:
+                var sections = SerializeSections(lrf.ReplaySections);
                 break;
             case LRFTypes.NFO:
-                break;
-            case LRFTypes.SPECTATOR:
-                break;
             case LRFTypes.ENET:
-                var packets = WIP(lrf.ENetPackets.ToArray());
+                var packets = SerializePackets(lrf.ENetPackets);
                 slrf.Packets = packets;
                 break;
+            case LRFTypes.NAN:
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -42,7 +42,7 @@ public partial class LRFSerializer
     
     //
     
-    private List<SerializedPacket>  WIP(IList<ENetPacket> eNetPackets)
+    private List<SerializedPacket>  SerializePackets(IReadOnlyList<ENetPacket> eNetPackets)
     {
         var serializedPackets = new List<SerializedPacket>();
         // ngl idk a better way to do this
@@ -98,10 +98,15 @@ public partial class LRFSerializer
             }
             var rawId = GetID(eNetPacket);
             var serializedPacket = Parse(eNetPacket, basePacket, rawId);
-            serializedPackets.Add(serializedPacket);
+            serializedPackets[i] = (serializedPacket);
         }
 
         return serializedPackets;
+    }
+
+    private List<SerializedSection> SerializeSections(IReadOnlyList<Section> sections)
+    {
+        return null;
     }
 
     private int GetID(ENetPacket eNetPacket)
@@ -173,79 +178,6 @@ public partial class LRFSerializer
         }
 
         return serializedPacket;
-    }
-    
-    private void RegisterGameObjectType(BasePacket packet)
-    {
-        uint netID = 0;
-        GameObjectTypes type = GameObjectTypes.Unknown;
-        switch (packet)
-        {
-            case S2C_CreateTurret pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.ObjAIBase_Turret;
-                break;
-            case S2C_SpawnTurret pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.ObjAIBase_Turret;
-                break;
-            case S2C_CreateHero pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.ObjAIBase_Hero;
-                break;
-            case S2C_CreateNeutral pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.NeutralMinionCamp;
-                break;
-            case CHAR_SpawnPet pkt:
-                netID = pkt.SenderNetID;
-                type = GameObjectTypes.AttackableUnit;
-                break;
-            case SpawnMinionS2C pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.AttackableUnit;
-                break;
-            case Barrack_SpawnUnit pkt:
-                netID = pkt.SenderNetID;
-                type = GameObjectTypes.AttackableUnit;
-                break;
-            case SpawnBotS2C pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.Unknown; // GameObjectTypes.Bot;
-                break;
-            case SpawnLevelPropS2C pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.LevelProp;
-                break;
-            case SpawnMarkerS2C pkt:
-                netID = pkt.NetID;
-                type = GameObjectTypes.ObjAIBase_Marker;
-                break;
-            case S2C_ForceCreateMissile pkt:
-                return;
-                netID = pkt.MissileNetID;
-                type = GameObjectTypes.Missile;
-                break;
-            case IGamePacketsList parent:
-                foreach (var subPacket in parent.Packets)
-                {
-                    RegisterGameObjectType(subPacket);
-                }
-                break;
-            default:
-                return;
-        }
-
-        if (netID == 0)
-        {
-            return;
-        }
-        
-        if (!_netIdToTypesMap.TryAdd(netID, type))
-        {
-            //var saved = _netIdToTypesMap[netID];
-            //Console.WriteLine($"Attempt Map Override :: {netID} : {saved} -> {type}");
-        }
     }
 
     private BadPacket SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)

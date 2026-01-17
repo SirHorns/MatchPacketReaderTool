@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer;
+namespace LeagueReplayFileSerializer;
 
 public static class ValueConverter
 {

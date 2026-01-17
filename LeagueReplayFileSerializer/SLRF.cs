@@ -1,8 +1,8 @@
-using LeaguePacketsSerializer.Packets;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Structs;
+using LeagueReplayFileSerializer.Data;
 
-namespace LeaguePacketsSerializer;
+namespace LeagueReplayFileSerializer;
 
 public class SLRF
 {

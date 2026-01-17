@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer.Packets;
+namespace LeagueReplayFileSerializer.Data;
 
 public class SerializedSection
 {
