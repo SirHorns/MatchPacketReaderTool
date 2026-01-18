@@ -1,6 +1,6 @@
-namespace LeaguePacketsSerializer.Replication;
+namespace ReplayNamesUnhasher.Replications;
 
-public enum ReplicationType
+public enum ReplicationTypes
 {
     Unknown,
     Prop,

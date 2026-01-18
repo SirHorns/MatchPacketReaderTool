@@ -1,10 +1,7 @@
-﻿using System;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+﻿using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 
-namespace Program
+namespace ReplayNamesUnhasher
 {
     static class Program
     {

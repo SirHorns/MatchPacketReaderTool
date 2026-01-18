@@ -1,4 +1,4 @@
-﻿namespace LeagueReplayFileSerializer.GameServer.Enums
+﻿namespace ReplayNamesUnhasher.Enums
 {
     /// <summary>
     /// Enumerator containing all(?) possible spell flags found in spell data. Used in determining how a spell functions.

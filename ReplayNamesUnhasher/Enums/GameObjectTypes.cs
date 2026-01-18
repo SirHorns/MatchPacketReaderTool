@@ -1,4 +1,4 @@
-namespace LeagueReplayFileSerializer.Enums;
+namespace ReplayNamesUnhasher.Enums;
 
 public enum GameObjectTypes
 {

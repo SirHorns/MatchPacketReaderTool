@@ -1,4 +1,4 @@
-namespace LeaguePacketsSerializer.Replication;
+namespace ReplayNamesUnhasher.Replications;
 
 class ReplicateHold
 {

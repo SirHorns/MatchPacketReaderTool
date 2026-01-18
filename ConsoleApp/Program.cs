@@ -4,6 +4,7 @@ using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFileSerializer;
 using Newtonsoft.Json;
+using ReplayNamesUnhasher;
 
 string _serializedDirectory = "Serialized";
 
@@ -25,6 +26,10 @@ var count = dirs.Count();
 Console.WriteLine($"Total replays found: {count}");
 var i = 0;
 
+var unhasher = new Unhasher();
+
+unhasher.Initialize();
+
 foreach (var lrfPath in dirs)
 {
     ++i;
@@ -42,6 +47,9 @@ foreach (var lrfPath in dirs)
         Console.WriteLine($"[{rid}]: {lrf.Type}");
         var serializer = new LRFSerializer();
         var slrf = serializer.CreateSerializedLRF(lrf);
+        unhasher.Unhashie(slrf);
+        
+        
         var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
         File.WriteAllText($"{_serializedDirectory}/{fileName}", json);
     }

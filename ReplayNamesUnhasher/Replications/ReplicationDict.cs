@@ -1,27 +1,104 @@
-using LeaguePacketsSerializer.GameServer.Enums;
-using LeaguePacketsSerializer.Replication;
+using ReplayNamesUnhasher.Enums;
 
-namespace LeaguePacketsSerializer;
+namespace ReplayNamesUnhasher.Replications;
 
-public partial class ReplicationDict
+public class ReplicationDict
 {
+    private bool _recording;
+    private uint _u { get; set; }
+    private float _f { get; set; }
+    private bool _b { get; set; }
+    private ActionState _as { get; set; }
+    private SpellDataFlags _sdf { get; set; }
+    private ReplicateHold?[,] _currentValues { get; set; }
+    private ReplicationTypes _currentReplicationType { get; set; }
+    private ReplicationDataTypes?[][,] _replicationMaps { get; set; }
+    
     internal ReplicationDict()
     {
+        
+    }
+
+    public void Initialize()
+    {
         _recording = true;
-        var replicationTypes = (ReplicationType[])Enum.GetValues(typeof(ReplicationType));
-        _replicationMaps = new ReplicationDataType?[replicationTypes.Length][,];
+        var replicationTypes = (ReplicationTypes[])Enum.GetValues(typeof(ReplicationTypes));
+        _replicationMaps = new ReplicationDataTypes?[replicationTypes.Length][,];
         foreach (var replicationType in replicationTypes)
         {
-            _replicationMaps[(int)replicationType] = new ReplicationDataType?[6, 32];
+            _replicationMaps[(int)replicationType] = new ReplicationDataTypes?[6, 32];
             LoadMaps(replicationType, null);
         }
-
         _recording = false;
     }
 
     
 
-    internal Dictionary<string, object> LoadMaps(ReplicationType replicationType, ReplicateHold[,]? values)
+    public object? GetValue(ReplicationDataTypes? replicationDataType, byte[] bytes, ref int index)
+    {
+        object? value = null;
+        switch (replicationDataType)
+        {
+            case ReplicationDataTypes.UNKNOWN:
+                value = "N/A";
+                break;
+            case ReplicationDataTypes.FLOAT:
+                value = 0;
+                if (bytes[index] == 0xFF)
+                {
+                    index++;
+                }
+                else
+                {
+                    var startIndex = index;
+                    if (bytes[index] == 0xFE)
+                    {
+                        startIndex++;
+                    }
+
+                    value = BitConverter.ToSingle(bytes, startIndex);
+                    index = startIndex + 4;
+                }
+                break;
+            case ReplicationDataTypes.UINT:
+                value = GetUINTValue(bytes, ref index);
+                break;
+            case ReplicationDataTypes.BOOL:
+                var rawBool = GetUINTValue(bytes, ref index);
+                value = rawBool == 1;
+                break;
+            case ReplicationDataTypes.ACTION_STATE:
+                var rawAction = GetUINTValue(bytes, ref index);
+                var actionState = Enum.Parse<ActionState>(rawAction.ToString());
+                value = actionState;
+                break;
+            case ReplicationDataTypes.SPELL_DATA_FLAGS:
+                var rawSpellFlags = GetUINTValue(bytes, ref index);
+                var spellDataFlags = Enum.Parse<SpellDataFlags>(rawSpellFlags.ToString());
+                value = spellDataFlags;
+                break;
+            case null:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(replicationDataType), replicationDataType, null);
+        }
+
+        return value;
+    }
+    
+    
+    internal ReplicationDataTypes? GetReplicationValueType(int replicationType, byte index, byte sid)
+    {
+        var replicationSet = _replicationMaps[replicationType];
+        var res = replicationSet[index, sid];
+        return res;
+    }
+     
+    
+    
+    //
+    
+    private Dictionary<string, object> LoadMaps(ReplicationTypes replicationType, ReplicateHold[,]? values)
     {
         var data = new Dictionary<string, object>();
         _currentReplicationType = replicationType;
@@ -33,7 +110,7 @@ public partial class ReplicationDict
             // UpdateUint\((.*), (\d+), (\d+)\) -> if(TryGetUint($2, $3)) data["$1"] = u
             // UpdateBool\((.*), (\d+), (\d+)\) -> if(TryGetUint($2, $3)) data["$1"] = u == 1u
 
-            case ReplicationType.Turret:
+            case ReplicationTypes.Turret:
                 /**/
                 if (TryGetFloat(1, 0))
                 { 
@@ -67,7 +144,7 @@ public partial class ReplicationDict
 
                 break;
 
-            case ReplicationType.HQ:
+            case ReplicationTypes.HQ:
 
                 if (TryGetFloat(1, 0)) data["Stats.CurrentHealth"] = _f; //mHP
                 if (TryGetBool(1, 1)) data["Stats.IsInvulnerable"] = _b; //IsInvulnerable
@@ -76,7 +153,7 @@ public partial class ReplicationDict
 
                 break;
 
-            case ReplicationType.Hero:
+            case ReplicationTypes.Hero:
 
                 if (TryGetFloat(0, 0)) data["Stats.Gold"] = _f; //mGold
                 /**/
@@ -168,7 +245,7 @@ public partial class ReplicationDict
 
                 break;
 
-            case ReplicationType.Minion:
+            case ReplicationTypes.Minion:
                 if (TryGetFloat(1, 0)) data["Stats.CurrentHealth"] = _f; //mHP
                 if (TryGetFloat(1, 1)) data["Stats.HealthPoints.Total"] = _f; //mMaxHP
                 /**/
@@ -209,15 +286,8 @@ public partial class ReplicationDict
 
         return data;
     }
-
-    internal ReplicationDataType? GetReplicationValueType(int replicationType, byte index, byte sid)
-    {
-        var replicationSet = _replicationMaps[replicationType];
-        var res = replicationSet[index, sid];
-        return res;
-    }
-     
-    private bool TryGet(int primaryId, int secondaryId, ReplicationDataType replicationDataType)
+    
+    private bool TryGet(int primaryId, int secondaryId, ReplicationDataTypes replicationDataType)
     {
         //TODO: value.isFloat != isFloat
         if (_recording)
@@ -234,22 +304,22 @@ public partial class ReplicationDict
 
         switch (replicationDataType)
         {
-            case ReplicationDataType.FLOAT:
+            case ReplicationDataTypes.FLOAT:
                 _f = (float)replicate.Value;
                 break;
-            case ReplicationDataType.UINT:
+            case ReplicationDataTypes.UINT:
                 _u = (uint)replicate.Value;
                 break;
-            case ReplicationDataType.BOOL:
+            case ReplicationDataTypes.BOOL:
                 _b = (bool)replicate.Value;
                 break;
-            case ReplicationDataType.ACTION_STATE:
+            case ReplicationDataTypes.ACTION_STATE:
                 _as = (ActionState)replicate.Value;
                 break;
-            case ReplicationDataType.SPELL_DATA_FLAGS:
+            case ReplicationDataTypes.SPELL_DATA_FLAGS:
                 _sdf = (SpellDataFlags)replicate.Value;
                 break;
-            case ReplicationDataType.UNKNOWN:
+            case ReplicationDataTypes.UNKNOWN:
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(replicationDataType), replicationDataType, null);
@@ -259,79 +329,27 @@ public partial class ReplicationDict
 
     private bool TryGetUint(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, ReplicationDataType.UINT);
+        return TryGet(primaryId, secondaryId, ReplicationDataTypes.UINT);
     }
 
     private bool TryGetFloat(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, ReplicationDataType.FLOAT);
+        return TryGet(primaryId, secondaryId, ReplicationDataTypes.FLOAT);
     }
     
     private bool TryGetBool(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, ReplicationDataType.BOOL);
+        return TryGet(primaryId, secondaryId, ReplicationDataTypes.BOOL);
     }
     
     private bool TryGetActionState(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, ReplicationDataType.ACTION_STATE);
+        return TryGet(primaryId, secondaryId, ReplicationDataTypes.ACTION_STATE);
     }
     
     private bool TryGetSpellDataFlags(int primaryId, int secondaryId)
     {
-        return TryGet(primaryId, secondaryId, ReplicationDataType.SPELL_DATA_FLAGS);
-    }
-
-    public object? GetValue(ReplicationDataType? replicationDataType, byte[] bytes, ref int index)
-    {
-        object? value = null;
-        switch (replicationDataType)
-        {
-            case ReplicationDataType.UNKNOWN:
-                value = "N/A";
-                break;
-            case ReplicationDataType.FLOAT:
-                value = 0;
-                if (bytes[index] == 0xFF)
-                {
-                    index++;
-                }
-                else
-                {
-                    var startIndex = index;
-                    if (bytes[index] == 0xFE)
-                    {
-                        startIndex++;
-                    }
-
-                    value = BitConverter.ToSingle(bytes, startIndex);
-                    index = startIndex + 4;
-                }
-                break;
-            case ReplicationDataType.UINT:
-                value = GetUINTValue(bytes, ref index);
-                break;
-            case ReplicationDataType.BOOL:
-                var rawBool = GetUINTValue(bytes, ref index);
-                value = rawBool == 1;
-                break;
-            case ReplicationDataType.ACTION_STATE:
-                var rawAction = GetUINTValue(bytes, ref index);
-                var actionState = Enum.Parse<ActionState>(rawAction.ToString());
-                value = actionState;
-                break;
-            case ReplicationDataType.SPELL_DATA_FLAGS:
-                var rawSpellFlags = GetUINTValue(bytes, ref index);
-                var spellDataFlags = Enum.Parse<SpellDataFlags>(rawSpellFlags.ToString());
-                value = spellDataFlags;
-                break;
-            case null:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(replicationDataType), replicationDataType, null);
-        }
-
-        return value;
+        return TryGet(primaryId, secondaryId, ReplicationDataTypes.SPELL_DATA_FLAGS);
     }
 
     private uint GetUINTValue(byte[] bytes, ref int index)

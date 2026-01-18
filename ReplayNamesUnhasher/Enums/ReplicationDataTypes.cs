@@ -1,6 +1,6 @@
-namespace LeaguePacketsSerializer;
+namespace ReplayNamesUnhasher.Replications;
 
-public enum ReplicationDataType
+public enum ReplicationDataTypes
 {
     UNKNOWN,
     FLOAT,

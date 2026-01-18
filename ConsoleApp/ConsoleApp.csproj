@@ -11,6 +11,7 @@
       <ProjectReference Include="..\LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj" />
       <ProjectReference Include="..\LeagueReplayFile\LeagueReplayFile.csproj" />
       <ProjectReference Include="..\ReplayAPI\ReplayAPI.csproj" />
+      <ProjectReference Include="..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
     </ItemGroup>
 
 </Project>

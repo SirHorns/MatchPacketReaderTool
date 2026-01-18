@@ -1,4 +1,4 @@
-﻿namespace LeagueReplayFileSerializer.GameServer.Enums
+﻿namespace ReplayNamesUnhasher.Enums
 {
     [Flags]
     public enum ActionState : uint
