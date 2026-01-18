@@ -3,6 +3,7 @@ using LeaguePackets.Game;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Protocols.ENet;
+using LeagueReplayFile.Structs;
 using LeagueReplayFile.Structs.Sections;
 using LeagueReplayFileSerializer.Data;
 using LeagueReplayFileSerializer.Enums;
@@ -25,11 +26,13 @@ public partial class LRFSerializer
         switch (lrf.Type)
         {
             case LRFTypes.SPECTATOR:
-                var sections = SerializeSections(lrf.ReplaySections);
+                var lrfSections = lrf.Sections;
+                SerializeSections(ref lrfSections);
+                slrf.Sections = lrfSections;
                 break;
             case LRFTypes.NFO:
             case LRFTypes.ENET:
-                var packets = SerializePackets(lrf.ENetPackets);
+                var packets = SerializePackets(lrf.Packets);
                 slrf.Packets = packets;
                 break;
             case LRFTypes.NAN:
@@ -42,7 +45,7 @@ public partial class LRFSerializer
     
     //
     
-    private List<SerializedPacket>  SerializePackets(IReadOnlyList<ENetPacket> eNetPackets)
+    private List<SerializedPacket> SerializePackets(List<ENetPacket> eNetPackets)
     {
         var serializedPackets = new List<SerializedPacket>();
         // ngl idk a better way to do this
@@ -104,9 +107,47 @@ public partial class LRFSerializer
         return serializedPackets;
     }
 
-    private List<SerializedSection> SerializeSections(IReadOnlyList<Section> sections)
+    private void SerializeSections(ref List<Section> sections)
     {
-        return null;
+        for (var i = 0; i < sections.Count; i++)
+        {
+            var section = sections[i];
+            switch (section)
+            {
+                case GameDataSection gameDataSection:
+                    var sgds = new SerializedGameDataSection()
+                    {
+                        Type = gameDataSection.Type,
+                        Http = gameDataSection.Http,
+                        Data = gameDataSection.Data,
+                        Time = gameDataSection.Time,
+                        
+                        ID = gameDataSection.ID,
+                        Chunk = new SerializedChunk()
+                        {
+                            ID = gameDataSection.Chunk.ID,
+                            Packets = SerializePackets(gameDataSection.Chunk.Packets)
+                        }
+                    };
+                    sections[i] = sgds;
+                    break;
+                case KeyFrameSection keyFrameSection:
+                    var skfs = new SerializedKeyFrameSection()
+                    {
+                        Type = keyFrameSection.Type,
+                        Http = keyFrameSection.Http,
+                        Data = keyFrameSection.Data,
+                        Time = keyFrameSection.Time,
+                        
+                        ID = keyFrameSection.ID,
+                        Packets = SerializePackets(keyFrameSection.Packets)
+                    };
+                    sections[i] = skfs;
+                    break;
+                default:
+                    continue;
+            }
+        }
     }
 
     private int GetID(ENetPacket eNetPacket)

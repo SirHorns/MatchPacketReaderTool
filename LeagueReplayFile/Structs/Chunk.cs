@@ -5,5 +5,5 @@ namespace LeagueReplayFile.Structs;
 public class Chunk
 {
     public int ID { get; set; }
-    public List<ENetPacket> ENetPackets { get; set; } = [];
+    public List<ENetPacket> Packets { get; set; } = [];
 }

@@ -3,7 +3,7 @@ using LeagueReplayFile.Protocols.ENet;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace LeagueReplayFileSerializer.Data;
+namespace LeagueReplayFileSerializer;
 
 public class SerializedPacket
 {

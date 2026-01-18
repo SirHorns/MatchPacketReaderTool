@@ -176,10 +176,10 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         switch (CurrentSection)
         {
             case GameDataSection gameDataSection:
-                gameDataSection.Chunk.ENetPackets.AddRange(pkts);
+                gameDataSection.Chunk.Packets.AddRange(pkts);
                 break;
             case KeyFrameSection keyFrameSection:
-                keyFrameSection.ENetPackets.AddRange(pkts);
+                keyFrameSection.Packets.AddRange(pkts);
                 break;
         }
     }

@@ -4,12 +4,12 @@ namespace LeagueReplayFile.Structs.Sections;
 
 public class Section
 {
-    public RequestTypes Type { get; internal set; }
+    public RequestTypes Type { get; set; }
 
-    public string Http { get; internal set; }
+    public string Http { get; set; }
         
-    public byte[] Data { get; internal set; }
-    public float Time { get; internal set; }
+    public byte[] Data { get; set; }
+    public float Time { get; set; }
         
 
     public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)

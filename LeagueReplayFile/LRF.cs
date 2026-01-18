@@ -7,14 +7,12 @@ namespace LeagueReplayFile;
 
 public class LRF
 {
-    internal List<ENetPacket> Packets { get; set; }
-    internal List<Section> Sections { get;  set; }
+    public List<ENetPacket> Packets { get; set; }
+    public List<Section> Sections { get;  set; }
     
     
     public Stream Stream { get; internal set; }
     public LRFTypes Type { get; internal set; }
     public BasicHeader BasicHeader { get; internal set; }
     public MetaData MetaData { get; internal set; }
-    public IReadOnlyList<ENetPacket> ENetPackets => Packets.AsReadOnly();
-    public IReadOnlyList<Section> ReplaySections => Sections.AsReadOnly();
 }

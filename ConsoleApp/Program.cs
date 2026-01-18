@@ -1,14 +1,18 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using LeagueReplayFile;
-using LeagueReplayFile.Enums;
 using LeagueReplayFileSerializer;
+using LeagueReplayFileSerializer.Enums;
 using Newtonsoft.Json;
 using ReplayNamesUnhasher;
 
 string _serializedDirectory = "Serialized";
 
 Directory.CreateDirectory(_serializedDirectory);
+foreach (var type in Enum.GetValues<ReplayType>())
+{
+    Directory.CreateDirectory($"{_serializedDirectory}/{type}");
+}
 
 //ReplaySerializer serializer = new();
 string path;
@@ -51,7 +55,7 @@ foreach (var lrfPath in dirs)
         
         
         var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
-        File.WriteAllText($"{_serializedDirectory}/{fileName}", json);
+        File.WriteAllText($"{_serializedDirectory}/{slrf.Type}/{fileName}", json);
     }
     catch (Exception e)
     {

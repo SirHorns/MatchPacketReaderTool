@@ -68,7 +68,7 @@ public class LRFReader: IDisposable
             
             ENetGameClientVersions version;
             var clientVersion = metaData.ClientVersion;
-            var majorVersion = Int32.Parse(clientVersion.Split('.')[0]);
+            var majorVersion = int.Parse(clientVersion.Split('.')[0]);
             switch (majorVersion)
             { 
                 case 1:

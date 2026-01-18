@@ -5,5 +5,5 @@ namespace LeagueReplayFile.Structs.Sections;
 public class KeyFrameSection : Section
 {
     public int ID { get; internal set; }
-    public List<ENetPacket> ENetPackets { get; set; } = [];
+    public List<ENetPacket> Packets { get; set; } = [];
 }
