@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{7411B992-DB76-420B-9915-BC5F09DE7B53}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayNamesUnhasher", "ReplayNamesUnhasher\ReplayNamesUnhasher.csproj", "{598AF8B6-08B9-45C5-8F82-7555CF6D37DA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaguePackets", "LeaguePackets\LeaguePackets.csproj", "{2E82DA04-49F2-429E-97C6-863FF08870D8}"
@@ -24,10 +22,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7411B992-DB76-420B-9915-BC5F09DE7B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7411B992-DB76-420B-9915-BC5F09DE7B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7411B992-DB76-420B-9915-BC5F09DE7B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7411B992-DB76-420B-9915-BC5F09DE7B53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{598AF8B6-08B9-45C5-8F82-7555CF6D37DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{598AF8B6-08B9-45C5-8F82-7555CF6D37DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{598AF8B6-08B9-45C5-8F82-7555CF6D37DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
