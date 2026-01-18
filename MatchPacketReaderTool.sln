@@ -4,13 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayNamesUnhasher", "Repl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaguePackets", "LeaguePackets\LeaguePackets.csproj", "{2E82DA04-49F2-429E-97C6-863FF08870D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplayAPI", "ReplayAPI\ReplayAPI.csproj", "{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueReplayFile", "LeagueReplayFile\LeagueReplayFile.csproj", "{2CC351D8-0D4A-4200-85B3-8F4D7F57A301}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{FF18B8E8-F09B-486F-9E68-444E091973F9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatchReplayFile", "MatchReplayFile\MatchReplayFile.csproj", "{9B465C63-059A-4CCB-894E-F413A8238609}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueReplayFileSerializer", "LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj", "{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}"
 EndProject
@@ -30,10 +26,6 @@ Global
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E82DA04-49F2-429E-97C6-863FF08870D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{430D42EB-13EA-4FC2-AD2B-8EB9E1341D66}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2CC351D8-0D4A-4200-85B3-8F4D7F57A301}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2CC351D8-0D4A-4200-85B3-8F4D7F57A301}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CC351D8-0D4A-4200-85B3-8F4D7F57A301}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,10 +34,6 @@ Global
 		{FF18B8E8-F09B-486F-9E68-444E091973F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF18B8E8-F09B-486F-9E68-444E091973F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF18B8E8-F09B-486F-9E68-444E091973F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9B465C63-059A-4CCB-894E-F413A8238609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9B465C63-059A-4CCB-894E-F413A8238609}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9B465C63-059A-4CCB-894E-F413A8238609}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9B465C63-059A-4CCB-894E-F413A8238609}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
