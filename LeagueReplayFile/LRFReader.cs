@@ -8,6 +8,9 @@ using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
 
 namespace LeagueReplayFile;
 
+/// <summary>
+/// Reads LRF file contents into a C# Object
+/// </summary>
 public class LRFReader: IDisposable
 {
     private BinaryReader? _reader;
@@ -16,13 +19,13 @@ public class LRFReader: IDisposable
     {
         _reader = new BinaryReader(stream);
         var header = ReadHeader();
-        LRF? lrf = new LRF()
+        var lrf = new LRF()
         {
             Type = LRFTypes.NAN,
             Stream = stream,
             BasicHeader = header
         };
-        MetaData metaData = null;
+        MetaData? metaData = null;
         LRFTypes type;
         if(header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' && header.Reserved == '\0')
         {
@@ -187,12 +190,6 @@ public class LRFReader: IDisposable
 
         return rawPackets;
     }
-
-    private void Specator()
-    {
-        
-    }
-    
 
     public void Dispose()
     {

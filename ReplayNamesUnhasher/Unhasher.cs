@@ -8,7 +8,7 @@ public partial class Unhasher
 {
     private string _filePath;
     private Dictionary<long, string> NameHashes = new();
-    private JArray _replay;
+    private JArray? _replay;
     private int i, j, k;
 
     private Dictionary<uint, GameObjectTypes> _netIdToTypesMap;
@@ -102,6 +102,18 @@ public partial class Unhasher
         
         Console.WriteLine("Hash Map Loaded!");
         return true;
+    }
+
+    public void Reset()
+    {
+        _filePath = "";
+        NameHashes.Clear();
+        _replay?.Clear();
+        i = 0;
+        j = 0;
+        k = 0;
+        _netIdToTypesMap.Clear();
+        _replicationTypes.Clear();
     }
     
     private static string GetContentPath()
