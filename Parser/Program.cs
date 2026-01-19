@@ -8,72 +8,152 @@ namespace Parser;
 
 public static class Program
 {
-    private const string SerializedDirectory = "Serialized";
+    private static string SerializedDirectory;
+    private static Unhasher Unhasher;
 
-    public static void Main(string[] args)
+    static Program()
     {
+        SerializedDirectory = "Serialized";
+        Unhasher = new Unhasher();
         Directory.CreateDirectory(SerializedDirectory);
         foreach (var type in Enum.GetValues<ReplayType>())
         {
             Directory.CreateDirectory($"{SerializedDirectory}/{type}");
         }
-
+    }
+    
+    public static void Main(string[] args)
+    {
+        Unhasher.Initialize();
         string path;
         if (args.Length == 0)
         {
-            Console.WriteLine("Provide Path:");
+            Console.WriteLine("Provide Path to lrf(s):");
             path = Console.ReadLine() ?? "";
         }
         else
         {
             path = args[0];
         }
-        var dirs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories);
-        var count = dirs.Count();
-        if (dirs.Count() == 0)
+        
+        
+        if(path.EndsWith(".lrf"))
         {
-            Console.WriteLine($"No .lrf files found in \"{path}\"");
-            Exit();
-            return;
+            ParseReplay(path);
         }
-        
-        Console.WriteLine($"Total replays found: {count}");
-        
-        var i = 0;
-        var unhasher = new Unhasher();
-        unhasher.Initialize();
-
-        foreach (var lrfPath in dirs)
+        else
         {
-            ++i;
-            var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
-            if (File.Exists($"{SerializedDirectory}/{fileName}"))
-            {
-                Console.WriteLine($"Skipping {fileName}; Already exists.");
-            }
-            var rid = $"{i}/{count}";
-            try
-            {
-                var stream = File.OpenRead(lrfPath);
-                var reader = new LRFReader();
-                var lrf = reader.Read(stream);
-                Console.WriteLine($"[{rid}]: {lrf.Type}");
-                var serializer = new LRFSerializer();
-                var slrf = serializer.CreateSerializedLRF(lrf);
-                unhasher.Unhashie(slrf);
-        
-        
-                var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
-                File.WriteAllText($"{SerializedDirectory}/{slrf.Type}/{fileName}", json);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[{rid}]: Error - {e}");
-            }
+            var lrfPaths = GetFilePaths(path);
+            ParseReplays(lrfPaths);
         }
 
         Console.WriteLine("Done");
         Exit();
+    }
+
+    private static LRF? ReadLRF(string path)
+    {
+        LRF? lrf = null;
+        try
+        {
+            var stream = File.OpenRead(path);
+            var reader = new LRFReader();
+            lrf = reader.Read(stream);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return lrf;
+    }
+
+    private static SLRF? SerializeLRF(LRF lrf)
+    {
+        SLRF? slrf = null;
+        var serializer = new LRFSerializer();
+        try
+        {
+            slrf = serializer.CreateSerializedLRF(lrf);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return slrf;
+    }
+
+    private static void UnhashSLRF(SLRF slrf)
+    {
+        try
+        {
+            Unhasher.Unhashie(slrf);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+    
+    private static void WriteToFile(SLRF slrf, string fileName)
+    {
+        var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
+        File.WriteAllText($"{SerializedDirectory}/{slrf.Type}/{fileName}", json);   
+    }
+
+    private static void ParseReplay(string lrfPath)
+    {
+        var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
+        if (File.Exists($"{SerializedDirectory}/{fileName}"))
+        {
+            Console.WriteLine($"Skipping {fileName}; Already exists.");
+            return;
+        }
+        var lrf = ReadLRF(lrfPath);
+        Console.WriteLine($"{lrf.Type}");
+        var slrf = SerializeLRF(lrf);
+        UnhashSLRF(slrf);
+        //WriteToFile(slrf, fileName);
+    }
+
+    private static void ParseReplays(List<string> lrfPaths)
+    {
+        var i = 0;
+        var count = lrfPaths.Count;
+        foreach (var lrfPath in lrfPaths)
+        {
+            ++i; 
+            var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
+            if (File.Exists($"{SerializedDirectory}/{fileName}"))
+            {
+                Console.WriteLine($"Skipping {fileName}; Already exists.");
+                continue;
+            }
+            var lrf = ReadLRF(lrfPath);
+            var rid = $"{i}/{count}";
+            Console.WriteLine($"[{rid}]: {lrf.Type}");
+            var slrf = SerializeLRF(lrf);
+            UnhashSLRF(slrf);
+            //WriteToFile(slrf, fileName);
+        }
+    }
+    
+
+    private static List<string>? GetFilePaths(string path)
+    {
+        var lrfs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories).ToList();
+        var count = lrfs.Count;
+        if (lrfs.Count == 0)
+        {
+            Console.WriteLine($"No .lrf files found in \"{path}\"");
+            Exit();
+            return null;
+        }
+        
+        Console.WriteLine($"Total replays found: {count}");
+        return lrfs;
     }
 
 
