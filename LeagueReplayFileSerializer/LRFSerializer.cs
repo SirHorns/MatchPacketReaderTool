@@ -10,6 +10,9 @@ using LeagueReplayFileSerializer.Enums;
 
 namespace LeagueReplayFileSerializer;
 
+/// <summary>
+/// TODO: Make serializer static
+/// </summary>
 public partial class LRFSerializer
 {
 
