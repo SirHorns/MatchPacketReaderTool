@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using LeagueReplayFile.Enums;
-using LeagueReplayFile.Structs;
-using LeagueReplayFile.Structs.Sections;
+using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Sections;
 
 namespace LeagueReplayFile.Protocols;
 
@@ -38,7 +38,7 @@ public abstract class HttpProtocolHandler
                     HandleGetText(data);
                     break;
                 case HttpState.Done:
-                    HandleDone(data, time);
+                    HandleDone(data, time, segment);
                     break;
                 case HttpState.ContinueBinary:
                     HandleContinueBinary(data, time);
@@ -54,9 +54,12 @@ public abstract class HttpProtocolHandler
 
         
         
-        private void HandleDone(byte[] data, float time)
+        private void HandleDone(byte[] data, float time, DataSegment segment)
         {
-            CurrentSection = new Section();
+            CurrentSection = new Section()
+            {
+                Segment = segment,
+            };
             
             var req = Encoding.UTF8.GetString(data).Split(' ');
 
@@ -136,7 +139,7 @@ public abstract class HttpProtocolHandler
                 case "getGameMetaData":
                     SetCurrentRequest(RequestTypes.GAME_META_DATA);
                     SetHttpState(HttpState.GetText);
-                    CurrentSection = new MetaDataSection()
+                    CurrentSection = new GameMetaDataSection()
                     {
                         MatchId = int.Parse(CurrentSection.Http.Split("/")[^2])
                     }.Copy(CurrentSection, type: RequestTypes.GAME_META_DATA);
@@ -161,10 +164,12 @@ public abstract class HttpProtocolHandler
                     SetCurrentRequest(RequestTypes.GAME_DATA_CHUNK);
                     SetHttpState(HttpState.GetBinary);
                     var id = int.Parse(CurrentSection.Http.Split("/")[^2]);
+                    var gameId = int.Parse(CurrentSection.Http.Split("/")[^3]);
                     CurrentSection = new GameDataSection
                     {
                         ID = id,
-                        Chunk = new Chunk()
+                        GameId = gameId,
+                        Chunk = new GameDataChunk()
                         {
                             ID = id
                         }

@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace LeagueReplayFile.Structs;
+namespace LeagueReplayFile.Models;
 
-public class MetaData
+public class ReplayMetaData
 {
     public string QueueType { get; set; } = "N/A";
     public string ReplayVersion { get; set; }

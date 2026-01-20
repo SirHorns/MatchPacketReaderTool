@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj" />
+      <ProjectReference Include="..\LeagueReplayFile\LeagueReplayFile.csproj" />
+      <ProjectReference Include="..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
+    </ItemGroup>
+
+</Project>

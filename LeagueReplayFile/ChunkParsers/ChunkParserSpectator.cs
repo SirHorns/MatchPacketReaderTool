@@ -1,10 +1,10 @@
 ﻿using System.IO.Compression;
 using System.Text;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols;
 using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFile.Structs;
-using LeagueReplayFile.Structs.Sections;
 using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
 
 namespace LeagueReplayFile.ChunkParsers;
@@ -135,7 +135,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
                 ((VersionSection)CurrentSection).Text = Encoding.UTF8.GetString(data);
                 break;
             case RequestTypes.GAME_META_DATA:
-                ((MetaDataSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
+                ((GameMetaDataSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
                 break;
             case RequestTypes.LAST_CHUNK_INFO:
                 ((LastChunkInfoSection)CurrentSection).Json = Encoding.UTF8.GetString(data);

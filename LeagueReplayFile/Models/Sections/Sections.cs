@@ -1,6 +1,6 @@
 using LeagueReplayFile.Enums;
 
-namespace LeagueReplayFile.Structs.Sections;
+namespace LeagueReplayFile.Models.Sections;
 
 public class Section
 {
@@ -10,7 +10,8 @@ public class Section
         
     public byte[] Data { get; set; }
     public float Time { get; set; }
-        
+    public DataSegment Segment { get; set; }
+
 
     public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)
     {

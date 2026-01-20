@@ -1,5 +1,5 @@
-﻿using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFile.Structs;
+﻿using LeagueReplayFile.Models;
+using LeagueReplayFile.Protocols.ENet;
 
 namespace LeagueReplayFile.ChunkParsers;
 

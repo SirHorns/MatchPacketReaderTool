@@ -1,7 +1,7 @@
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFile.Structs;
-using LeagueReplayFile.Structs.Sections;
 
 namespace LeagueReplayFile;
 
@@ -14,5 +14,5 @@ public class LRF
     public Stream Stream { get; internal set; }
     public LRFTypes Type { get; internal set; }
     public BasicHeader BasicHeader { get; internal set; }
-    public MetaData MetaData { get; internal set; }
+    public ReplayMetaData MetaData { get; internal set; }
 }

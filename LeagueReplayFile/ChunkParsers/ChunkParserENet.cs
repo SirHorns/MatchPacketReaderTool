@@ -1,7 +1,7 @@
 ﻿using System.Text;
+using LeagueReplayFile.Models;
 using LeagueReplayFile.Protocols.ENet;
 using LeagueReplayFile.Protocols.ENet.Protocols;
-using LeagueReplayFile.Structs;
 
 namespace LeagueReplayFile.ChunkParsers;
 

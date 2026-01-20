@@ -1,8 +1,8 @@
 using System.Text;
 using LeagueReplayFile.ChunkParsers;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models;
 using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFile.Structs;
 using Newtonsoft.Json;
 using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
 
@@ -25,7 +25,7 @@ public class LRFReader: IDisposable
             Stream = stream,
             BasicHeader = header
         };
-        MetaData? metaData = null;
+        ReplayMetaData? metaData = null;
         LRFTypes type;
         if(header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' && header.Reserved == '\0')
         {
@@ -139,20 +139,20 @@ public class LRFReader: IDisposable
         };
     }
 
-    public MetaData ReadMetaData()
+    public ReplayMetaData ReadMetaData()
     {
         var jsonLength = _reader.ReadInt32();
         var json = _reader.ReadExactBytes(jsonLength);
         var jsonString = Encoding.UTF8.GetString(json);
-        return JsonConvert.DeserializeObject<MetaData>(jsonString);
+        return JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
     }
     
-    public MetaData ReadMetaDataNFO(int dataSize)
+    public ReplayMetaData ReadMetaDataNFO(int dataSize)
     {
         var pad = _reader.ReadUInt64();
         var jsonData = _reader.ReadExactBytes(dataSize);
         var jsonString = Encoding.UTF8.GetString(jsonData);
-        return JsonConvert.DeserializeObject<MetaData>(jsonString);
+        return JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
     }
 
 

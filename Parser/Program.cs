@@ -41,7 +41,6 @@ public static class Program
             path = args[0];
         }
         
-        
         if(path.EndsWith(".lrf"))
         {
             ParseReplay(path);
@@ -49,7 +48,14 @@ public static class Program
         else
         {
             var lrfPaths = GetFilePaths(path);
-            ParseReplays(lrfPaths);
+            if (lrfPaths.Count == 1)
+            {
+                ParseReplay(lrfPaths[0]);
+            }
+            else
+            {
+                ParseReplays(lrfPaths);
+            }
         }
 
         Console.WriteLine("Done");
@@ -271,6 +277,9 @@ public static class Program
     private static void Exit()
     {
         Console.Write("Press any key to exit...");
-        Console.Read();
+        while (true)
+        {
+            Console.Read();
+        }
     }
 }

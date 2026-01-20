@@ -1,4 +1,4 @@
-namespace LeagueReplayFile.Structs.Sections;
+namespace LeagueReplayFile.Models.Sections;
 
 public class LastChunkInfoSection : Section
 {

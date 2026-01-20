@@ -1,4 +1,4 @@
-namespace LeagueReplayFile.Structs;
+namespace LeagueReplayFile.Models;
 
 public class BasicHeader
 {

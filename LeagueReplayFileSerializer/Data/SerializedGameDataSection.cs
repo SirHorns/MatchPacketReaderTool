@@ -1,4 +1,4 @@
-using LeagueReplayFile.Structs.Sections;
+using LeagueReplayFile.Models.Sections;
 
 namespace LeagueReplayFileSerializer.Data;
 

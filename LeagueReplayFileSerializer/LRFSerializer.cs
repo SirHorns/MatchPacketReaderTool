@@ -2,9 +2,8 @@ using LeaguePackets;
 using LeaguePackets.Game;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols.ENet;
-using LeagueReplayFile.Structs;
-using LeagueReplayFile.Structs.Sections;
 using LeagueReplayFileSerializer.Data;
 using LeagueReplayFileSerializer.Enums;
 

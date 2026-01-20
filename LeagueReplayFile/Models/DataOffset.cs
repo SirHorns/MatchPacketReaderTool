@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace LeagueReplayFile.Structs;
+namespace LeagueReplayFile.Models;
 
 public class DataOffset
 {

@@ -1,6 +1,6 @@
 using LeagueReplayFile.Protocols.ENet;
 
-namespace LeagueReplayFile.Structs.Sections;
+namespace LeagueReplayFile.Models.Sections;
 
 public class KeyFrameSection : Section
 {

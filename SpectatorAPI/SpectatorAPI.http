@@ -1,0 +1,40 @@
+@SpectatorAPI_HostAddress = http://localhost:5120/observer-mode/rest/consumer
+@Platform_ID = DEV
+@Game_ID = 0
+@Posfix = {{Platform_ID}}/{{Game_ID}}
+
+###
+
+GET {{SpectatorAPI_HostAddress}}/featured/
+Accept: application/json
+
+###
+
+GET {{SpectatorAPI_HostAddress}}/version/
+Accept: text/plain
+
+###
+
+@Unknown_Parameter1 = 0
+GET {{SpectatorAPI_HostAddress}}/getGameMetaData/{{Posfix}}/{{Unknown_Parameter1}}/token
+Accept: application/json
+
+###
+
+@Unknown_Parameter2 = 0
+GET {{SpectatorAPI_HostAddress}}/getLastChunkInfo/{{Unknown_Parameter2}}/token
+Accept: application/json
+
+###
+
+@Chunk_ID = 0
+GET {{SpectatorAPI_HostAddress}}/getGameDataChunk/{{Chunk_ID}}/token
+Accept: application/json
+
+###
+
+@Frame_ID = 0
+GET {{SpectatorAPI_HostAddress}}/getKeyFrame/{{Frame_ID}}/token
+Accept: application/json
+
+###

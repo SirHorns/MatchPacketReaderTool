@@ -15,7 +15,7 @@
 
 using System.Security.Cryptography;
 
-namespace LeagueReplayFile.Structs
+namespace LeagueReplayFile.Models
 {
     public class BlowFish
     {
