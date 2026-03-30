@@ -139,12 +139,13 @@ public class LRFReader: IDisposable
         };
     }
 
-    public ReplayMetaData ReadMetaData()
+    public ReplayMetaData? ReadMetaData()
     {
         var jsonLength = _reader.ReadInt32();
         var json = _reader.ReadExactBytes(jsonLength);
         var jsonString = Encoding.UTF8.GetString(json);
-        return JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
+        var metadata = JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
+        return metadata;
     }
     
     public ReplayMetaData ReadMetaDataNFO(int dataSize)

@@ -164,7 +164,7 @@ public abstract class HttpProtocolHandler
                     SetCurrentRequest(RequestTypes.GAME_DATA_CHUNK);
                     SetHttpState(HttpState.GetBinary);
                     var id = int.Parse(CurrentSection.Http.Split("/")[^2]);
-                    var gameId = int.Parse(CurrentSection.Http.Split("/")[^3]);
+                    var gameId = long.Parse(CurrentSection.Http.Split("/")[^3]);
                     CurrentSection = new GameDataSection
                     {
                         ID = id,

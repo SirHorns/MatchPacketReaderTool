@@ -21,10 +21,11 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     public List<ENetPacket> Packets { get; } = [];
 
 
-    public ChunkParserSpectator(byte[] key, int matchId)
+    public ChunkParserSpectator(byte[] key, long matchId)
     {
-        var keyBlowfish = new BlowFish(Encoding.ASCII.GetBytes(matchId.ToString()));
-        _blowfish = new BlowFish(keyBlowfish.Decrypt(key).Take(16).ToArray());
+        _blowfish =  new BlowFish(key);
+        /*var keyBlowfish = new BlowFish(Encoding.ASCII.GetBytes(matchId.ToString()));
+        _blowfish = new BlowFish(keyBlowfish.Decrypt(key).Take(16).ToArray());*/
     }
 
     public void Read(byte[] data)
@@ -70,8 +71,13 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
             byte flags = (byte)(marker >> 4);
             byte channel = (byte)(marker & 0x0F);
             int length;
+            
+            var w = (flags & 0x8) == 0;
+            var x =(flags & 0x1) == 0;
+            var y = (flags & 0x4) == 0;
+            var z = (flags & 0x2) == 0;
 
-            if ((flags & 0x8) == 0)
+            if (w)
             {
                 time = reader.ReadSingle();
             }
@@ -80,7 +86,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
                 time += reader.ReadByte() / 1000.0f;
             }
 
-            if ((flags & 0x1) == 0)
+            if (x)
             {
                 length = reader.ReadInt32();
             }
@@ -89,12 +95,12 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
                 length = reader.ReadByte();
             }
 
-            if ((flags & 0x4) == 0)
+            if (y)
             {
                 packetType = reader.ReadByte();
             }
 
-            if ((flags & 0x2) == 0)
+            if (z)
             {
                 blockParam = reader.ReadInt32();
             }
@@ -161,7 +167,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     {
         List<ENetPacket> pkts;
         var decrypted = _blowfish.Decrypt(data);
-        using var decompressed = new MemoryStream();
+        /*using var decompressed = new MemoryStream();
         using (var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress))
         {
             compressed.CopyTo(decompressed);
@@ -171,7 +177,9 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         using (var reader = new BinaryReader(decompressed))
         {
             pkts = ReadSectionPackets(reader);
-        }
+        }*/
+
+        pkts = ReadSectionPackets(new BinaryReader(new MemoryStream(decrypted)));
 
         switch (CurrentSection)
         {
