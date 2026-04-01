@@ -3,76 +3,18 @@ using LeaguePackets;
 using LeaguePackets.Game;
 using LeagueReplayFile.Enums;
 using LeagueReplayFileSerializer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ReplayNamesUnhasher;
 
 public partial class Unhasher
 {
-    public void UnhashReplay()
-    {
-        Console.WriteLine("Unhashing Replay...");
-        for (i = 0; i < _replay.Count; i++)
-        {
-            var packetInfo = _replay[i].SelectToken("Packet").ToArray();
-
-            for (k = 0; k < packetInfo.Count(); k++)
-            {
-                Console.WriteLine(k);
-                ProcessProperty(packetInfo[k] as JProperty);
-            }
-        };
-        Console.WriteLine("Finished Unhasing Replay!");
-    }
-    
-    public Task UnhashReplay(JArray packets, string outputPath)
-    {
-        Console.WriteLine("Unhashing Replay...");
-        
-        for (i = 0; i < packets.Count; i++)
-        {
-            var packetInfo = packets[i].SelectToken("Packet").ToArray();
-
-            for (k = 0; k < packetInfo.Count(); k++)
-            {
-                ProcessProperty(packetInfo[k] as JProperty);
-            }
-        };
-        
-        Console.WriteLine("Finished Unhasing Replay!");
-        
-        using var fileStream = File.CreateText(outputPath.Replace(".lrf", "_Unhashed.json"));
-        var jsonSerializer = new JsonSerializer
-        {
-            Formatting = Formatting.Indented
-        };
-        jsonSerializer.Serialize(fileStream, packets);
-        
-        GC.Collect();
-        return Task.CompletedTask;
-    }
-
-    public string Unhash(string json)
-    {
-        var token = JToken.Parse(json);
-        var packetInfo = token.SelectToken("Data").ToArray();
-
-        for (var index = 0; index < packetInfo.Length; index++)
-        {
-            var jProp = packetInfo[index] as JProperty;
-            ProcessProperty(jProp);
-        }
-
-        return token.ToString();
-    }
-
-
     public void Unhashie(SLRF slrf)
     {
+        Console.WriteLine("Unhashing is not enabled, still WIP");
+        return;
         switch (slrf.Type)
         {
-            case LRFTypes.SPECTATOR:
+            case LRFTypes.HTTP:
                 break;
             case LRFTypes.NFO:
             case LRFTypes.ENET:
@@ -82,6 +24,7 @@ public partial class Unhasher
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        Reset();
     }
 
     private void UnhashPackets(List<SerializedPacket> packets)
@@ -89,16 +32,22 @@ public partial class Unhasher
         foreach (var sp in packets)
         {
             object result = null;
+            // incase random object somehow replaces the packet object
             if (sp.Packet is not BasePacket packet)
             {
                 continue;
             }
+            
             // castinfo
             // talent
             // color
             // argsbuff, argsheal, argsDamage, argsforclient, argsminionkill
+            //TODO: FINDING ALL PACKETS THAT NEED TO BE UNHASHED
             switch (packet)
             {
+                case SynchVersionS2C:
+                    UnhashPacket(packet);
+                    break;
                 case NPC_BuffRemoveGroup:
                     break;
                 case C2S_PlayVOCommand:

@@ -1,3 +1,4 @@
+using LeaguePackets;
 using LeaguePackets.Game;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -88,6 +89,10 @@ public partial class Unhasher
             }
             Console.WriteLine($"Unhashed {key} to {NameHashes[key]}!");
         }
+    }
+
+    private void UnhashPacket(BasePacket packet)
+    {
     }
     
     private object UnhashOnReplication(OnReplication replication)

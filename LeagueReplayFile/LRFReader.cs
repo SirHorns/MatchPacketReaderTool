@@ -26,37 +26,26 @@ public class LRFReader: IDisposable
             BasicHeader = header
         };
         ReplayMetaData? metaData = null;
-        LRFTypes type;
-        if(header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' && header.Reserved == '\0')
-        {
-            type = LRFTypes.NFO; // LRF is a NFO replay
-        }
-        else
-        {
-            metaData = ReadMetaData();
-            if (metaData.SpectatorMode)
-            {
-                type = LRFTypes.SPECTATOR;
-            }
-            else
-            {
-                type = LRFTypes.ENET;
-            }
-        }
+        var isNFO = header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' &&
+                    header.Reserved == '\0';
 
-
-        if (type == LRFTypes.NFO)
+        if (isNFO)
         {
             var nfo = Encoding.UTF8.GetString(_reader.ReadExactBytes(4)) == "nfo";
-            var dataSize = (int)_reader.ReadUInt32();
-            if(nfo)
-            {
-                metaData = ReadMetaDataNFO(dataSize); 
-            }
-            Console.WriteLine($"{type}");
+        }
+        var dataSize = _reader.ReadUInt32();
+        if (isNFO)
+        {
+            var pad = _reader.ReadUInt64();
+        }
+        metaData = ReadMetaData((int)dataSize);
+        Console.WriteLine($"Client Version: {metaData.ClientVersion}");
+        Console.WriteLine($"Replay Version: {metaData.ReplayVersion}");
+        if (isNFO)
+        {
             var packets = NFO();
             lrf.Packets = packets;
-        }
+        } 
         else
         {
             var offsetStart = stream.Position;
@@ -103,26 +92,50 @@ public class LRFReader: IDisposable
                     version = ENetGameClientVersions.Unknown;
                     break;
             }
-            
-            Console.WriteLine($"{type} - {metaData.ClientVersion}");
         
-            if (type is LRFTypes.SPECTATOR)
+            if (metaData.SpectatorMode)
             {
+                Console.WriteLine("SpectatorMode");
                 var parser = new ChunkParserSpectator(metaData.EncryptionKey, metaData.MatchId);
                 parser.Read(data);
                 lrf.Sections = parser.Sections;
             }
-            else if (type is LRFTypes.ENET)
+            else if (metaData.IsStream)
             {
+                Console.WriteLine("Stream");
+                var parser = new ChunkParserENet(version, metaData.EncryptionKey);
+                parser.Read(data);
+                lrf.Packets = parser.Packets;
+            }
+            else if (metaData.ObserverStream)
+            {
+                Console.WriteLine("ObserverStream");
+            }
+            else
+            {
+                Console.WriteLine("POVStream");
                 var parser = new ChunkParserENet(version, metaData.EncryptionKey);
                 parser.Read(data);
                 lrf.Packets = parser.Packets;
             }
         }
 
-        lrf.Type = type;
+        if (isNFO)
+        {
+            lrf.Type = LRFTypes.NFO; // LRF is a NFO replay
+        }
+        else
+        {
+            if (metaData.SpectatorMode)
+            {
+                lrf.Type = LRFTypes.HTTP;
+            }
+            else
+            {
+                lrf.Type = LRFTypes.ENET;
+            }
+        }
         lrf.MetaData = metaData;
-
         return lrf;
     }
     
@@ -139,24 +152,14 @@ public class LRFReader: IDisposable
         };
     }
 
-    public ReplayMetaData? ReadMetaData()
+    public ReplayMetaData? ReadMetaData(int dataSize)
     {
-        var jsonLength = _reader.ReadInt32();
-        var json = _reader.ReadExactBytes(jsonLength);
-        var jsonString = Encoding.UTF8.GetString(json);
-        var metadata = JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
+        var bytes = _reader.ReadExactBytes(dataSize);
+        var json = Encoding.UTF8.GetString(bytes);
+        var metadata = JsonConvert.DeserializeObject<ReplayMetaData>(json);
         return metadata;
     }
     
-    public ReplayMetaData ReadMetaDataNFO(int dataSize)
-    {
-        var pad = _reader.ReadUInt64();
-        var jsonData = _reader.ReadExactBytes(dataSize);
-        var jsonString = Encoding.UTF8.GetString(jsonData);
-        return JsonConvert.DeserializeObject<ReplayMetaData>(jsonString);
-    }
-
-
     private List<ENetPacket> NFO()
     {
         var rawPackets = new List<ENetPacket>();

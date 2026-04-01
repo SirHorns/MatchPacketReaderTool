@@ -127,10 +127,9 @@ public class APIServer
     private static SLRF? SerializeLRF(LRF lrf)
     {
         SLRF? slrf = null;
-        var serializer = new LRFSerializer();
         try
         {
-            slrf = serializer.CreateSerializedLRF(lrf);
+            slrf = LRFSerializer.Serialize(lrf);
         }
         catch (Exception e)
         {

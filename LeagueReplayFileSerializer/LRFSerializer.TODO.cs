@@ -1,6 +1,6 @@
 namespace LeagueReplayFileSerializer;
 
-public partial class LRFSerializer
+public static  partial class LRFSerializer
 {
     /*private void ParseChunkPacket(Chunk chunk, ENetPacket enetPacket)
 {

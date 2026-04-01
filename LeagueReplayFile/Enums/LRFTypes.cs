@@ -4,6 +4,6 @@ public enum LRFTypes
 {
     NAN,
     NFO,
-    SPECTATOR,
+    HTTP,
     ENET
 }

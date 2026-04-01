@@ -1,23 +1,23 @@
 using LeaguePackets;
-using LeaguePackets.Game;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols.ENet;
 using LeagueReplayFileSerializer.Data;
-using LeagueReplayFileSerializer.Enums;
 
 namespace LeagueReplayFileSerializer;
 
-/// <summary>
-/// TODO: Make serializer static
-/// </summary>
-public partial class LRFSerializer
+public static partial class LRFSerializer
 {
 
-    public LRFSerializer() { }
+    static LRFSerializer() { }
 
-    public SLRF CreateSerializedLRF(LRF lrf)
+    /// <summary>
+    /// Converted ENetPackets into LeaguePackets then Serializes them
+    /// </summary>
+    /// <param name="lrf"></param>
+    /// <returns>SLRF object containing converted packet data</returns>
+    public static SLRF? Serialize(LRF lrf)
     {
         var slrf = new SLRF()
         {
@@ -27,7 +27,7 @@ public partial class LRFSerializer
         };
         switch (lrf.Type)
         {
-            case LRFTypes.SPECTATOR:
+            case LRFTypes.HTTP:
                 var lrfSections = lrf.Sections;
                 SerializeSections(ref lrfSections);
                 slrf.Sections = lrfSections;
@@ -39,77 +39,104 @@ public partial class LRFSerializer
                 break;
             case LRFTypes.NAN:
             default:
-                throw new ArgumentOutOfRangeException();
+                Console.WriteLine($"Unable to serialize LRF: {lrf.Type}");
+                return null;
         }
         
         return slrf;
     }
-    
-    //
-    
-    private List<SerializedPacket> SerializePackets(List<ENetPacket> eNetPackets)
+
+    /// <summary>
+    /// Convert ENetPackets into LeaguePackets
+    /// </summary>
+    /// <param name="eNetPackets"></param>
+    /// <returns></returns>
+    public static List<BasePacket> ConvertENetPackets(List<ENetPacket> eNetPackets)
+    {
+        Console.WriteLine("Converting ENet Packets");
+        List<BasePacket> basePackets = [];
+        // gather our League of Legends packets
+        var count = 0;
+        var unk = 0;
+        foreach (var eNetPacket in eNetPackets)
+        {
+            var leaguePacket = BasePacket.Create(eNetPacket.Bytes, (ChannelID)eNetPacket.Channel);
+            if (leaguePacket is UnknownPacket)
+            {
+                unk++;
+                var rawID = GetID(eNetPacket);
+                Console.WriteLine($"Packet sent over non-standard channel - ID: {rawID} Channel: {eNetPacket.Channel}");
+            }
+            else
+            {
+                count++;
+            }
+            basePackets.Add(leaguePacket);
+        }
+        Console.WriteLine($"Normal: {count} Unknown: {unk}");
+        return basePackets;
+    }
+
+    /// <summary>
+    /// Serialize League Packets
+    /// </summary>
+    /// <param name="eNetPackets"></param>
+    /// <param name="basePackets"></param>
+    /// <returns></returns>
+    public static List<SerializedPacket> SerializeLeaguePackets(List<ENetPacket> eNetPackets, List<BasePacket> basePackets)
     {
         var serializedPackets = new List<SerializedPacket>();
         // ngl idk a better way to do this
-        for (int i = 0; i < eNetPackets.Count; i++)
+        for (var i = 0; i < eNetPackets.Count; i++)
         {
-            serializedPackets.Add(null);
+            serializedPackets.Add(new SerializedPacket()
+            {
+                RawID = 0,
+                Type = "N/A",
+                ChannelID = ChannelID.Default,
+                RawChannel = 0,
+                Time = 0,
+                Packet = default
+            });
         }
 
-        List<BasePacket?> basePackets = [];
-
-        var index = -1;
-        var size = eNetPackets.Count - 1;
-        // gather our League of Legends packets
-        foreach (var eNetPacket in eNetPackets)
-        {
-            index++;
-            if (eNetPacket.Channel >= 8)
-            {
-                // Sometimes we get packets with unknown channels
-                // Their use or what they do is unknown as of now
-                basePackets.Add(null);
-                serializedPackets[index] = new SerializedPacket()
-                {
-                    RawID = -1,
-                    Type = "Unknown",
-                    ChannelID = null,
-                    RawChannel = eNetPacket.Channel,
-                    Time = eNetPacket.Time,
-                    Packet = eNetPacket
-                };
-                continue;
-            }
-
-            try
-            {
-                var basePacket = BasePacket.Create(eNetPacket.Bytes, (ChannelID)eNetPacket.Channel);
-                basePackets.Add(basePacket);
-            }
-            catch (Exception e)
-            {
-                basePackets.Add(null);
-            }
-        }
-
+        int succeeded = 0;
+        int failed = 0;
         // iterate over our set to create new SerializedPackets
         for (var i = 0; i < eNetPackets.Count; i++)
         {
             var eNetPacket = eNetPackets[i];
             var basePacket = basePackets[i];
-            if (basePacket is null)
-            {
-                continue;
-            }
             var rawId = GetID(eNetPacket);
             var serializedPacket = Parse(eNetPacket, basePacket, rawId);
-            serializedPackets[i] = (serializedPacket);
-        }
+            if (serializedPacket is null)
+            {
+                serializedPackets[i].RawID = rawId;
+                serializedPackets[i].RawChannel = eNetPacket.Channel;
+                serializedPackets[i].Time = eNetPacket.Time;
+                failed++;
+                continue;
+            }
 
+            succeeded++;
+            serializedPackets[i] = serializedPacket;
+        }
+        Console.WriteLine($"Success: {succeeded} Failed: {failed}");
+        return serializedPackets;
+    }
+    
+    //
+    
+    private static List<SerializedPacket> SerializePackets(List<ENetPacket> eNetPackets)
+    {
+        // gather our League of Legends packets
+        var basePackets =  ConvertENetPackets(eNetPackets);
+        Console.WriteLine("Serializing League Packets");
+        var serializedPackets = SerializeLeaguePackets(eNetPackets, basePackets);
         return serializedPackets;
     }
 
-    private void SerializeSections(ref List<Section> sections)
+    private static void SerializeSections(ref List<Section> sections)
     {
         for (var i = 0; i < sections.Count; i++)
         {
@@ -152,7 +179,7 @@ public partial class LRFSerializer
         }
     }
 
-    private int GetID(ENetPacket eNetPacket)
+    private static int GetID(ENetPacket eNetPacket)
     {
         int rawId = eNetPacket.Bytes[0];
         if (rawId == 254)
@@ -162,7 +189,7 @@ public partial class LRFSerializer
         return rawId;
     }
     
-    private SerializedPacket? Parse(ENetPacket eNetPacket, BasePacket basePacket, int rawId)
+    private static SerializedPacket? Parse(ENetPacket eNetPacket, BasePacket basePacket, int rawId)
     {
         SerializedPacket? serializedPacket = new SerializedPacket()
         {
@@ -223,7 +250,7 @@ public partial class LRFSerializer
         return serializedPacket;
     }
 
-    private BadPacket SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)
+    private static BadPacket SoftBad(int rawId, ENetPacket rPacket, BasePacket packet)
     {
         var softBad = new BadPacket()
         {
@@ -236,7 +263,7 @@ public partial class LRFSerializer
         return softBad;
     }
 
-    private BadPacket[] SoftBadLoop(IGamePacketsList list, ENetPacket rPacket)
+    private static BadPacket[] SoftBadLoop(IGamePacketsList list, ENetPacket rPacket)
     {
         var bads = new List<BadPacket>();
         foreach (var packet2 in list.Packets)
@@ -260,7 +287,7 @@ public partial class LRFSerializer
         return bads.ToArray();
     }
 
-    private BadPacket HardBad(int rawId, ENetPacket rPacket, Exception exception)
+    private static BadPacket HardBad(int rawId, ENetPacket rPacket, Exception exception)
     {
         var hardBad = new BadPacket()
         {
