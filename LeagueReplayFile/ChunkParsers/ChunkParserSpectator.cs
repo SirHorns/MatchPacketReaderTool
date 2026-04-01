@@ -21,11 +21,12 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     public List<ENetPacket> Packets { get; } = [];
 
 
-    public ChunkParserSpectator(byte[] key, long matchId)
+    public ChunkParserSpectator(byte[] encryptionKey, long matchId)
     {
-        _blowfish =  new BlowFish(key);
-        /*var keyBlowfish = new BlowFish(Encoding.ASCII.GetBytes(matchId.ToString()));
-        _blowfish = new BlowFish(keyBlowfish.Decrypt(key).Take(16).ToArray());*/
+        var checksumKey = Encoding.ASCII.GetBytes(matchId.ToString());
+        var checksumBlowfish = new BlowFish(checksumKey);
+        var realKey = checksumBlowfish.Decrypt(encryptionKey);
+        _blowfish = new BlowFish(realKey.Take(16).ToArray());
     }
 
     public void Read(byte[] data)
@@ -34,24 +35,24 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
 
         while (_reader.BaseStream.Position < _reader.BaseStream.Length)
         {
-            var t = _reader.ReadSingle();
-            var l = _reader.ReadInt32();
-            var d = _reader.ReadExactBytes(l);
-            var p = _reader.ReadByte();
+            var time = _reader.ReadSingle();
+            var length = _reader.ReadInt32();
+            var segmentData = _reader.ReadExactBytes(length);
+            var padding = _reader.ReadByte();
         
             var segment =  new DataSegment()
             {
-                Time = t,
-                Length = l,
-                Data = d,
-                Pad = p
+                Time = time,
+                Length = length,
+                Data = segmentData,
+                Pad = padding
             };
             Segments.Add(segment);
         }
-
-        foreach (var segment in Segments)
+        Console.WriteLine($"Processing {Segments.Count} segments");
+        for (var i = 0; i < Segments.Count; i++)
         {
-            ReadSegment(segment);
+            ReadSegment(Segments[i]);
         }
     }
 
@@ -151,7 +152,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
             case RequestTypes.GAME_DATA_CHUNK:
             case RequestTypes.NONE:
             default:
-                //
+                // ignore non text requests
                 break;
         }
 
@@ -167,7 +168,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
     {
         List<ENetPacket> pkts;
         var decrypted = _blowfish.Decrypt(data);
-        /*using var decompressed = new MemoryStream();
+        using var decompressed = new MemoryStream();
         using (var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress))
         {
             compressed.CopyTo(decompressed);
@@ -177,9 +178,7 @@ public class ChunkParserSpectator : HttpProtocolHandler, IChunkParser
         using (var reader = new BinaryReader(decompressed))
         {
             pkts = ReadSectionPackets(reader);
-        }*/
-
-        pkts = ReadSectionPackets(new BinaryReader(new MemoryStream(decrypted)));
+        }
 
         switch (CurrentSection)
         {

@@ -1,4 +1,5 @@
 using LeagueReplayFile;
+using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFileSerializer;
@@ -41,10 +42,7 @@ public class APIServer
         SpectatorReplayController.OnFeatured += () => Task.FromResult("{ }");
         SpectatorReplayController.OnVersion += () => Task.FromResult(Version);
         SpectatorReplayController.OnGetMetadata += () => Task.FromResult(GameMetaData);
-        SpectatorReplayController.OnLasChunkInfo += (unk) =>
-        {
-            return Task.FromResult<LastChunkInfo>(null);
-        };
+        SpectatorReplayController.OnLasChunkInfo += (unk) => Task.FromResult<LastChunkInfo>(null);
         SpectatorReplayController.OnGameDataChunk += (id) =>
         {
             string res;
@@ -70,14 +68,20 @@ public class APIServer
 
     public void Run(string lrfPath)
     {
-        Unhasher.Initialize();
         var lrf = ReadLRF(lrfPath);
-        //var slrf = SerializeLRF(lrf);
-        //UnhashSLRF(slrf);
+        switch (lrf.Type)
+        {
+            case LRFTypes.HTTP:
+                break;
+            case LRFTypes.NAN:
+                throw new NotImplementedException($"Replay is invalid");
+            case LRFTypes.NFO:
+            case LRFTypes.ENET:
+                throw new NotImplementedException($"{lrf.Type} replay is not implemented yet");
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
         replay = lrf;
-
-        
-
         foreach (var section in lrf.Sections)
         {
             string json;

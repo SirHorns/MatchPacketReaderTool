@@ -4,7 +4,26 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        string path;
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Provide Path to lrf:");
+            path = Console.ReadLine() ?? "";
+        }
+        else
+        {
+            path = args[0];
+        }
         var api = new APIServer();
-        api.Run("F:\\ReplayArchive\\LRF\\Replays2\\found\\Map1\\00e196923dfca246d44cbf98716ac4a3.lrf");
+        try
+        {
+            api.Run(path);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        Console.WriteLine("Press any key to exit...");
+        Console.Read();
     }
 }

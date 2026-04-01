@@ -4,6 +4,6 @@ public enum ReplayType
 {
     NAN,
     NFO,
-    SPECTATOR,
+    HTTP,
     ENET
 }

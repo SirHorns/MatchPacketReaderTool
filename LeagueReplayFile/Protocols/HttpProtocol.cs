@@ -47,7 +47,7 @@ public abstract class HttpProtocolHandler
                     HandleContinueText(data, time);
                     break;
                 default:
-                    Console.WriteLine("Skipped segment");
+                    Console.WriteLine($"Skipped Segment: {_httpState}");
                     break;
             }
         }
