@@ -1,0 +1,219 @@
+using LeagueReplayFile;
+using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Sections;
+using Newtonsoft.Json;
+using SpectatorAPI.Controllers;
+
+namespace SpectatorAPI;
+
+public class ReplayApiServer
+{
+    private bool _started;
+    
+    private WebApplication WebApp;
+    private LRF Replay;
+    private string Version = "";
+    private GameMetaData GameMetaData;
+    private List<LastChunkInfoSection> LastChunkInfos;
+    private Dictionary<int, GameDataSection> GameDatas;
+    private Dictionary<int, KeyFrameSection> KeyFrames;
+    
+    public ReplayApiServer()
+    {
+        _started = false;
+        GameMetaData = new GameMetaData();
+        LastChunkInfos = [];
+        GameDatas = [];
+        KeyFrames = [];
+        var builder = WebApplication.CreateBuilder();
+// Add services to the container.
+        builder.Services.AddControllers();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        builder.Services.AddOpenApi();
+        
+        WebApp = builder.Build();
+// Configure the HTTP request pipeline.
+        if (WebApp.Environment.IsDevelopment())
+        {
+            WebApp.MapOpenApi();
+        }
+        WebApp.UseAuthorization();
+        WebApp.MapControllers();
+
+        SpectatorReplayController.OnFeatured += GetFeatured;
+        SpectatorReplayController.OnVersion += GetVersion;
+        SpectatorReplayController.OnEndOfGameStats += GetEndOfGameStats;
+        SpectatorReplayController.OnGetMetadata += GetMetaData;
+        SpectatorReplayController.OnLasChunkInfo += GetLastChunkInfo;
+        SpectatorReplayController.OnGameDataChunk += GetGameDataChunk;
+        SpectatorReplayController.OnKeyFrame += GetKeyFrame;
+    }
+
+    public void Start()
+    {
+        if (_started)
+        {
+            return;
+        }
+        _started = true;
+        WebApp.Run();
+    }
+
+    public void Stop()
+    {
+        if (!_started)
+        {
+            return;
+        }
+        _started = false;
+        WebApp.StopAsync();
+    }
+    
+    //<•······················•<>•······················•>
+
+    public object GetPlatform(string id)
+    {
+        return default;
+    }
+
+    public object GetGame(long id)
+    {
+        return default;
+    }
+    
+    //<•······················•<>•······················•>
+    
+    private Task<string> GetFeatured()
+    {
+        return Task.FromResult("{ }");
+    }
+    
+    private Task<string> GetVersion()
+    {
+        return Task.FromResult(Version);
+    }
+    
+    private Task<EndOfGameStats> GetEndOfGameStats(string platformId, long gameId)
+    {
+        var platform = GetPlatform(platformId);
+        var game = GetGame(gameId);
+        return Task.FromResult(new EndOfGameStats());
+    }
+    
+    private Task<GameMetaData> GetMetaData(string platformId, long gameId, string unknown)
+    {
+        var platform = GetPlatform(platformId);
+        var game = GetGame(gameId);
+        return Task.FromResult(GameMetaData);
+    }
+
+    private int index = 0;
+    private Task<LastChunkInfo> GetLastChunkInfo(string platformId, long gameId, string unknown)
+    {
+        var platform = GetPlatform(platformId);
+        var game = GetGame(gameId);
+        index++;
+        if (index> LastChunkInfos.Count)
+        {
+            Console.WriteLine($"OUT OF RANGE: {index} > {LastChunkInfos.Count}");
+            return null;
+        }
+        var section = LastChunkInfos[index];
+        var json = section.Json;
+        var info = JsonConvert.DeserializeObject<LastChunkInfo>(json);
+        return Task.FromResult(info);
+    }
+    
+    private Task<GameDataChunk> GetGameDataChunk(string platformId, long gameId, int chunkId)
+    {
+        var platform = GetPlatform(platformId);
+        var game = GetGame(gameId);
+        if (!GameDatas.TryGetValue(chunkId, out var section))
+        {
+            return Task.FromResult(new GameDataChunk());
+        }
+        var chunk = section.Chunk;
+        return Task.FromResult(chunk);
+    }
+    
+    //TODO: Implement KeyFrame
+    private Task<KeyFrame> GetKeyFrame(string platformId, long gameId, int frameId)
+    {
+        var platform = GetPlatform(platformId);
+        var game = GetGame(gameId);
+        if (!KeyFrames.TryGetValue(frameId, out var section))
+        {
+            return Task.FromResult(new KeyFrame());
+        }
+        return Task.FromResult(new KeyFrame());
+    }
+    
+    //<•······················•<>•······················•>
+
+    public void LoadReplay(string lrfPath)
+    {
+        var lrf = ReadLRF(lrfPath);
+        switch (lrf.Type)
+        {
+            case LRFTypes.HTTP:
+                break;
+            case LRFTypes.NAN:
+                throw new NotImplementedException($"Replay is invalid");
+            case LRFTypes.NFO:
+            case LRFTypes.ENET:
+                throw new NotImplementedException($"{lrf.Type} replay is not implemented yet");
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        Replay = lrf;
+        ParseSections();
+    }
+    
+    private static LRF? ReadLRF(string path)
+    {
+        LRF? lrf = null;
+        try
+        {
+            var stream = File.OpenRead(path);
+            var reader = new LRFReader();
+            lrf = reader.Read(stream);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        return lrf;
+    }
+    
+    private void ParseSections()
+    {
+        foreach (var section in Replay.Sections)
+        {
+            string json;
+            switch (section)
+            {
+                case GameDataSection gameDataSection:
+                    GameDatas.Add(gameDataSection.ID, gameDataSection);
+                    break;
+                case GameMetaDataSection gameMetaDataSection:
+                    json = gameMetaDataSection.Json;
+                    var metaData = JsonConvert.DeserializeObject<GameMetaData>(json);
+                    GameMetaData = metaData ?? throw new NullReferenceException("Game MetaData is null!!!");
+                    break;
+                case KeyFrameSection keyFrameSection:
+                    KeyFrames.Add(keyFrameSection.ID, keyFrameSection);
+                    break;
+                case LastChunkInfoSection lastChunkInfoSection:
+                    LastChunkInfos.Add(lastChunkInfoSection);
+                    break;
+                case VersionSection versionSection:
+                    Version = versionSection.Text;
+                    break;
+                default:
+                    continue;
+            }
+        }
+    }
+}

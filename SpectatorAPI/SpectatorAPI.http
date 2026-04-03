@@ -21,6 +21,11 @@ Accept: application/json
 
 ###
 
+GET {{SpectatorAPI_HostAddress}}/endOfGameStats/{{Posfix}}/null
+Accept: application/base64
+
+###
+
 @Unknown_Parameter2 = 0
 GET {{SpectatorAPI_HostAddress}}/getLastChunkInfo/{{Unknown_Parameter2}}/token
 Accept: application/json
@@ -29,12 +34,12 @@ Accept: application/json
 
 @Chunk_ID = 0
 GET {{SpectatorAPI_HostAddress}}/getGameDataChunk/{{Chunk_ID}}/token
-Accept: application/json
+Accept: Encrypted/Compressed
 
 ###
 
 @Frame_ID = 0
 GET {{SpectatorAPI_HostAddress}}/getKeyFrame/{{Frame_ID}}/token
-Accept: application/json
+Accept: Encrypted/Compressed
 
 ###

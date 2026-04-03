@@ -1,23 +1,15 @@
 namespace SpectatorAPI;
 
-public class Program
+public static class Program
 {
+    private static readonly string Path = $"..\\bin\\Debug\\net9.0\\replay.lrf";
     public static void Main(string[] args)
     {
-        string path;
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Provide Path to lrf:");
-            path = Console.ReadLine() ?? "";
-        }
-        else
-        {
-            path = args[0];
-        }
-        var api = new APIServer();
+        var api = new ReplayApiServer();
+        api.LoadReplay(Path);
         try
         {
-            api.Run(path);
+            api.Start();
         }
         catch (Exception e)
         {

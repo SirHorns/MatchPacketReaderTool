@@ -2,6 +2,7 @@ using System.Text;
 using LeagueReplayFile.ChunkParsers;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols.ENet;
 using Newtonsoft.Json;
 using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
@@ -96,27 +97,26 @@ public class LRFReader: IDisposable
             if (metaData.SpectatorMode)
             {
                 Console.WriteLine("SpectatorMode");
-                var parser = new ChunkParserSpectator(metaData.EncryptionKey, metaData.MatchId);
-                parser.Read(data);
-                lrf.Sections = parser.Sections;
+                var sections = Spectator(metaData, data);
+                lrf.Sections = sections;
             }
             else if (metaData.IsStream)
             {
                 Console.WriteLine("Stream");
-                var parser = new ChunkParserENet(version, metaData.EncryptionKey);
-                parser.Read(data);
-                lrf.Packets = parser.Packets;
+                var packets = Stream(version, metaData, data);
+                lrf.Packets = packets;
             }
             else if (metaData.ObserverStream)
             {
                 Console.WriteLine("ObserverStream");
+                var packets = Stream(version, metaData, data);
+                lrf.Packets = packets;
             }
             else
             {
                 Console.WriteLine("POVStream");
-                var parser = new ChunkParserENet(version, metaData.EncryptionKey);
-                parser.Read(data);
-                lrf.Packets = parser.Packets;
+                var packets = Stream(version, metaData, data);
+                lrf.Packets = packets;
             }
         }
 
@@ -195,6 +195,20 @@ public class LRFReader: IDisposable
         return rawPackets;
     }
 
+    private List<Section> Spectator(ReplayMetaData metaData, byte[] data)
+    {
+        var parser = new ChunkParserSpectator(metaData.EncryptionKey, metaData.MatchId);
+        parser.Read(data);
+        return parser.Sections;
+    }
+    
+    private List<ENetPacket> Stream(ENetGameClientVersions version, ReplayMetaData metaData, byte[] data)
+    {
+        var parser = new ChunkParserENet(version, metaData.EncryptionKey);
+        parser.Read(data);
+        return parser.Packets;
+    }
+    
     public void Dispose()
     {
         _reader?.Dispose();
