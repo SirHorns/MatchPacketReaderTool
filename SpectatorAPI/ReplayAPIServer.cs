@@ -189,13 +189,17 @@ public class ReplayApiServer
     
     private void ParseSections()
     {
+        Console.WriteLine("Parsing Sections...");
         foreach (var section in Replay.Sections)
         {
             string json;
             switch (section)
             {
                 case GameDataSection gameDataSection:
-                    GameDatas.Add(gameDataSection.ID, gameDataSection);
+                    if (!GameDatas.TryAdd(gameDataSection.ID, gameDataSection))
+                    {
+                        //Console.WriteLine($"Duplicate GameDataSection ID: {gameDataSection.ID}");
+                    }
                     break;
                 case GameMetaDataSection gameMetaDataSection:
                     json = gameMetaDataSection.Json;
@@ -203,7 +207,10 @@ public class ReplayApiServer
                     GameMetaData = metaData ?? throw new NullReferenceException("Game MetaData is null!!!");
                     break;
                 case KeyFrameSection keyFrameSection:
-                    KeyFrames.Add(keyFrameSection.ID, keyFrameSection);
+                    if (!KeyFrames.TryAdd(keyFrameSection.ID, keyFrameSection))
+                    {
+                        //Console.WriteLine($"Duplicate KeyFrameSection ID: {keyFrameSection.ID}");
+                    }
                     break;
                 case LastChunkInfoSection lastChunkInfoSection:
                     LastChunkInfos.Add(lastChunkInfoSection);

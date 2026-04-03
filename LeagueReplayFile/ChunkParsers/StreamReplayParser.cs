@@ -6,9 +6,9 @@ using LeagueReplayFile.Protocols.ENet.Protocols;
 namespace LeagueReplayFile.ChunkParsers;
 
 /// <summary>
-/// Chunk parser that handles chunks sent over ENet protocols
+/// Parses replays sent as a stream
 /// </summary>
-public class ChunkParserENet : ENetProtocolHandler, IChunkParser
+public class StreamReplayParser : ENetProtocolHandler, IChunkParser
 {
     protected class FragmentBuffer
     {
@@ -25,7 +25,7 @@ public class ChunkParserENet : ENetProtocolHandler, IChunkParser
     public List<ENetPacket> Packets { get; } = new();
     public ENetGameClientVersions Version { get; }
 
-    public ChunkParserENet(ENetGameClientVersions version, byte[] key)
+    public StreamReplayParser(ENetGameClientVersions version, byte[] key)
     {
         Version = version;
         _blowfish = new BlowFish(key);

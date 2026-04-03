@@ -5,7 +5,17 @@ namespace LeagueReplayFile.ChunkParsers;
 
 public interface IChunkParser
 {
+    /// <summary>
+    /// 
+    /// </summary>
     List<DataSegment> Segments { get; }
+    /// <summary>
+    /// 
+    /// </summary>
     List<ENetPacket> Packets { get; }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
     void Read(byte[] data);
 }

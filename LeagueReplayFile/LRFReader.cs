@@ -197,14 +197,14 @@ public class LRFReader: IDisposable
 
     private List<Section> Spectator(ReplayMetaData metaData, byte[] data)
     {
-        var parser = new ChunkParserSpectator(metaData.EncryptionKey, metaData.MatchId);
+        var parser = new HttpReplayParser(metaData.EncryptionKey, metaData.MatchId);
         parser.Read(data);
         return parser.Sections;
     }
     
     private List<ENetPacket> Stream(ENetGameClientVersions version, ReplayMetaData metaData, byte[] data)
     {
-        var parser = new ChunkParserENet(version, metaData.EncryptionKey);
+        var parser = new StreamReplayParser(version, metaData.EncryptionKey);
         parser.Read(data);
         return parser.Packets;
     }
