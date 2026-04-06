@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolDisconnect : ENetProtocol
+public class ENetProtocolDisconnect : ENetProtocolBase
 {
     public uint Data { get; set; }
 

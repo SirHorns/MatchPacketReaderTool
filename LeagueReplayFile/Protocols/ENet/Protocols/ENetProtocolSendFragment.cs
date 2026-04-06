@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolSendFragment : ENetProtocol
+public class ENetProtocolSendFragment : ENetProtocolBase
 {
     public ushort StartSequenceNumber { get; set; }
     public uint FragmentCount { get; set; }

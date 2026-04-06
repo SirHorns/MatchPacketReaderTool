@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolSendUnreliable : ENetProtocol
+public class ENetProtocolSendUnreliable : ENetProtocolBase
 {
     public ushort UnreliableSequenceNumber { get; set; }
     public byte[] Data { get; set; }

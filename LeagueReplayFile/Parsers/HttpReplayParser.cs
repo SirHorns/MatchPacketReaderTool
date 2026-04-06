@@ -5,14 +5,13 @@ using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols;
 using LeagueReplayFile.Protocols.ENet;
-using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
 
-namespace LeagueReplayFile.ChunkParsers;
+namespace LeagueReplayFile.Parsers;
 
 /// <summary>
 /// Parses replays that were sent over HTTP
 /// </summary>
-public class HttpReplayParser : HttpProtocolHandler, IChunkParser
+public class HttpReplayParser : HttpProtocol, ILRFParser
 {
     private readonly BlowFish _blowfish;
     private BinaryReader _reader;

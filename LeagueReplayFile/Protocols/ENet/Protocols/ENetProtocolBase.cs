@@ -1,6 +1,6 @@
 ﻿namespace LeagueReplayFile.Protocols.ENet.Protocols
 {
-    public abstract class ENetProtocol
+    public abstract class ENetProtocolBase
     {
         public static readonly Dictionary<ENetProtocolCommand, int> CommandFullSize = new()
         {
@@ -18,7 +18,7 @@
             [ENetProtocolCommand.THROTTLE_CONFIGURE] = 16,
         };
 
-        public static readonly Dictionary<ENetProtocolCommand, Func<ENetProtocolHeader, ENetProtocolCommandHeader, BinaryReader, ENetProtocol>> CommandConstructors = new()
+        public static readonly Dictionary<ENetProtocolCommand, Func<ENetProtocolHeader, ENetProtocolCommandHeader, BinaryReader, ENetProtocolBase>> CommandConstructors = new()
         {
             [ENetProtocolCommand.ACKNOWLEDGE] = (p, c, r) => new ENetProtocolAcknowledge(p, c, r),
             [ENetProtocolCommand.CONNECT] = (p, c, r) => new ENetProtocolConnect(p, c, r),

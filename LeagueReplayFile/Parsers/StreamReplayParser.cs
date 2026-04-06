@@ -3,12 +3,12 @@ using LeagueReplayFile.Models;
 using LeagueReplayFile.Protocols.ENet;
 using LeagueReplayFile.Protocols.ENet.Protocols;
 
-namespace LeagueReplayFile.ChunkParsers;
+namespace LeagueReplayFile.Parsers;
 
 /// <summary>
 /// Parses replays sent as a stream
 /// </summary>
-public class StreamReplayParser : ENetProtocolHandler, IChunkParser
+public class StreamReplayParser : ENetProtocol, ILRFParser
 {
     protected class FragmentBuffer
     {
@@ -138,7 +138,7 @@ public class StreamReplayParser : ENetProtocolHandler, IChunkParser
         }
     }
 
-    private bool Handle(ENetProtocol command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    private bool Handle(ENetProtocolBase command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
     {
         return true;
     }
@@ -283,7 +283,7 @@ public class StreamReplayParser : ENetProtocolHandler, IChunkParser
     
     // overrides
 
-    protected override bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocol protocol)
+    protected override bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocolBase protocol)
     {
         dynamic dinProtocol = protocol;
         return Handle(dinProtocol, protocolHeader, protocolCommandHeader);

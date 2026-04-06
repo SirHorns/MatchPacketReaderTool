@@ -1,8 +1,8 @@
 using System.Text;
-using LeagueReplayFile.ChunkParsers;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Sections;
+using LeagueReplayFile.Parsers;
 using LeagueReplayFile.Protocols.ENet;
 using Newtonsoft.Json;
 using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;

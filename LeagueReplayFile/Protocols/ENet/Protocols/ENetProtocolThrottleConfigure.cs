@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolThrottleConfigure : ENetProtocol
+public class ENetProtocolThrottleConfigure : ENetProtocolBase
 {
     public uint PacketThrottleInterval { get; set; }
     public uint PacketThrottleAcceleration { get; set; }

@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolSendUnsequenced : ENetProtocol
+public class ENetProtocolSendUnsequenced : ENetProtocolBase
 {
     public ushort UnsequencedGroup { get; set; }
     public byte[] Data { get; set; }

@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolSendReliable : ENetProtocol
+public class ENetProtocolSendReliable : ENetProtocolBase
 {
     public byte[] Data { get; set; }
 

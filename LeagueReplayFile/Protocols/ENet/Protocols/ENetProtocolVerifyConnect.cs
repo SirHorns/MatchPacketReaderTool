@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolVerifyConnect : ENetProtocol
+public class ENetProtocolVerifyConnect : ENetProtocolBase
 {
     public ushort OutgoingPeerID { get; set; }
     public ushort MTU { get; set; }

@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolBandwidthLimit : ENetProtocol
+public class ENetProtocolBandwidthLimit : ENetProtocolBase
 {
     public uint IncomingBandwidth { get; set; }
     public uint OutgoingBandwidth { get; set; }

@@ -5,7 +5,7 @@ using LeagueReplayFile.Models.Sections;
 
 namespace LeagueReplayFile.Protocols;
 
-public abstract class HttpProtocolHandler
+public abstract class HttpProtocol
 {
     protected static Regex RE_CONTENT_LEN = new("Content-Length: ([0-9]+)", RegexOptions.IgnoreCase);
 
@@ -21,7 +21,7 @@ public abstract class HttpProtocolHandler
     protected Section CurrentSection { get; set; }
 
 
-    protected HttpProtocolHandler()
+    protected HttpProtocol()
     {
         Buffer = [];
         

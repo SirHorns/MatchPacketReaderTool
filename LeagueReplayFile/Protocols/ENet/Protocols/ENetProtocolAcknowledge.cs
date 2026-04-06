@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Protocols.ENet.Protocols;
 
-public class ENetProtocolAcknowledge : ENetProtocol
+public class ENetProtocolAcknowledge : ENetProtocolBase
 {
     public ushort ReceivedReliableSequenceNumber { get; set; }
     public ushort ReceivedSentTime { get; set; }

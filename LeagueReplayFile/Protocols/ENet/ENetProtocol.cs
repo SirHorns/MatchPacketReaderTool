@@ -1,10 +1,12 @@
-namespace LeagueReplayFile.Protocols.ENet.Protocols;
+using LeagueReplayFile.Protocols.ENet.Protocols;
 
-public abstract class ENetProtocolHandler
+namespace LeagueReplayFile.Protocols.ENet;
+
+public abstract class ENetProtocol
 {
     protected virtual bool HandleProtocolHeader(ENetProtocolHeader protocolHeader) => true;
     protected virtual bool HandleProtocolCommandHeader(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader) => true;
-    protected virtual bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocol protocol) => true;
+    protected virtual bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocolBase protocol) => true;
 
     
     /// <summary>
@@ -34,7 +36,7 @@ public abstract class ENetProtocolHandler
             }
             var protocolCommandHeader = new ENetProtocolCommandHeader(reader);
             
-            if (!ENetProtocol.CommandFullSize.TryGetValue(protocolCommandHeader.Command, out var fullSize))
+            if (!ENetProtocolBase.CommandFullSize.TryGetValue(protocolCommandHeader.Command, out var fullSize))
             {
                 break;
             }
@@ -48,10 +50,10 @@ public abstract class ENetProtocolHandler
             {
                 break;
             }
-            ENetProtocol protocol;
+            ENetProtocolBase protocol;
             try
             {
-                protocol = ENetProtocol.CommandConstructors[protocolCommandHeader.Command](protocolHeader, protocolCommandHeader, reader);
+                protocol = ENetProtocolBase.CommandConstructors[protocolCommandHeader.Command](protocolHeader, protocolCommandHeader, reader);
             }
             catch (Exception)
             {

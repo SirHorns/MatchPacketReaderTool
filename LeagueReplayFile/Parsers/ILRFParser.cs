@@ -1,9 +1,9 @@
 ﻿using LeagueReplayFile.Models;
 using LeagueReplayFile.Protocols.ENet;
 
-namespace LeagueReplayFile.ChunkParsers;
+namespace LeagueReplayFile.Parsers;
 
-public interface IChunkParser
+public interface ILRFParser
 {
     /// <summary>
     /// 
