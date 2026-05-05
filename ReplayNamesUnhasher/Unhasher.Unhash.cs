@@ -10,8 +10,7 @@ public partial class Unhasher
 {
     public void Unhashie(SLRF slrf)
     {
-        Console.WriteLine("Unhashing is not enabled, still WIP");
-        return;
+        Console.WriteLine("Unhashing is still a WIP");
         switch (slrf.Type)
         {
             case LRFTypes.HTTP:

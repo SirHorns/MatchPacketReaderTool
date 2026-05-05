@@ -7,8 +7,8 @@ public delegate Task<string> GetStringHandle();
 public delegate Task<EndOfGameStats> GetEndOfGameStatsHandle(string platformId, long gameId);
 public delegate Task<GameMetaData> GetMetaDataHandle(string platformId, long gameId, string unknown);
 public delegate Task<LastChunkInfo> GetLastChunkInfoHandle(string platformId, long gameId, string unknown);
-public delegate Task<GameDataChunk> GetGameDataChunkHandle(string platformId, long gameId, int chunkId);
-public delegate Task<KeyFrame> GetKeyFrameHandle(string platformId, long gameId, int frameId);
+public delegate Task<byte[]> GetGameDataChunkHandle(string platformId, long gameId, int chunkId);
+public delegate Task<byte[]> GetKeyFrameHandle(string platformId, long gameId, int frameId);
 
 [ApiController]
 [Route("observer-mode/rest/consumer/")]
@@ -45,7 +45,7 @@ public class SpectatorReplayController : ControllerBase
         return result;
     }
     
-    [HttpGet("getLastChunkInfo/{platformId}/{gameId}/null", Name = "EndOfGameStats")]
+    [HttpGet("getEndOfGameStats/{platformId}/{gameId}/null", Name = "EndOfGameStats")]
     public async Task<EndOfGameStats> GetEndOfGameStats(string platformId, string gameId)
     {
         var result = await OnEndOfGameStats.Invoke(platformId, long.Parse(gameId));
@@ -58,58 +58,6 @@ public class SpectatorReplayController : ControllerBase
         _logger.Log(LogLevel.Information, $"[getGameMetaData] Platform: {platformId} MatchId: {gameId} Unknown1: {unknown}");
         var result = await OnGetMetadata.Invoke(platformId, long.Parse(gameId), unknown);
         return result;
-        /*return new GameMetaData()
-        {
-            GameKey = new GameKey()
-            {
-                GameId = 0,
-                PlatformId = "NA1"
-            },
-            GameServerAddress = "",
-            Port = 0,
-            EncryptionKey = "",
-            ChunkTimeInterval = 30000,
-            StartTime = "Dec 31, 1969 4:00:00 PM",
-            GameEnded = false,
-            LastChunkId = 3,
-            LastKeyFrameId = -1,
-            EndStartupChunkId = 2,
-            DelayTime = 150000,
-            PendingAvailableChunkInfo =
-            [
-                new PendingAvailableChunkInfo()
-                {
-                    Id = 1,
-                    Duration = 30119,
-                    ReceivedTime = "Oct 29, 2014 8:31:01 PM"
-                },
-                new PendingAvailableChunkInfo()
-                {
-                    Id = 2,
-                    Duration = 21534,
-                    ReceivedTime = "Oct 29, 2014 8:31:23 PM"
-                },
-                new PendingAvailableChunkInfo()
-                {
-                    Id = 3,
-                    Duration = 0,
-                    ReceivedTime = "Oct 29, 2014 8:31:32 PM"
-                }
-            ],
-            PendingAvailableKeyFrameInfo = [],
-            KeyFrameTimeInterval = 60000,
-            DecodedEncryptionKey = "",
-            StartGameChunkId = 0,
-            GameLength = 0,
-            ClientAddedLag = 30000,
-            ClientBackFetchingEnabled = false,
-            ClientBackFetchingFreq = 1000,
-            InterestScore = 1462,
-            FeaturedGame = false,
-            CreateTime = "Oct 29, 2014 8:30:31 PM",
-            EndGameChunkId = -1,
-            EndGameKeyFrameId = -1
-        };*/
     }
 
     [HttpGet("getLastChunkInfo/{platformId}/{gameId}/{unknown}/token", Name = "LastChunkInfo")]
@@ -121,7 +69,7 @@ public class SpectatorReplayController : ControllerBase
     }
 
     [HttpGet("getGameDataChunk/{platformId}/{gameId}/{chunkId}/token", Name = "GameDataChunk")]
-    public async Task<GameDataChunk> GetGameDataChunk(string platformId, string gameId, string chunkId)
+    public async Task<byte[]> GetGameDataChunk(string platformId, string gameId, string chunkId)
     {
         _logger.Log(LogLevel.Information, $"[getGameDataChunk] Platform: {platformId} MatchId: {gameId} ChunkID: {chunkId}");
         var result = await OnGameDataChunk.Invoke(platformId, long.Parse(gameId), int.Parse(chunkId));
@@ -129,7 +77,7 @@ public class SpectatorReplayController : ControllerBase
     }
 
     [HttpGet("getKeyFrame/{platformId}/{gameId}/{frameId}/token", Name = "KeyFrame")]
-    public async Task<KeyFrame> GetKeyFrame(string platformId, string gameId, string frameId)
+    public async Task<byte[]> GetKeyFrame(string platformId, string gameId, string frameId)
     {
         _logger.Log(LogLevel.Information, $"[getKeyFrame] Platform: {platformId} MatchId: {gameId} FrameID: {frameId}");
         var result = await OnKeyFrame.Invoke(platformId, long.Parse(gameId), int.Parse(frameId));

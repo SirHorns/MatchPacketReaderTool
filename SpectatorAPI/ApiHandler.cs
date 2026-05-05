@@ -7,19 +7,20 @@ using SpectatorAPI.Controllers;
 
 namespace SpectatorAPI;
 
-public class ReplayApiServer
+public class ApiHandler
 {
     private bool _started;
     
     private WebApplication WebApp;
-    private LRF Replay;
-    private string Version = "";
-    private GameMetaData GameMetaData;
+    public LRF Replay;
+    public string Version = "";
+    public GameMetaData GameMetaData;
     private List<LastChunkInfoSection> LastChunkInfos;
     private Dictionary<int, GameDataSection> GameDatas;
     private Dictionary<int, KeyFrameSection> KeyFrames;
-    
-    public ReplayApiServer()
+    private int Index { get; set; } = 0;
+
+    public ApiHandler()
     {
         _started = false;
         GameMetaData = new GameMetaData();
@@ -108,45 +109,54 @@ public class ReplayApiServer
         return Task.FromResult(GameMetaData);
     }
 
-    private int index = 0;
+    
     private Task<LastChunkInfo> GetLastChunkInfo(string platformId, long gameId, string unknown)
     {
         var platform = GetPlatform(platformId);
         var game = GetGame(gameId);
-        index++;
-        if (index> LastChunkInfos.Count)
+        Index++;
+        if (Index> LastChunkInfos.Count)
         {
-            Console.WriteLine($"OUT OF RANGE: {index} > {LastChunkInfos.Count}");
+            Console.WriteLine($"OUT OF RANGE: {Index} > {LastChunkInfos.Count}");
             return null;
         }
-        var section = LastChunkInfos[index];
+        var section = LastChunkInfos[Index];
         var json = section.Json;
         var info = JsonConvert.DeserializeObject<LastChunkInfo>(json);
         return Task.FromResult(info);
     }
     
-    private Task<GameDataChunk> GetGameDataChunk(string platformId, long gameId, int chunkId)
+    //TODO: Implement Compressing Stream
+    private Task<byte[]> GetGameDataChunk(string platformId, long gameId, int chunkId)
     {
         var platform = GetPlatform(platformId);
         var game = GetGame(gameId);
         if (!GameDatas.TryGetValue(chunkId, out var section))
         {
-            return Task.FromResult(new GameDataChunk());
+            return Task.FromResult(Array.Empty<byte>());
         }
-        var chunk = section.Chunk;
-        return Task.FromResult(chunk);
+
+        var stream = new MemoryStream();
+        using var writer = new BinaryWriter(stream);
+        section.Write(writer);
+        return Task.FromResult(stream.ToArray());
     }
     
-    //TODO: Implement KeyFrame
-    private Task<KeyFrame> GetKeyFrame(string platformId, long gameId, int frameId)
+    //TODO: Implement Compressing Stream
+    private Task<byte[]> GetKeyFrame(string platformId, long gameId, int frameId)
     {
         var platform = GetPlatform(platformId);
         var game = GetGame(gameId);
         if (!KeyFrames.TryGetValue(frameId, out var section))
         {
-            return Task.FromResult(new KeyFrame());
+            return Task.FromResult(Array.Empty<byte>());
         }
-        return Task.FromResult(new KeyFrame());
+        
+        var stream = new MemoryStream();
+        using var writer = new BinaryWriter(stream);
+        section.Write(writer);
+        
+        return Task.FromResult(stream.ToArray());
     }
     
     //<•······················•<>•······················•>

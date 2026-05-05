@@ -10,20 +10,11 @@ namespace LeagueReplayFile.Parsers;
 /// </summary>
 public class StreamReplayParser : ENetProtocol, ILRFParser
 {
-    protected class FragmentBuffer
-    {
-        public int nextReliableSequenceNumber = 0;
-        public int FragmentCount = 0;
-        public int FragmentsLeft = 0;
-        public byte[] Buffer = Array.Empty<byte>();
-    }
-
     private BlowFish _blowfish { get; }
-
-
     public List<DataSegment> Segments { get; } = new();
     public List<ENetPacket> Packets { get; } = new();
     public ENetGameClientVersions Version { get; }
+    protected Dictionary<byte, Dictionary<ushort, FragmentBuffer>> ChannelFragmentBuffer = MakeChannelBuffers();
 
     public StreamReplayParser(ENetGameClientVersions version, byte[] key)
     {
@@ -32,6 +23,156 @@ public class StreamReplayParser : ENetProtocol, ILRFParser
     }
     
     
+    
+    /// <summary>
+    /// Read the data stream from the ENet Chunk replay
+    /// </summary>
+    /// <param name="data"></param>
+    public void Read(byte[] data)
+    {
+        // Read "segments" from stream and hand them over to parser
+        var stream = new MemoryStream(data);
+        using var reader = new BinaryReader(stream);
+        while (reader.BaseStream.Position < reader.BaseStream.Length)
+        {
+            var segment = DataSegment.Read(reader);
+            Segments.Add(segment);
+        }
+
+        foreach (var segment in Segments)
+        {
+            ParseSegment(segment);
+        }
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="segment"></param>
+    private void ParseSegment(DataSegment segment)
+    {
+        var data = segment.Data;
+        var time = segment.Time;
+        var stream = new MemoryStream(data);
+        using var reader = new BinaryReader(stream);
+        Read(reader, time, Version);
+    }
+
+    private static Dictionary<byte, Dictionary<ushort, FragmentBuffer>> MakeChannelBuffers()
+    {
+        var tmp = new Dictionary<byte, Dictionary<ushort, FragmentBuffer>>();
+        for (int i = 0; i < 255; i++)
+        {
+            tmp[(byte)i] = new Dictionary<ushort, FragmentBuffer>();
+        }
+
+        return tmp;
+    }
+
+    // overrides
+
+    protected override bool HandleProtocolHeader(ENetProtocolHeader header)
+    {
+        return base.HandleProtocolHeader(header);
+    }
+
+    protected override bool HandleProtocolCommandHeader(ENetProtocolHeader protocol, ENetProtocolCommandHeader command)
+    {
+        return base.HandleProtocolCommandHeader(protocol, command);
+    }
+
+    protected override bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader, ENetProtocolBase protocol)
+    {
+        dynamic dinProtocol = protocol;
+        return Handle(dinProtocol, protocolHeader, commandHeader);
+    }
+    
+    //
+
+    private bool Handle(ENetProtocolBase command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    {
+        return true;
+    }
+
+    private bool Handle(ENetProtocolSendReliable command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    {
+        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Reliable);
+        return true;
+    }
+
+    private bool Handle(ENetProtocolSendUnsequenced command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    {
+        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Unsequenced);
+        return true;
+    }
+
+    private bool Handle(ENetProtocolSendUnreliable command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    {
+        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.None);
+        return true;
+    }
+
+    private bool Handle(ENetProtocolSendFragment command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
+    {
+        if (command.FragmentOffset >= command.TotalLength ||
+            command.FragmentOffset + command.Data.Length > command.TotalLength ||
+            command.FragmentNumber >= command.FragmentCount)
+        {
+            return false;
+        }
+
+        var channel = ChannelFragmentBuffer[commandHeader.Channel];
+        FragmentBuffer buffer;
+        if (channel.TryGetValue(command.StartSequenceNumber, out var value))
+        {
+            buffer = value;
+        }
+        else
+        {
+            if (command.StartSequenceNumber != commandHeader.ReliableSequenceNumber)
+            {
+                return true;
+            }
+
+            buffer = new FragmentBuffer
+            {
+                Buffer = new byte[command.TotalLength],
+                FragmentCount = (int)command.FragmentCount,
+                nextReliableSequenceNumber = commandHeader.ReliableSequenceNumber,
+                FragmentsLeft = (int)command.FragmentCount
+            };
+            channel[command.StartSequenceNumber] = buffer;
+        }
+
+        if (buffer.nextReliableSequenceNumber != commandHeader.ReliableSequenceNumber)
+        {
+            return true;
+        }
+
+        if (buffer.FragmentCount != command.FragmentCount)
+        {
+            return false;
+        }
+
+        if (buffer.Buffer.Length != command.TotalLength)
+        {
+            return false;
+        }
+
+        buffer.nextReliableSequenceNumber++;
+        buffer.FragmentsLeft--;
+
+        Buffer.BlockCopy(command.Data, 0, buffer.Buffer, (int)command.FragmentOffset, command.Data.Length);
+        if (buffer.FragmentsLeft <= 0)
+        {
+            AddPacket(buffer.Buffer, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Reliable);
+            channel.Remove(command.StartSequenceNumber);
+        }
+
+        return true;
+    }
+    
+    //
 
     private void AddPacket(byte[] data, float time, byte channel, ENetPacketFlags flags)
     {
@@ -136,156 +277,5 @@ public class StreamReplayParser : ENetProtocol, ILRFParser
                 }
             }
         }
-    }
-
-    private bool Handle(ENetProtocolBase command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
-    {
-        return true;
-    }
-
-    private bool Handle(ENetProtocolSendReliable command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
-    {
-        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Reliable);
-        return true;
-    }
-
-    private bool Handle(ENetProtocolSendUnsequenced command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
-    {
-        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Unsequenced);
-        return true;
-    }
-
-    private bool Handle(ENetProtocolSendUnreliable command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
-    {
-        AddPacket(command.Data, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.None);
-        return true;
-    }
-
-    private bool Handle(ENetProtocolSendFragment command, ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader)
-    {
-        if (command.FragmentOffset >= command.TotalLength ||
-            command.FragmentOffset + command.Data.Length > command.TotalLength ||
-            command.FragmentNumber >= command.FragmentCount)
-        {
-            return false;
-        }
-
-        var channel = ChannelFragmentBuffer[commandHeader.Channel];
-        FragmentBuffer buffer;
-        if (channel.TryGetValue(command.StartSequenceNumber, out var value))
-        {
-            buffer = value;
-        }
-        else
-        {
-            if (command.StartSequenceNumber != commandHeader.ReliableSequenceNumber)
-            {
-                return true;
-            }
-
-            buffer = new FragmentBuffer
-            {
-                Buffer = new byte[command.TotalLength],
-                FragmentCount = (int)command.FragmentCount,
-                nextReliableSequenceNumber = commandHeader.ReliableSequenceNumber,
-                FragmentsLeft = (int)command.FragmentCount
-            };
-            channel[command.StartSequenceNumber] = buffer;
-        }
-
-        if (buffer.nextReliableSequenceNumber != commandHeader.ReliableSequenceNumber)
-        {
-            return true;
-        }
-
-        if (buffer.FragmentCount != command.FragmentCount)
-        {
-            return false;
-        }
-
-        if (buffer.Buffer.Length != command.TotalLength)
-        {
-            return false;
-        }
-
-        buffer.nextReliableSequenceNumber++;
-        buffer.FragmentsLeft--;
-
-        Buffer.BlockCopy(command.Data, 0, buffer.Buffer, (int)command.FragmentOffset, command.Data.Length);
-        if (buffer.FragmentsLeft <= 0)
-        {
-            AddPacket(buffer.Buffer, protocolHeader.TimeRecieved, commandHeader.Channel, ENetPacketFlags.Reliable);
-            channel.Remove(command.StartSequenceNumber);
-        }
-
-        return true;
-    }
-
-    private static Dictionary<byte, Dictionary<ushort, FragmentBuffer>> MakeChannelBuffers()
-    {
-        var tmp = new Dictionary<byte, Dictionary<ushort, FragmentBuffer>>();
-        for (int i = 0; i < 255; i++)
-        {
-            tmp[(byte)i] = new Dictionary<ushort, FragmentBuffer>();
-        }
-
-        return tmp;
-    }
-    
-    protected Dictionary<byte, Dictionary<ushort, FragmentBuffer>> ChannelFragmentBuffer = MakeChannelBuffers();
-
-    //
-
-    /// <summary>
-    /// Read the data stream from the ENet Chunk replay
-    /// </summary>
-    /// <param name="data"></param>
-    public void Read(byte[] data)
-    {
-        // Read "segments" from stream and hand them over to parser
-        var stream = new MemoryStream(data);
-        using var reader = new BinaryReader(stream);
-        while (reader.BaseStream.Position < reader.BaseStream.Length)
-        {
-            var t = reader.ReadSingle();
-            var l = reader.ReadInt32();
-            var d = reader.ReadExactBytes(l);
-            var p = reader.ReadByte();
-        
-            var segment =  new DataSegment()
-            {
-                Time = t,
-                Length = l,
-                Data = d,
-                Pad = p
-            };
-            Segments.Add(segment);
-        }
-
-        foreach (var segment in Segments)
-        {
-            ReadSegment(segment);
-        }
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="segment"></param>
-    private void ReadSegment(DataSegment segment)
-    {
-        var data = segment.Data;
-        var time = segment.Time;
-        var stream = new MemoryStream(data);
-        using var reader = new BinaryReader(stream);
-        Read(reader, time, Version);
-    }
-    
-    // overrides
-
-    protected override bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocolBase protocol)
-    {
-        dynamic dinProtocol = protocol;
-        return Handle(dinProtocol, protocolHeader, protocolCommandHeader);
     }
 }

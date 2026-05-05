@@ -28,7 +28,7 @@ public abstract class HttpProtocol
     }
 
 
-    protected void ReadSegment(DataSegment segment)
+    protected void ParseSegment(DataSegment segment)
     {
         var data = segment.Data;
         var time = segment.Time;

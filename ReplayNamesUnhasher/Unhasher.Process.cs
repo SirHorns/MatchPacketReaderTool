@@ -95,6 +95,17 @@ public partial class Unhasher
     {
     }
     
+    [Flags]
+    public enum ReplicationType
+    {
+        CLIENT_ONLY_REP_DATA = 0x1,
+        LOCAL_REP_DATA1 = 0x2,
+        LOCAL_REP_DATA2 = 0x4,
+        MAP_REP_DATA = 0x8,
+        ONVISIBLE_REP_DATA = 0x10,
+        GLOBAL_REP_DATA = 0x20,
+    }
+    
     private object UnhashOnReplication(OnReplication replication)
     {
             var syncId = replication.SyncID;
@@ -104,6 +115,19 @@ public partial class Unhasher
                 var unitNetID = rd.UnitNetID;
                 var data = rd.Data;
 
+                if (data[0].Item1 == 0)
+                {
+                    continue;
+                }
+                if (data[0].Item1 > (uint)ReplicationType.GLOBAL_REP_DATA)
+                {
+                    Console.WriteLine($"Unknown replication type: {data[0].Item1}");
+                }
+                
+                var type = (ReplicationType)data[0].Item1;
+                //Console.WriteLine($"[ID: {unitNetID} / Type: {type}]");
+                //continue;
+                
                 var objectType = _netIdToTypesMap.GetValueOrDefault(unitNetID, GameObjectTypes.Unknown);
                 var replicationType = _replicationTypes.GetValueOrDefault(unitNetID, ReplicationTypes.Unknown );
                 //Console.WriteLine($"[ID: {unitNetID} / Obj: {GameObjectTypes.Unknown} / Repl: {replicationType}]");

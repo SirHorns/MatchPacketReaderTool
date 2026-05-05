@@ -6,4 +6,12 @@ public class KeyFrameSection : Section
 {
     public int ID { get; internal set; }
     public List<ENetPacket> Packets { get; set; } = [];
+
+    public void Write(BinaryWriter writer)
+    {
+        foreach (var packet in Packets)
+        {
+            ENetPacket.Write(packet, writer);
+        }
+    }
 }

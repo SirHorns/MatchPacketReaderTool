@@ -47,8 +47,18 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         for (var i = 0; i < Segments.Count; i++)
         {
             var segment = Segments[i];
-            ReadSegment(segment);
+            ParseSegment(segment);
         }
+    }
+
+    private MemoryStream Decompress(byte[] data)
+    {
+        var decrypted = _blowfish.Decrypt(data);
+        var decompressed = new MemoryStream();
+        using var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress);
+        compressed.CopyTo(decompressed);
+        decompressed.Seek(0, SeekOrigin.Begin);
+        return decompressed;
     }
 
     //<•······················•<>•······················•>
@@ -56,12 +66,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     protected override void OnGetBinary(byte[] data)
     {
         List<ENetPacket> pkts;
-        var decrypted = _blowfish.Decrypt(data);
-        using var decompressed = new MemoryStream();
-        using (var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress))
-        {
-            compressed.CopyTo(decompressed);
-        }
+        var decompressed = Decompress(data);
         decompressed.Seek(0, SeekOrigin.Begin);
         using (var reader = new BinaryReader(decompressed))
         {
@@ -100,7 +105,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
             case RequestTypes.GAME_DATA_CHUNK:
             case RequestTypes.NONE:
             default:
-                Console.WriteLine($"Attempted to get text from n on-text section!: {CurrentRequest}");
+                Console.WriteLine($"Attempted to get text from non-text section!: {CurrentRequest}");
                 break;
         }
 

@@ -4,9 +4,9 @@ namespace LeagueReplayFile.Protocols.ENet;
 
 public abstract class ENetProtocol
 {
-    protected virtual bool HandleProtocolHeader(ENetProtocolHeader protocolHeader) => true;
-    protected virtual bool HandleProtocolCommandHeader(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader) => true;
-    protected virtual bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader protocolCommandHeader, ENetProtocolBase protocol) => true;
+    protected virtual bool HandleProtocolHeader(ENetProtocolHeader header) => true;
+    protected virtual bool HandleProtocolCommandHeader(ENetProtocolHeader protocol, ENetProtocolCommandHeader command) => true;
+    protected virtual bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader, ENetProtocolBase protocol) => true;
 
     
     /// <summary>
@@ -14,15 +14,17 @@ public abstract class ENetProtocol
     /// </summary>
     /// <param name="reader"></param>
     /// <param name="timeReceived"></param>
-    /// <param name="enetGameClientVersions"></param>
-    protected void Read(BinaryReader reader, float timeReceived, ENetGameClientVersions enetGameClientVersions)
+    /// <param name="version"></param>
+    protected void Read(BinaryReader reader, float timeReceived, ENetGameClientVersions version)
     {
-        if (reader.BytesLeft() < ENetProtocolHeader.ProtocolHeaderSizes[enetGameClientVersions])
+        var protocolHeaderSize = reader.BytesLeft();
+        if (protocolHeaderSize < ENetProtocolHeader.ProtocolHeaderSizes[version])
         {
+            Console.WriteLine($"ProtocolHeader Size Mismatch; Got {protocolHeaderSize} , Expected {ENetProtocolHeader.ProtocolHeaderSizes[version]} for {version}");
             return;
         }
         
-        var protocolHeader = new ENetProtocolHeader(reader, timeReceived, enetGameClientVersions);
+        var protocolHeader = ENetProtocolHeader.Read(reader, timeReceived, version);
         if (!HandleProtocolHeader(protocolHeader))
         {
             return;
@@ -30,7 +32,8 @@ public abstract class ENetProtocol
         
         while (reader.BytesLeft() > 0)
         {
-            if (reader.BytesLeft() < ENetProtocolCommandHeader.CommandHeaderSize)
+            var commandHeaderSize = reader.BytesLeft();
+            if (commandHeaderSize < ENetProtocolCommandHeader.CommandHeaderSize)
             {
                 break;
             }

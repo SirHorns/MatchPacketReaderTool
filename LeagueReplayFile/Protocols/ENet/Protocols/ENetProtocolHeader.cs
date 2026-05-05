@@ -9,42 +9,83 @@ public class ENetProtocolHeader
     public float TimeRecieved { get; set; }
     public ENetGameClientVersions ENetGameClientVersions { get; set; }
 
-    public static readonly Dictionary<ENetGameClientVersions, int> ProtocolHeaderSizes = new Dictionary<ENetGameClientVersions, int>
-    {
-        [ENetGameClientVersions.Seasson12] = 8,
-        [ENetGameClientVersions.Seasson34] = 4,
-        [ENetGameClientVersions.Patch4] = 8,
-    };
+    public static Dictionary<ENetGameClientVersions, int> ProtocolHeaderSizes { get; }
 
-    public ENetProtocolHeader(BinaryReader reader, float timeRecieved, ENetGameClientVersions enetGameClientVersions)
+    static ENetProtocolHeader()
     {
+        ProtocolHeaderSizes = [];
+        var values = Enum.GetValues<ENetGameClientVersions>();
+        foreach (var value in values)
+        {
+            ProtocolHeaderSizes[value] = 8;
+            switch (value)
+            {
+                case ENetGameClientVersions.Unknown:
+                    break;
+                case ENetGameClientVersions.Patch1:
+                    break;
+                case ENetGameClientVersions.Patch2:
+                    break;
+                case ENetGameClientVersions.Patch3:
+                    break;
+                case ENetGameClientVersions.Patch4:
+                    ProtocolHeaderSizes[ENetGameClientVersions.Patch4] = 8;
+                    break;
+                case ENetGameClientVersions.Patch5:
+                    break;
+                case ENetGameClientVersions.Patch6:
+                    break;
+                case ENetGameClientVersions.Patch7:
+                    break;
+                case ENetGameClientVersions.Patch8:
+                    break;
+                case ENetGameClientVersions.Seasson12:
+                    ProtocolHeaderSizes[ENetGameClientVersions.Seasson12] = 8;
+                    break;
+                case ENetGameClientVersions.Seasson34:
+                    ProtocolHeaderSizes[ENetGameClientVersions.Seasson34] = 4;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public ENetProtocolHeader() { }
+
+    public static ENetProtocolHeader Read(BinaryReader reader, float timeReceived, ENetGameClientVersions enetGameClientVersions)
+    {
+        uint sessionID;
+        ushort? peerID = null;
+        ushort? timeSent = null;
+        uint? checksum = null;
         switch (enetGameClientVersions)
         {
             case ENetGameClientVersions.Seasson12:
             {
-                SessionID = reader.ReadUInt32(true);
-                ushort peerID = reader.ReadUInt16(true);
+                sessionID = reader.ReadUInt32(true);
+                var id = reader.ReadUInt16(true);
                 if((peerID & 0x7FFF) != 0x7FFF)
                 {
-                    PeerID = peerID;
+                    peerID = id;
                 }
-                if ((peerID & 0x8000) > 0)
+                if ((id & 0x8000) > 0)
                 {
-                    TimeSent = reader.ReadUInt16();
+                    timeSent = reader.ReadUInt16();
                 }
             }
                 break;
             case ENetGameClientVersions.Seasson34:
             {
-                SessionID = reader.ReadByte();
-                var peerId = reader.ReadByte();
-                if ((peerId & 0x7F) != 0x7F)
+                sessionID = reader.ReadByte();
+                var id = reader.ReadByte();
+                if ((id & 0x7F) != 0x7F)
                 {
-                    PeerID = peerId;
+                    peerID = id;
                 }
-                if ((peerId & 0x80) > 0)
+                if ((id & 0x80) > 0)
                 {
-                    TimeSent = reader.ReadUInt16();
+                    timeSent = reader.ReadUInt16();
                 }
             }
                 break;
@@ -54,16 +95,16 @@ public class ENetProtocolHeader
             case ENetGameClientVersions.Patch7:
             case ENetGameClientVersions.Patch8:
             {
-                CheckSum = reader.ReadUInt32(true);
-                SessionID = reader.ReadByte();
-                var peerId = reader.ReadByte();
-                if ((peerId & 0x7F) != 0x7F)
+                checksum = reader.ReadUInt32(true);
+                sessionID = reader.ReadByte();
+                var id = reader.ReadByte();
+                if ((id & 0x7F) != 0x7F)
                 {
-                    PeerID = peerId;
+                    peerID = id;
                 }
-                if ((peerId & 0x80) > 0)
+                if ((id & 0x80) > 0)
                 {
-                    TimeSent = reader.ReadUInt16();
+                    timeSent = reader.ReadUInt16();
                 }
             }
                 break;
@@ -71,7 +112,18 @@ public class ENetProtocolHeader
             default:
                 throw new NotImplementedException();
         }
-        TimeRecieved = timeRecieved;
-        ENetGameClientVersions = enetGameClientVersions;
+        
+
+        var header = new ENetProtocolHeader()
+        {
+            SessionID = sessionID,
+            CheckSum = checksum,
+            PeerID = peerID,
+            TimeSent = timeSent,
+            TimeRecieved = timeReceived,
+            ENetGameClientVersions = enetGameClientVersions
+        };
+        
+        return header;
     }
 }

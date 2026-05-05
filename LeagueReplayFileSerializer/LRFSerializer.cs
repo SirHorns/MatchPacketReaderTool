@@ -1,4 +1,5 @@
 using LeaguePackets;
+using LeaguePackets.Game;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models.Sections;
