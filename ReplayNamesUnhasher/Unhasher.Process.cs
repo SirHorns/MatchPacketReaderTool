@@ -91,8 +91,70 @@ public partial class Unhasher
         }
     }
 
-    private void UnhashPacket(BasePacket packet)
+    private object? UnhashPacket(BasePacket packet)
     {
+        object? result = null;
+        JObject job;
+        //var json = JsonConvert.SerializeObject(owner, Formatting.Indented);
+        switch (packet)
+        {
+            case SynchVersionS2C:
+                break;
+            case NPC_BuffRemoveGroup:
+                break;
+            case C2S_PlayVOCommand:
+                break;
+            case NPC_BuffAddGroup:
+                break;
+            case S2C_SetSpellData:
+                break;
+            case NPC_BuffRemove2:
+                break;
+            case NPC_BuffAdd2:
+                break;
+            case S2C_PlayContextualEmote:
+                break;
+            case S2C_NeutralMinionTimerUpdate:
+                break;
+            case S2C_NotifyContextualSituation:
+                break;
+            case FX_Create_Group:
+                break;
+            case NPC_CastSpellAns:
+                break;
+            case MissileReplication:
+                break;
+            case AvatarInfo_Server avatarInfoServer:
+                job = JObject.FromObject(avatarInfoServer);
+                
+                /*var summoners = job["SummonerIDs"].ToArray();
+                for (int l = 0; l < 2; l++)
+                {
+                    var hash = (uint)summoners[l];
+                    var unhashed = NameHashes[hash];
+                    summoners[l] = unhashed;
+                }
+     
+                summoners = job["SummonerIDs2"].ToArray();
+                for (int l = 0; l < 2; l++)
+                {
+                    var hash = (uint)summoners[l];
+                    var unhashed = NameHashes[hash];
+                    summoners[l] = unhashed;
+                }
+                */
+                
+                var talents = job["Talents"].ToArray();
+                foreach (var talent in talents)
+                {
+                    var hash = (uint)talent["Hash"];
+                    var unhashed = NameHashes[hash];
+                    talent["Hash"] = unhashed;
+                }
+                break;
+        }
+
+        return result;
     }
     
     [Flags]

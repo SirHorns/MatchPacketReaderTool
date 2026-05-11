@@ -49,7 +49,7 @@ public partial class Unhasher
         {
             return false;
         }
-
+        NameHashes.Add(0,"0");
         foreach (var file in Directory.GetFiles(contentPath, "*.json", SearchOption.AllDirectories))
         {
             var fileName = Path.GetFileNameWithoutExtension(file);

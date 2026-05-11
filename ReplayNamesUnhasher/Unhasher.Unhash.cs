@@ -36,7 +36,7 @@ public partial class Unhasher
             {
                 continue;
             }
-            
+
             // castinfo
             // talent
             // color
@@ -44,34 +44,12 @@ public partial class Unhasher
             //TODO: FINDING ALL PACKETS THAT NEED TO BE UNHASHED
             switch (packet)
             {
-                case SynchVersionS2C:
-                    UnhashPacket(packet);
-                    break;
-                case NPC_BuffRemoveGroup:
-                    break;
-                case C2S_PlayVOCommand:
-                    break;
-                case NPC_BuffAddGroup:
-                    break;
-                case S2C_SetSpellData:
-                    break;
-                case NPC_BuffRemove2:
-                    break;
-                case NPC_BuffAdd2:
-                    break;
-                case S2C_PlayContextualEmote:
-                    break;
-                case S2C_NeutralMinionTimerUpdate:
-                    break;
-                case S2C_NotifyContextualSituation:
-                    break;
-                case FX_Create_Group:
-                    break;
                 case OnReplication onReplication:
                     result = UnhashOnReplication(onReplication);
                     break;
                 default:
-                    continue;
+                    result = UnhashPacket(packet);
+                    break;
             }
 
             if (result is null)
