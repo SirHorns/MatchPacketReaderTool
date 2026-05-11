@@ -138,8 +138,38 @@ public class LRFReader: IDisposable
         lrf.MetaData = metaData;
         return lrf;
     }
-    
-    
+
+    public ReplayMetaData? ReadMetaData(Stream stream, out LRFTypes type)
+    {
+        _reader = new BinaryReader(stream);
+        var header = ReadHeader();
+
+        ReplayMetaData? metaData = null;
+        var isNFO = header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' &&
+                    header.Reserved == '\0';
+
+        if (isNFO)
+        {
+            var nfo = Encoding.UTF8.GetString(_reader.ReadExactBytes(4)) == "nfo";
+        }
+        var dataSize = _reader.ReadUInt32();
+        if (isNFO)
+        {
+            var pad = _reader.ReadUInt64();
+        }
+        metaData = ReadMetaData((int)dataSize);
+        
+        if (isNFO)
+        {
+            type = LRFTypes.NFO; // LRF is a NFO replay
+        }
+        else
+        {
+            type = metaData.SpectatorMode ? LRFTypes.HTTP : LRFTypes.ENET;
+        }
+        
+        return metaData;
+    }
     
     private BasicHeader ReadHeader()
     {
