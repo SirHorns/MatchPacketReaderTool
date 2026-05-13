@@ -77,7 +77,7 @@ public static class Program
     
     private static void ParseLRF(string lrfPath)
     {
-        var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
+        var fileName = Path.GetFileNameWithoutExtension(lrfPath);
         if (File.Exists($"{SerializedDirectory}/{fileName}"))
         {
             Console.WriteLine($"Skipping {fileName}; Already exists.");
@@ -199,9 +199,54 @@ public static class Program
     private static void WriteToFile(SLRF slrf, string fileName)
     {
         var path = $"{SerializedDirectory}/{slrf.Type}/{fileName}";
+        Directory.CreateDirectory(path);
+        
         Console.WriteLine($"Outputted SLRF to {path}");
+        
+        //
+        var metaData = JsonConvert.SerializeObject(slrf.MetaData, Formatting.Indented);
+        File.WriteAllText($"{path}/MetaData.json", metaData);  
+        //
+        var toWrite = new List<SerializedPacket>();
+        var index = 0;
+        for (; index < slrf.Packets.Count; index++)
+        {
+            var packet = slrf.Packets[index];
+            if (packet.RawID == (int)GamePacketID.S2C_StartSpawn)
+            {
+                break;
+            }
+            toWrite.Add(packet);
+        }
+        
+        File.WriteAllText($"{path}/PreSpawn.json", JsonConvert.SerializeObject(toWrite, Formatting.Indented));  
+        toWrite.Clear();
+        
+        for (; index < slrf.Packets.Count; index++)
+        {
+            var packet = slrf.Packets[index];
+            toWrite.Add(packet);
+            if (packet.RawID == (int)GamePacketID.S2C_EndSpawn)
+            {
+                index++; // increment to skip for Game.json
+                break;
+            }
+        }
+        
+        File.WriteAllText($"{path}/Spawn.json", JsonConvert.SerializeObject(toWrite, Formatting.Indented)); 
+        toWrite.Clear();
+        
+        for (; index < slrf.Packets.Count; index++)
+        {
+            var packet = slrf.Packets[index];
+            toWrite.Add(packet);
+        }
+        
+        File.WriteAllText($"{path}/Game.json", JsonConvert.SerializeObject(toWrite, Formatting.Indented)); 
+        toWrite.Clear();
+        //
         var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
-        File.WriteAllText(path, json);   
+        File.WriteAllText($"{path}/{fileName}.slrf", json);   
     }
 
     private static List<string>? GetFilePaths(string path)

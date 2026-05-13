@@ -1,5 +1,6 @@
 using LeaguePackets;
 using LeaguePackets.Game;
+using LeaguePackets.Game.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ReplayNamesUnhasher.Enums;
@@ -98,59 +99,197 @@ public partial class Unhasher
         //var json = JsonConvert.SerializeObject(owner, Formatting.Indented);
         switch (packet)
         {
-            case SynchVersionS2C:
+            case SynchVersionS2C synchVersionS2C:
+                job = JObject.FromObject(synchVersionS2C);
+                foreach (var playerInfo in job["PlayerInfo"])
+                {
+                    var summoner1 = (uint)playerInfo["SummonorSpell1"];
+                    if (NameHashes.TryGetValue(summoner1, out var summoner1Name))
+                    {
+                        job["SummonorSpell1"] = summoner1Name;
+                    }
+                    var summoner2 = (uint)playerInfo["SummonorSpell2"];
+                    if (NameHashes.TryGetValue(summoner2, out var summoner2Name))
+                    {
+                        job["SummonorSpell2"] = summoner1Name;
+                    }
+                }
+                result = job;
                 break;
-            case NPC_BuffRemoveGroup:
+            case NPC_BuffRemoveGroup removeGroup:
+                job = JObject.FromObject(removeGroup);
+                var BuffNameHashGR = (uint)job["BuffNameHash"];
+                if (NameHashes.TryGetValue(BuffNameHashGR, out var BuffNameGR))
+                {
+                    job["BuffNameHash"] = BuffNameGR;
+                }
+                result = job;
                 break;
-            case C2S_PlayVOCommand:
+            case C2S_PlayVOCommand playVOCommand:
+                job = JObject.FromObject(playVOCommand);
+                var EventHash = (uint)job["EventHash"];
+                if (NameHashes.TryGetValue(EventHash, out var EventHashName))
+                {
+                    job["EventHash"] = EventHashName;
+                }
+                result = job;
                 break;
-            case NPC_BuffAddGroup:
+            case NPC_BuffAddGroup buffAddGroup:
+                job = JObject.FromObject(buffAddGroup);
+                var BuffNameHashG = (uint)job["BuffNameHash"];
+                if (NameHashes.TryGetValue(BuffNameHashG, out var BuffNameHashNameG))
+                {
+                    job["BuffNameHash"] = BuffNameHashNameG;
+                }
+                var BuffPackageHashG = (uint)job["PackageHash"];
+                if (NameHashes.TryGetValue(BuffPackageHashG, out var PackageHashNameG))
+                {
+                    job["PackageHash"] = PackageHashNameG;
+                }
+                result = job;
                 break;
-            case S2C_SetSpellData:
+            case S2C_SetSpellData setSpellData:
+                job = JObject.FromObject(setSpellData);
+                var HashedSpellName = (uint)job["HashedSpellName"];
+                if (NameHashes.TryGetValue(HashedSpellName, out var SpellName))
+                {
+                    job["HashedSpellName"] = SpellName;
+                }
+                result = job;
                 break;
-            case NPC_BuffRemove2:
+            case NPC_BuffRemove2 buffRemove2:
+                job = JObject.FromObject(buffRemove2);
+                var BuffNameHash2 = (uint)job["BuffNameHash"];
+                if (NameHashes.TryGetValue(BuffNameHash2, out var BuffNameHashName2))
+                {
+                    job["BuffNameHash"] = BuffNameHashName2;
+                }
+                result = job;
                 break;
-            case NPC_BuffAdd2:
+            case NPC_BuffAdd2 buff:
+                job = JObject.FromObject(buff);
+                var BuffNameHash = (uint)job["BuffNameHash"];
+                if (NameHashes.TryGetValue(BuffNameHash, out var BuffNameHashName))
+                {
+                    job["BuffNameHash"] = BuffNameHashName;
+                }
+                var BuffPackageHash = (uint)job["PackageHash"];
+                if (NameHashes.TryGetValue(BuffPackageHash, out var PackageHashName))
+                {
+                    job["PackageHash"] = PackageHashName;
+                }
+                result = job;
                 break;
-            case S2C_PlayContextualEmote:
+            case S2C_PlayContextualEmote contextualEmote:
+                job = JObject.FromObject(contextualEmote);
+                var HashedParam = (uint)job["HashedParam"];
+                if (NameHashes.TryGetValue(HashedParam, out var HashedParamName))
+                {
+                    job["HashedParam"] = HashedParamName;
+                }
+                result = job;
                 break;
-            case S2C_NeutralMinionTimerUpdate:
+            case S2C_NeutralMinionTimerUpdate neutralMinionTimerUpdate:
+                job = JObject.FromObject(neutralMinionTimerUpdate);
+                var TypeHash = (uint)job["TypeHash"];
+                if (NameHashes.TryGetValue(TypeHash, out var TypeName))
+                {
+                    job["TypeHash"] = TypeName;
+                }
+                result = job;
                 break;
-            case S2C_NotifyContextualSituation:
+            case S2C_NotifyContextualSituation contextualSituation:
+                job = JObject.FromObject(contextualSituation);
+                var SituationNameHash = (uint)job["SituationNameHash"];
+                if (NameHashes.TryGetValue(SituationNameHash, out var SituationName))
+                {
+                    job["SituationNameHash"] = SituationName;
+                }
+                result = job;
                 break;
-            case FX_Create_Group:
+            case FX_Create_Group group:
+                job = JObject.FromObject(group);
+                foreach (var data in job["FXCreateGroup"])
+                {
+                    var PackageHash = (uint)data["PackageHash"];
+                    if (NameHashes.TryGetValue(PackageHash, out var packageHashName))
+                    {
+                        data["PackageHash"] = packageHashName;
+                    }
+                    var EffectNameHash = (uint)data["EffectNameHash"];
+                    if (NameHashes.TryGetValue(EffectNameHash, out var effectNameHashName))
+                    {
+                        data["EffectNameHash"] = effectNameHashName;
+                    }
+                    var TargetBoneNameHash = (uint)data["TargetBoneNameHash"];
+                    if (NameHashes.TryGetValue(TargetBoneNameHash, out var targetBoneNameHashName))
+                    {
+                        data["TargetBoneNameHash"] = targetBoneNameHashName;
+                    }
+                    var BoneNameHash = (uint)data["BoneNameHash"];
+                    if (NameHashes.TryGetValue(BoneNameHash, out var boneNameHashName))
+                    {
+                        data["BoneNameHash"] = boneNameHashName;
+                    }
+                }
+                result = job;
                 break;
             case NPC_CastSpellAns:
-                break;
             case MissileReplication:
+                job = JObject.FromObject(packet);
+                var castInfo = job["CastInfo"];
+                
+                var missileSpellHash = (uint)castInfo["SpellHash"];
+                if (NameHashes.TryGetValue(missileSpellHash, out var missileSpellName))
+                {
+                    castInfo["SpellHash"] = missileSpellName;
+                }
+                
+                missileSpellHash = (uint)castInfo["PackageHash"];
+                if (NameHashes.TryGetValue(missileSpellHash, out missileSpellName))
+                {
+                    castInfo["PackageHash"] = missileSpellName;
+                }
+                result = job;
                 break;
             case AvatarInfo_Server avatarInfoServer:
                 job = JObject.FromObject(avatarInfoServer);
                 
-                /*var summoners = job["SummonerIDs"].ToArray();
+                var summoners = job["SummonerIDs"].ToArray();
                 for (int l = 0; l < 2; l++)
                 {
-                    var hash = (uint)summoners[l];
-                    var unhashed = NameHashes[hash];
-                    summoners[l] = unhashed;
+                    var summonerHash = (uint)summoners[l];
+                    if (NameHashes.TryGetValue(summonerHash, out var summonerName))
+                    {
+                        summoners[l] = summonerName;
+                    }
                 }
      
                 summoners = job["SummonerIDs2"].ToArray();
                 for (int l = 0; l < 2; l++)
                 {
-                    var hash = (uint)summoners[l];
-                    var unhashed = NameHashes[hash];
-                    summoners[l] = unhashed;
+                    var summonerHash = (uint)summoners[l];
+                    if (NameHashes.TryGetValue(summonerHash, out var summonerName))
+                    {
+                        summoners[l] = summonerName;
+                    }
                 }
-                */
                 
                 var talents = job["Talents"].ToArray();
                 foreach (var talent in talents)
                 {
-                    var hash = (uint)talent["Hash"];
-                    var unhashed = NameHashes[hash];
-                    talent["Hash"] = unhashed;
+                    var talentHash = (uint)talent["Hash"];
+                    if (NameHashes.TryGetValue(talentHash, out var talentName))
+                    {
+                        talent["Hash"] = talentName;
+                    }
                 }
+                result = job;
+                break;
+            case OnReplication onReplication:
+                job = JObject.FromObject(onReplication);
+                //result = UnhashOnReplication(onReplication);
+                result = job;
                 break;
         }
 
