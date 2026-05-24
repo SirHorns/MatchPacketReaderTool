@@ -62,33 +62,35 @@ public partial class Unhasher
             return;
         }
 
-        if (NameHashes.ContainsKey(key))
+        if (TryGetUnhashedValue(key, out var unhashedValue))
         {
-            //I've never been so ashamed of myself, but it seems to work just fine
+            return;
+        }
+
+        //I've never been so ashamed of myself, but it seems to work just fine
+        try
+        {
+            _replay[i]["Packet"][parentName].ToArray()[j][token.Name] = unhashedValue;
+        }
+        catch
+        {
             try
             {
-                _replay[i]["Packet"][parentName].ToArray()[j][token.Name] = NameHashes[key];
+                _replay[i]["Packet"][parentName][token.Name] = unhashedValue;
             }
             catch
             {
                 try
                 {
-                    _replay[i]["Packet"][parentName][token.Name] = NameHashes[key];
+                    _replay[i]["Packet"][token.Name] = unhashedValue;
                 }
                 catch
                 {
-                    try
-                    {
-                        _replay[i]["Packet"][token.Name] = NameHashes[key];
-                    }
-                    catch
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
-            Console.WriteLine($"Unhashed {key} to {NameHashes[key]}!");
         }
+        Console.WriteLine($"Unhashed {key} to {unhashedValue}!");
     }
 
     private object? UnhashPacket(BasePacket packet)
@@ -148,8 +150,10 @@ public partial class Unhasher
                 foreach (var talent in talents)
                 {
                     var hash = (uint)talent["Hash"];
-                    var unhashed = NameHashes[hash];
-                    talent["Hash"] = unhashed;
+                    if(TryGetUnhashedValue(hash, out var unhashed))
+                    {
+                        talent["Hash"] = unhashed;
+                    }
                 }
                 break;
         }

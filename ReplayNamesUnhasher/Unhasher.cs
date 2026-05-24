@@ -104,6 +104,11 @@ public partial class Unhasher
         return true;
     }
 
+    public bool TryGetUnhashedValue(long hash, out string unhashedValue)
+    {
+        return NameHashes.TryGetValue(hash, out unhashedValue);
+    }
+    
     public void Reset()
     {
         _filePath = "";
