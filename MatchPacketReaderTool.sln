@@ -8,13 +8,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueReplayFile", "LeagueR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueReplayFileSerializer", "LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj", "{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeagueReplayFileUnhasher", "LeagueReplayFileUnhasher\LeagueReplayFileUnhasher.csproj", "{5E275D07-8050-4AC4-B467-A047B56F270E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{0670E118-48DF-469F-B9FC-339061CA1B24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpectatorAPI", "SpectatorAPI\SpectatorAPI.csproj", "{0CF4E4F8-1715-44EE-A1EE-B27F0EF4F0E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Organizer", "Organizer\Organizer.csproj", "{218DDD7F-01E0-4706-A68B-916881E8AE31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{9445A426-0F84-46A4-9147-6EFD1D12445A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +38,6 @@ Global
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DB26093-7F1B-471F-AC9B-87AD83AD6CEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E275D07-8050-4AC4-B467-A047B56F270E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E275D07-8050-4AC4-B467-A047B56F270E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E275D07-8050-4AC4-B467-A047B56F270E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E275D07-8050-4AC4-B467-A047B56F270E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0670E118-48DF-469F-B9FC-339061CA1B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0670E118-48DF-469F-B9FC-339061CA1B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0670E118-48DF-469F-B9FC-339061CA1B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,5 +50,9 @@ Global
 		{218DDD7F-01E0-4706-A68B-916881E8AE31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{218DDD7F-01E0-4706-A68B-916881E8AE31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{218DDD7F-01E0-4706-A68B-916881E8AE31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9445A426-0F84-46A4-9147-6EFD1D12445A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9445A426-0F84-46A4-9147-6EFD1D12445A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9445A426-0F84-46A4-9147-6EFD1D12445A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9445A426-0F84-46A4-9147-6EFD1D12445A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
