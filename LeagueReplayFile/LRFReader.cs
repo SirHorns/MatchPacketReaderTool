@@ -159,13 +159,20 @@ public class LRFReader: IDisposable
         }
         metaData = ReadMetaData((int)dataSize);
         
-        if (isNFO)
+        if (metaData is null)
         {
-            type = LRFTypes.NFO; // LRF is a NFO replay
+            type = LRFTypes.NAN;
         }
         else
         {
-            type = metaData.SpectatorMode ? LRFTypes.HTTP : LRFTypes.ENET;
+           if (isNFO)
+           {
+               type = LRFTypes.NFO; // LRF is a NFO replay
+           }
+           else
+           {
+               type = metaData.SpectatorMode ? LRFTypes.HTTP : LRFTypes.ENET;
+           } 
         }
         
         return metaData;
