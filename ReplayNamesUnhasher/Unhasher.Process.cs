@@ -95,40 +95,163 @@ public partial class Unhasher
 
     private object? UnhashPacket(BasePacket packet)
     {
+        switch (packet)
+        {
+            case SynchVersionS2C:
+            case NPC_BuffRemoveGroup:
+            case C2S_PlayVOCommand:
+            case NPC_BuffAddGroup:
+            case S2C_SetSpellData:
+            case NPC_BuffRemove2:
+            case NPC_BuffAdd2:
+            case S2C_PlayContextualEmote:
+            case S2C_NeutralMinionTimerUpdate:
+            case S2C_NotifyContextualSituation:
+            case FX_Create_Group:
+            case NPC_CastSpellAns:
+            case MissileReplication:
+            case AvatarInfo_Server:
+            case OnReplication:
+                break;
+            default:
+                return null;
+        }
+        
         object? result = null;
-        JObject job;
+        var job = JObject.FromObject(packet);
+        long hash;
+        string value;
         //var json = JsonConvert.SerializeObject(owner, Formatting.Indented);
         switch (packet)
         {
             case SynchVersionS2C:
-                break;
-            case NPC_BuffRemoveGroup:
-                break;
-            case C2S_PlayVOCommand:
-                break;
-            case NPC_BuffAddGroup:
-                break;
-            case S2C_SetSpellData:
-                break;
-            case NPC_BuffRemove2:
+                foreach (var playInfo in (JArray)job["PlayerInfo"])
+                {
+                    hash = long.Parse(playInfo["SummonorSpell1"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        playInfo["Summonor1"] = value;
+                    }
+                    hash = long.Parse(playInfo["SummonorSpell2"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        playInfo["Summonor2"] = value;
+                    }
+                }
                 break;
             case NPC_BuffAdd2:
+                hash = long.Parse(job["BuffNameHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["BuffName"] = value;
+                }
+                hash = long.Parse(job["PackageHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["Package"] = value;
+                }
+                break;
+            case NPC_BuffRemove2:
+                hash = long.Parse(job["BuffNameHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["BuffName"] = value;
+                }
+                break;
+            case NPC_BuffAddGroup:
+                hash = long.Parse(job["BuffNameHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["BuffName"] = value;
+                }
+                hash = long.Parse(job["PackageHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["Package"] = value;
+                }
+                break;
+            case NPC_BuffRemoveGroup:
+                hash = long.Parse(job["BuffNameHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["BuffName"] = value;
+                }
+                break;
+            case C2S_PlayVOCommand:
+                hash = long.Parse(job["EventHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["Event"] = value;
+                }
+                break;
+            case S2C_SetSpellData:
+                hash = long.Parse(job["HashedSpellName"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["SpellName"] = value;
+                }
                 break;
             case S2C_PlayContextualEmote:
+                hash = long.Parse(job["HashedParam"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["Param"] = value;
+                }
                 break;
             case S2C_NeutralMinionTimerUpdate:
+                hash = long.Parse(job["TypeHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["Type"] = value;
+                }
                 break;
             case S2C_NotifyContextualSituation:
+                hash = long.Parse(job["SituationNameHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    job["SituationName"] = value;
+                }
                 break;
             case FX_Create_Group:
+                foreach (var group in (JArray)job["FXCreateGroup"])
+                {
+                    hash = long.Parse(group["PackageHash"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        group["Package"] = value;
+                    }
+                    hash = long.Parse(group["EffectNameHash"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        group["EffectName"] = value;
+                    }
+                    hash = long.Parse(group["TargetBoneNameHash"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        group["TargetBoneName"] = value;
+                    }
+                    hash = long.Parse(group["BoneNameHash"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        group["BoneName"] = value;
+                    }
+                }
                 break;
             case NPC_CastSpellAns:
-                break;
             case MissileReplication:
+                var castInfo = job["CastInfo"];
+                hash = long.Parse(castInfo["SpellHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    castInfo["Spell"] = value;
+                }
+                hash = long.Parse(castInfo["PackageHash"].ToString());
+                if (TryGetUnhashedValue(hash, out value))
+                {
+                    castInfo["Package"] = value;
+                }
                 break;
-            case AvatarInfo_Server avatarInfoServer:
-                job = JObject.FromObject(avatarInfoServer);
-                
+            case AvatarInfo_Server:
                 /*var summoners = job["SummonerIDs"].ToArray();
                 for (int l = 0; l < 2; l++)
                 {
@@ -145,19 +268,60 @@ public partial class Unhasher
                     summoners[l] = unhashed;
                 }
                 */
-                
-                var talents = job["Talents"].ToArray();
-                foreach (var talent in talents)
+
+                var summonerIDs1 = (JArray)job["SummonerIDs"];
+                var summonerIDs2 = (JArray)job["SummonerIDs2"];
+
+                var summs1 = new string[summonerIDs1.Count];
+                var summs2 = new string[summonerIDs2.Count];
+
+
+                for (int l = 0; l < summonerIDs1.Count; l++)
                 {
-                    var hash = (uint)talent["Hash"];
-                    if(TryGetUnhashedValue(hash, out var unhashed))
+                    hash = long.Parse(summonerIDs1[i].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
                     {
-                        talent["Hash"] = unhashed;
+                        summs1[i] = value;
+                    }
+                }
+                
+                for (int l = 0; l < summonerIDs2.Count; l++)
+                {
+                    hash = long.Parse(summonerIDs2[i].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        summs2[i] = value;
+                    }
+                }
+
+                job["Summoner"] = JArray.FromObject(summs1);
+                job["Summoners2"] = JArray.FromObject(summs2);
+                
+                foreach (var talent in (JArray)job["Talents"])
+                {
+                    hash = long.Parse(talent["Hash"].ToString());
+                    if (TryGetUnhashedValue(hash, out value))
+                    {
+                        talent["ID"] = value;
                     }
                 }
                 break;
+            case OnReplication onReplication:
+                result = UnhashOnReplication(onReplication);
+                job = null;
+                break;
         }
 
+
+        switch (result)
+        {
+            case null when job is null:
+                result = packet;
+                break;
+            case null:
+                result = job;
+                break;
+        }
         return result;
     }
     

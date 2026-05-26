@@ -1,10 +1,13 @@
 ﻿using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols;
 using LeagueReplayFile.Protocols.ENet;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LeagueReplayFile.Parsers;
 
@@ -24,8 +27,11 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     {
         var checksumKey = Encoding.ASCII.GetBytes(matchId.ToString());
         var checksumBlowfish = new BlowFish(checksumKey);
-        var realKey = checksumBlowfish.Decrypt(encryptionKey);
-        _blowfish = new BlowFish(realKey.Take(16).ToArray());
+        
+        var decryptedKey = checksumBlowfish.Decrypt(encryptionKey);
+        var finalKey = decryptedKey.Take(16).ToArray();
+        
+        _blowfish = new BlowFish(finalKey);
         CurrentRequest = RequestTypes.NONE;
         Sections = [];
         Packets = [];
@@ -43,7 +49,11 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
             Segments.Add(segment);
         }
         Console.WriteLine($"Found {Segments.Count} segments");
-        Console.WriteLine($"Reading Segments...");
+    }
+
+    public void Parse()
+    {
+        Console.WriteLine($"Parsing Segments...");
         for (var i = 0; i < Segments.Count; i++)
         {
             var segment = Segments[i];
@@ -58,57 +68,73 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         using var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress);
         compressed.CopyTo(decompressed);
         decompressed.Seek(0, SeekOrigin.Begin);
-        return decompressed;
+        return new MemoryStream(data);
     }
 
     //<•······················•<>•······················•>
     
     protected override void OnGetBinary(byte[] data)
     {
-        List<ENetPacket> pkts;
-        var decompressed = Decompress(data);
-        decompressed.Seek(0, SeekOrigin.Begin);
-        using (var reader = new BinaryReader(decompressed))
+        try
         {
-            pkts = ReadSectionPackets(reader);
-        }
+            List<ENetPacket> pkts;
 
-        switch (CurrentSection)
-        {
-            case GameDataSection gameDataSection:
-                gameDataSection.Chunk.Packets.AddRange(pkts);
-                break;
-            case KeyFrameSection keyFrameSection:
-                keyFrameSection.Packets.AddRange(pkts);
-                break;
+            var decompressed = Decompress(data);
+            decompressed.Seek(0, SeekOrigin.Begin);
+
+            using (var reader = new BinaryReader(decompressed))
+            {
+                pkts = ReadSectionPackets(reader);
+            }
+
+            switch (CurrentSection)
+            {
+                case GameDataSection gameDataSection:
+                    gameDataSection.Chunk.Packets.AddRange(pkts);
+                    break;
+                case KeyFrameSection keyFrameSection:
+                    keyFrameSection.Packets.AddRange(pkts);
+                    break;
+            }
+
+            Sections.Add(CurrentSection);
         }
-        
-        Sections.Add(CurrentSection);
+        catch (Exception e)
+        {
+        }
     }
     
     protected override void OnGetText(byte[] data)
     {
         switch (CurrentRequest)
         {
-            case RequestTypes.VERSION:
-                ((VersionSection)CurrentSection).Text = Encoding.UTF8.GetString(data);
-                break;
-            case RequestTypes.GAME_META_DATA:
-                ((GameMetaDataSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
-                break;
-            case RequestTypes.LAST_CHUNK_INFO:
-                ((LastChunkInfoSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
-                break;
             case RequestTypes.END_OF_GAME_STATS:
-                break;
             case RequestTypes.KEY_FRAME:
             case RequestTypes.GAME_DATA_CHUNK:
             case RequestTypes.NONE:
-            default:
                 Console.WriteLine($"Attempted to get text from non-text section!: {CurrentRequest}");
+                return;
+        }
+        var text = Encoding.UTF8.GetString(data);
+        switch (CurrentRequest)
+        {
+            case RequestTypes.VERSION:
+                ((VersionSection)CurrentSection).Text = text;
+                Console.WriteLine(text);
+                return;
+            case RequestTypes.GAME_META_DATA:
+                ((GameMetaDataSection)CurrentSection).Json = text;
+                break;
+            case RequestTypes.LAST_CHUNK_INFO:
+                ((LastChunkInfoSection)CurrentSection).Json = text;
                 break;
         }
 
+        
+        var jsonString = JToken.Parse(text).ToString(Formatting.Indented);
+        
+        Console.WriteLine($"[{CurrentRequest}]:\n{jsonString}");
+        
         // probbly a better way to do this
         // but most non data chunks so far are at most a little over 800 bytes
         if (data.Length > 900)

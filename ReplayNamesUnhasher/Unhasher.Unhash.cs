@@ -10,6 +10,10 @@ public partial class Unhasher
 {
     public void Unhashie(SLRF slrf)
     {
+        if (slrf.Packets.Count == 0)
+        {
+            return;
+        }
         Console.WriteLine("Unhashing is still a WIP");
         switch (slrf.Type)
         {
@@ -30,28 +34,12 @@ public partial class Unhasher
     {
         foreach (var sp in packets)
         {
-            object result = null;
             // incase random object somehow replaces the packet object
             if (sp.Packet is not BasePacket packet)
             {
                 continue;
             }
-
-            // castinfo
-            // talent
-            // color
-            // argsbuff, argsheal, argsDamage, argsforclient, argsminionkill
-            //TODO: FINDING ALL PACKETS THAT NEED TO BE UNHASHED
-            switch (packet)
-            {
-                case OnReplication onReplication:
-                    result = UnhashOnReplication(onReplication);
-                    break;
-                default:
-                    result = UnhashPacket(packet);
-                    break;
-            }
-
+            var result = UnhashPacket(packet);
             if (result is null)
             {
                 continue;

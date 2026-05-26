@@ -1,25 +1,19 @@
-﻿using LeaguePackets;
-using LeaguePackets.Game;
-using LeaguePackets.LoadScreen;
-using LeagueReplayFile;
+﻿using LeagueReplayFile;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.Models;
 using LeagueReplayFileSerializer;
-using LeagueReplayFileSerializer.Data;
 using LeagueReplayFileSerializer.Enums;
-using Newtonsoft.Json;
-using ReplayNamesUnhasher;
 
 namespace Parser;
 
 public static class Program
 {
     private static readonly string SerializedDirectory;
-    private static readonly Unhasher Unhasher;
+    
 
     static Program()
     {
         SerializedDirectory = "Serialized";
-        Unhasher = new Unhasher();
         Directory.CreateDirectory(SerializedDirectory);
         foreach (var type in Enum.GetValues<ReplayType>())
         {
@@ -29,7 +23,7 @@ public static class Program
     
     public static void Main(string[] args)
     {
-        Unhasher.Initialize();
+        Utils.Unhasher.Initialize();
         Console.WriteLine("<•······················•<>•······················•>");
         string path;
         if (args.Length == 0)
@@ -44,24 +38,232 @@ public static class Program
         
         if(path.EndsWith(".lrf"))
         {
-            ParseLRF(path);
+            SingleReplay(path);
         }
         else
         {
-            var lrfPaths = GetFilePaths(path);
-            if (lrfPaths.Count == 1)
+            var lrfs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories).ToList();
+            if (lrfs.Count == 1)
             {
-                ParseLRF(lrfPaths[0]);
+                SingleReplay(lrfs[0]);
             }
             else
             {
-                ParseLRFs(lrfPaths);
+                var count = lrfs.Count;
+                if (lrfs.Count == 0)
+                {
+                    Console.WriteLine($"No .lrf files found in \"{path}\"");
+                }
+                else
+                {
+                    BatchofReplays(lrfs);
+                }
             }
         }
 
-        Console.WriteLine("Done");
+        Console.WriteLine("Done!");
         Exit();
     }
+
+    private static void SingleReplay(string path)
+    {
+        Console.WriteLine("[Single Replays]");
+        Console.WriteLine($"Reading {Path.GetFileName(path)}");
+        LRF? lrf = ReadLRF(path);
+        
+        Console.WriteLine("Serialize replay?: [y/n]");
+        var res = Console.ReadLine();
+        if (res == null || !res.ToLowerInvariant().Equals("y"))
+        {
+            return;
+        }
+        
+        Console.WriteLine("Unhash replay?: [y/n]");
+        res = Console.ReadLine();
+        bool result = false;
+        if (res != null && res.ToLowerInvariant().Equals("y"))
+        {
+            result = true;
+        }
+        Console.WriteLine($"Serializing {Path.GetFileName(path)}");
+        var slrf = lrf.SerializeLRF();
+        
+        Console.WriteLine("Write replay to file?: [y/n]");
+        res = Console.ReadLine(); 
+        result = false;
+        if (res != null && res.ToLowerInvariant().Equals("y"))
+        {
+            result = true;
+        }
+        if (result)
+        {
+            slrf.WriteToFile(SerializedDirectory, $"{Path.GetFileNameWithoutExtension(path)}.slrf");
+        }
+    }
+
+    public static void BatchofReplays(List<string> lrfPaths)
+    {
+        var i = 0; 
+        var count = lrfPaths.Count;
+        bool shouldSerialize = false;
+        bool shouldUnhash = false;
+        bool skipUnssuportedReplayVersions = false;
+        
+        Console.WriteLine($"[Batch of Replays]: {count} replays found.");
+        
+        
+        Console.WriteLine("Serialize replays?: [y/n]");
+        var result = Console.ReadLine();
+        if (result != null && result.ToLowerInvariant().Equals("y"))
+        {
+            shouldSerialize = true;
+        }
+        if (shouldSerialize)
+        {
+            Console.WriteLine("Unhash replays?: [y/n]");
+            result = Console.ReadLine();
+            if (result != null && result.ToLowerInvariant().Equals("y"))
+            {
+                shouldUnhash = true;
+            }
+        }
+        Console.WriteLine("Skip unsupported replay versions?: [y/n]");
+        result = Console.ReadLine().ToLowerInvariant();
+        switch (result)
+        {
+            case "y":
+                skipUnssuportedReplayVersions = true;
+                break;
+            case "n":
+                skipUnssuportedReplayVersions = false;
+                break;
+        }
+        
+        Console.WriteLine($"Replays will {(shouldSerialize ? "be" : "NOT be")} serialized.");
+        if (shouldSerialize)
+        {
+            Console.WriteLine($"Replays will {(shouldUnhash ? "be" : "NOT be")} unhashed.");
+        }
+        Console.WriteLine($"Unsupported replays versions will {(skipUnssuportedReplayVersions ? "be" : "NOT be")} skipped.");
+        
+        List<LRF> lrfs = [];
+        List<SLRF> slrfs = [];
+        
+        
+        foreach (var lrfPath in lrfPaths)
+        {
+            Console.WriteLine("<•······················•<>•······················•>");
+            ++i; 
+            var rid = $"{i}/{count}";
+            var md = ReadLRFMetaData(lrfPath, out var type);
+            Console.WriteLine($"[{rid}]: {type} lrf");
+            bool non420Replay;
+            if (!md.ClientVersion.StartsWith("4.20"))
+            {
+                Console.Write($"{lrfPath} is not a 4.20.0.315 GameClient replay");
+                if (skipUnssuportedReplayVersions)
+                {
+                    Console.WriteLine($"Skipping {lrfPath}");
+                    continue;
+                }
+                Console.WriteLine("There could be issues parsing it. If any occur packets will not be read from any binary streams.");
+            }
+
+            LRF? lrf = ReadLRF(lrfPath);
+            lrfs.Add(lrf);
+        }
+
+        if (shouldSerialize)
+        {
+            Console.WriteLine("Serialising Replays");
+            foreach (var lrf in lrfs)
+            {
+                var slrf = lrf.SerializeLRF();
+                slrfs.Add(slrf);
+            }
+        }
+        if (shouldSerialize && shouldUnhash)
+        {
+            Console.WriteLine("Unhashing Replays");
+            foreach (var slrf in slrfs)
+            {
+                slrf.UnhashSLRF();
+            }
+        } 
+
+        List<Object> x;
+        if (shouldSerialize) 
+        {
+            foreach (var slrf in slrfs)
+            {
+                slrf.WriteToFile(SerializedDirectory, $"{slrf.MetaData.MatchId}_{slrf.MetaData.Region}.slrf");
+            }
+        }
+        else
+        {
+            foreach (var lrf in lrfs)
+            {
+                lrf.WriteToFile(SerializedDirectory, $"{lrf.MetaData.MatchId}_{lrf.MetaData.Region}.plrf");
+            }
+        }
+        
+        
+    }
+    
+    
+    public static ReplayMetaData? ReadLRFMetaData(string path, out LRFTypes type)
+    {
+        ReplayMetaData? metaData = null;
+        try
+        {
+            var stream = File.OpenRead(path);
+            var reader = new LRFReader();
+            metaData = reader.ReadMetaData(stream, out type);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return metaData;
+    }
+
+    private static LRF? ReadLRF(string path)
+    {
+        LRF? lrf = null;
+        try
+        {
+            var stream = File.OpenRead(path);
+            var reader = new LRFReader();
+            lrf = reader.Read(stream);
+            Console.WriteLine($"Client Version: {lrf.MetaData.ClientVersion}");
+            Console.WriteLine($"Replay Version: {lrf.MetaData.ReplayVersion}");
+            switch (lrf.Type)
+            {
+                case LRFTypes.NFO:
+                    reader.ParseNFO();
+                    break;
+                case LRFTypes.HTTP:
+                case LRFTypes.ENET:
+                    reader.Parse();
+                    break;
+                case LRFTypes.NAN:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
+
+        return lrf;
+    }
+    
+    //⬖•······················•⯁•······················•⬗
     
     private static void Exit() 
     { 
@@ -72,258 +274,4 @@ public static class Program
             break;
         }
     }
-    
-    //⬖•······················•⯁•······················•⬗
-    
-    private static void ParseLRF(string lrfPath)
-    {
-        var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
-        if (File.Exists($"{SerializedDirectory}/{fileName}"))
-        {
-            Console.WriteLine($"Skipping {fileName}; Already exists.");
-            return;
-        }
-        Console.WriteLine($"Reading {Path.GetFileName(lrfPath)}");
-        var lrf = ReadLRF(lrfPath);
-        Console.WriteLine($"Serializing {Path.GetFileName(lrfPath)}");
-        var slrf = SerializeLRF(lrf);
-        UnhashSLRF(slrf);
-        WriteToFile(slrf, fileName);
-    }
-    
-    private static SLRF? SerializeLRF(LRF lrf)
-    {
-        SLRF? slrf = null;
-        try
-        {
-            slrf = LRFSerializer.Serialize(lrf);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-
-        return slrf;
-    }
-    
-    private static void UnhashSLRF(SLRF slrf)
-    {
-        Console.WriteLine("Unhashing Packets");
-        try
-        {
-            Unhasher.Unhashie(slrf);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-    }
-    
-    
-    //⬖•······················•⯁•······················•⬗
-    
-    private static void ParseLRFs(List<string> lrfPaths)
-    {
-        Console.WriteLine("Parsing Packets");
-        var i = 0;
-        var count = lrfPaths.Count;
-        List<LRF> lrfs = [];
-        foreach (var lrfPath in lrfPaths)
-        {
-            Console.WriteLine("<•······················•<>•······················•>");
-            ++i; 
-            var fileName = $"{Path.GetFileNameWithoutExtension(lrfPath)}.slrf";
-            if (File.Exists($"{SerializedDirectory}/{fileName}"))
-            {
-                Console.WriteLine($"Skipping {fileName}; Already exists.");
-                continue;
-            }
-            var lrf = ReadLRF(lrfPath);
-            var rid = $"{i}/{count}";
-            Console.WriteLine($"[{rid}]: {lrf.Type}");
-            lrfs.Add(lrf);
-        }
-        var slrfs = SerializeLRFs(lrfs);
-        UnhashSLRFs(slrfs);
-    }
-    
-    private static List<SLRF> SerializeLRFs(List<LRF> lrfs)
-    {
-        Console.WriteLine("Serialising Replays");
-        List<SLRF> slrfs = [];
-        foreach (var lrf in lrfs)
-        {
-            var slrf =  SerializeLRF(lrf);
-            slrfs.Add(slrf);
-        }
-        return slrfs;
-    }
-    
-    private static void UnhashSLRFs(List<SLRF> slrfs)
-    {
-        Console.WriteLine("Unhashing Replays");
-        foreach (var slrf in slrfs)
-        {
-            try
-            {
-                Unhasher.Unhashie(slrf);
-                Unhasher.Reset();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-    }
-    
-    //⬖•······················•⯁•······················•⬗
-    
-    private static LRF? ReadLRF(string path)
-    {
-        LRF? lrf = null;
-        try
-        {
-            var stream = File.OpenRead(path);
-            var reader = new LRFReader();
-            lrf = reader.Read(stream);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
-        return lrf;
-    }
-    
-    private static void WriteToFile(SLRF slrf, string fileName)
-    {
-        var path = $"{SerializedDirectory}/{slrf.Type}/{fileName}";
-        Console.WriteLine($"Outputted SLRF to {path}");
-        var json = JsonConvert.SerializeObject(slrf, Formatting.Indented);
-        File.WriteAllText(path, json);   
-    }
-
-    private static List<string>? GetFilePaths(string path)
-    {
-        var lrfs = Directory.EnumerateFiles($"{path}\\", $"*.lrf", SearchOption.AllDirectories).ToList();
-        var count = lrfs.Count;
-        if (lrfs.Count == 0)
-        {
-            Console.WriteLine($"No .lrf files found in \"{path}\"");
-            Exit();
-            return null;
-        }
-        
-        Console.WriteLine($"Total replays found: {count}");
-        return lrfs;
-    }
-    
-    private static void PrintPacketCounts(SLRF slrf)
-    {
-        var dict = new Dictionary<Type, int>();
-        switch (slrf.Type)
-        {
-            case LRFTypes.NFO:
-            case LRFTypes.ENET:
-                foreach (var sp in slrf.Packets)
-                {
-                    if (sp.Packet is not BasePacket packet)
-                    {
-                        continue;
-                    }
-
-                    var type = packet.GetType();
-                    if (dict.TryGetValue(type, out var value))
-                    {
-                        dict[type] = ++value;
-                    }
-                    else
-                    {
-                        dict.Add(type, 1);
-                    }
-                }
-                break;
-            case LRFTypes.HTTP:
-                foreach (var section in slrf.Sections)
-                {
-                    switch (section)
-                    {
-                        case SerializedGameDataSection serializedGameDataSection:
-                            foreach (var sp in serializedGameDataSection.Chunk.Packets)
-                            {
-                                if (sp.Packet is not BasePacket packet)
-                                {
-                                    continue;
-                                }
-
-                                var type = packet.GetType();
-                                if (dict.TryGetValue(type, out var value))
-                                {
-                                    dict[type] = ++value;
-                                }
-                                else
-                                {
-                                    dict.Add(type, 1);
-                                }
-                            }
-                            break;
-                        case SerializedKeyFrameSection serializedKeyFrameSection:
-                            foreach (var sp in serializedKeyFrameSection.Packets)
-                            {
-                                if (sp.Packet is not BasePacket packet)
-                                {
-                                    continue;
-                                }
-
-                                var type = packet.GetType();
-                                if (dict.TryGetValue(type, out var value))
-                                {
-                                    dict[type] = ++value;
-                                }
-                                else
-                                {
-                                    dict.Add(type, 1);
-                                }
-                            }
-                            break;
-                    }
-                }
-                break;
-        }
-
-        foreach (var (type, count) in dict)
-        {
-            Console.WriteLine("[{0}]:  {1}", type.Name, count );
-        }
-    }
-
-    private static void PrintMessages(SLRF slrf)
-    {
-        foreach (var serializedPacket in slrf.Packets)
-        {
-            if (serializedPacket.Packet is not BasePacket packet)
-            {
-                continue;
-            }
-
-            string msg = "";
-            switch (packet)
-            {
-                case Chat chat:
-                    msg = $"[{chat.ChatType}]: <{chat.ClientID}/{chat.NetID}> {chat.Message}";
-                    break;
-                case QuickChat quickChat:
-                    msg = $"<{quickChat.ClientID}> {quickChat.MessageId}";
-                    break;
-                case S2C_SystemMessage system:
-                    msg = $"<{system.SourceNetID}> {system.Message}";
-                    break;
-                default:
-                    continue;
-            }
-            Console.WriteLine("{0} - [{1}]: {2}", serializedPacket.Time, packet.GetType().Name, msg);
-        }
-    }
-    
 }

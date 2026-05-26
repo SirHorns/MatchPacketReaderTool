@@ -30,7 +30,7 @@ public static partial class LRFSerializer
         {
             case LRFTypes.HTTP:
                 var lrfSections = lrf.Sections;
-                SerializeSections(ref lrfSections);
+                SerializeSections(lrfSections);
                 slrf.Sections = lrfSections;
                 break;
             case LRFTypes.NFO:
@@ -54,6 +54,10 @@ public static partial class LRFSerializer
     /// <returns></returns>
     public static List<BasePacket> ConvertENetPackets(List<ENetPacket> eNetPackets)
     {
+        if (eNetPackets.Count == 0)
+        {
+            return [];
+        }
         Console.WriteLine("Converting ENet Packets");
         List<BasePacket> basePackets = [];
         // gather our League of Legends packets
@@ -130,6 +134,10 @@ public static partial class LRFSerializer
     
     private static List<SerializedPacket> SerializePackets(List<ENetPacket> eNetPackets)
     {
+        if (eNetPackets.Count == 0)
+        {
+            return [];
+        }
         // gather our League of Legends packets
         var basePackets =  ConvertENetPackets(eNetPackets);
         Console.WriteLine("Serializing League Packets");
@@ -137,7 +145,7 @@ public static partial class LRFSerializer
         return serializedPackets;
     }
 
-    private static void SerializeSections(ref List<Section> sections)
+    private static void SerializeSections(List<Section> sections)
     {
         for (var i = 0; i < sections.Count; i++)
         {

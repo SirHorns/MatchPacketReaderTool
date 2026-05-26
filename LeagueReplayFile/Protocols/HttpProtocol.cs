@@ -10,7 +10,6 @@ public abstract class HttpProtocol
     protected static Regex RE_CONTENT_LEN = new("Content-Length: ([0-9]+)", RegexOptions.IgnoreCase);
 
     protected static byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
-
     
     
     private HttpState _httpState = HttpState.Done;
@@ -32,57 +31,42 @@ public abstract class HttpProtocol
     {
         var data = segment.Data;
         var time = segment.Time;
-
+        bool skipped = false;
+        bool setDone = false;
         switch (_httpState)
         {
             case HttpState.GetBinary:
-                HandleGetBinary(data);
+                OnGetBinary(data);
+                setDone = true;
                 break;
             case HttpState.GetText:
-                HandleGetText(data);
+                OnGetText(data);
+                setDone = true;
                 break;
             case HttpState.Done:
-                HandleDone(data, time, segment);
+                OnDone(data, time, segment);
                 break;
             case HttpState.ContinueBinary:
-                HandleContinueBinary(data);
+                OnContinueBinary(data);
                 break;
             case HttpState.ContinueText:
-                HandleContinueText(data);
+                OnContinueText(data);
                 break;
             default:
-                Console.WriteLine($"Skipped Segment: {_httpState}");
+                skipped = true;
                 break;
         }
-    }
-    
-    //<•······················•<>•······················•>
 
-    private void HandleGetBinary(byte[] data)
-    {
-        OnGetBinary(data);
-        SetHttpState(HttpState.Done);
-    }
-    
-    private void HandleGetText(byte[] data)
-    {
-        OnGetText(data);
-        SetHttpState(HttpState.Done);
-    }
-    
-    private void HandleDone(byte[] data, float time, DataSegment segment)
-    {
-        OnDone(data, time, segment);
-    }
-    
-    private void HandleContinueBinary(byte[] data)
-    {
-        OnContinueBinary(data);
-    }
-    
-    private void HandleContinueText(byte[] data)
-    {
-        OnContinueText(data);
+        if (skipped)
+        {
+            Console.WriteLine($"Skipped Segment: {_httpState}");
+        }
+
+        if (setDone)
+        {
+            SetHttpState(HttpState.Done);
+        }
+        
     }
     
     //<•······················•<>•······················•>

@@ -45,7 +45,7 @@ else
         character = Console.ReadLine();
         if (string.IsNullOrEmpty(character))
         {
-            continue;
+            break;
         }
         character = character.ToLowerInvariant();
         Console.WriteLine($"Is \"{character}\" correct? [y/n]");
@@ -63,6 +63,8 @@ else
         }
     }
 }
+
+
 
 if (string.IsNullOrEmpty(character))
 {
