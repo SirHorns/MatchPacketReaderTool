@@ -1,5 +1,6 @@
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.LRFs;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
@@ -200,7 +201,7 @@ public class ApiHandler
     private void ParseSections()
     {
         Console.WriteLine("Parsing Sections...");
-        foreach (var section in Replay.Sections)
+        foreach (var section in (Replay as HttpLRF).Sections)
         {
             string json;
             switch (section)

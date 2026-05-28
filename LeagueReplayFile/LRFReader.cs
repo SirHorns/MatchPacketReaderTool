@@ -1,7 +1,7 @@
 using System.Text;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.LRFs;
 using LeagueReplayFile.Models;
-using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Parsers;
 using LeagueReplayFile.Protocols.ENet;
 using Newtonsoft.Json;
@@ -43,37 +43,34 @@ public static class LRFReader
         LRF lrf;
         if (isNfo)
         {
-            lrf = new ENetLRF()
+            lrf = new StreamLRF()
             {
                 Type = LRFType.NFO,
                 MetaData = metaData,
-                Stream = stream,
                 BasicHeader = header
             };
         }
         else if (metaData.SpectatorMode)
         {
-            lrf = new SpectatorLRF()
+            lrf = new HttpLRF()
             {
                 Type = LRFType.HTTP,
                 MetaData = metaData,
-                Stream = stream,
                 BasicHeader = header
             };
         }
         else
         {
-            lrf = new ENetLRF()
+            lrf = new StreamLRF()
             {
                 Type = LRFType.ENET,
                 MetaData = metaData,
-                Stream = stream,
                 BasicHeader = header
             };
         }
         if (isNfo)
         {
-            NFO((ENetLRF)lrf, reader);
+            NFO((StreamLRF)lrf, reader);
         } 
         else
         {
@@ -88,11 +85,11 @@ public static class LRFReader
             
             if (metaData.SpectatorMode)
             {
-               Spectator((SpectatorLRF)lrf, data);
+               Spectator((HttpLRF)lrf, data);
             }
             else //if (metaData.IsStream || metaData.ObserverStream)
             {
-                Stream((ENetLRF)lrf, data);
+                Stream((StreamLRF)lrf, data);
             }
         }
         
@@ -158,7 +155,7 @@ public static class LRFReader
         return metadata;
     }
     
-    private static void NFO(ENetLRF lrf, BinaryReader reader)
+    private static void NFO(StreamLRF lrf, BinaryReader reader)
     {
         var rawPackets = new List<ENetPacket>();
         while(reader.BaseStream.Position < reader.BaseStream.Length)
@@ -192,14 +189,15 @@ public static class LRFReader
         lrf.Packets = rawPackets;
     }
 
-    private static void Spectator(SpectatorLRF lrf, byte[] data)
+    private static void Spectator(HttpLRF lrf, byte[] data)
     {
-        var parser = new HttpReplayParser(lrf.MetaData.EncryptionKey, lrf.MetaData.MatchId);
-        parser.Read(data);
+        var parser = new HttpReplayParser(lrf);
+        var segments = parser.Read(data);
+        parser.Parse(segments);
         lrf.Sections = parser.Sections;
     }
     
-    private static void Stream(ENetLRF lrf, byte[] data)
+    private static void Stream(StreamLRF lrf, byte[] data)
     {
         ENetGameClientVersions version;
         var clientVersion = lrf.MetaData.ClientVersion;

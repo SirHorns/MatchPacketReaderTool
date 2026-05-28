@@ -2,6 +2,7 @@ using LeaguePackets;
 using LeaguePackets.Game;
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
+using LeagueReplayFile.LRFs;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols.ENet;
 using LeagueReplayFileSerializer.Data;
@@ -29,13 +30,13 @@ public static partial class LRFSerializer
         switch (lrf.Type)
         {
             case LRFType.HTTP:
-                var lrfSections = lrf.Sections;
+                var lrfSections = (lrf as HttpLRF).Sections;
                 SerializeSections(ref lrfSections);
                 slrf.Sections = lrfSections;
                 break;
             case LRFType.NFO:
             case LRFType.ENET:
-                var packets = SerializePackets(lrf.Packets);
+                var packets = SerializePackets((lrf as StreamLRF).Packets);
                 slrf.Packets = packets;
                 break;
             case LRFType.NAN:

@@ -9,7 +9,7 @@ namespace LeagueReplayFile.Parsers;
 /// <summary>
 /// Parses replays sent as a stream
 /// </summary>
-public class StreamReplayParser : ENetProtocol, ILRFParser
+public class StreamReplayParser : ENetProtocol
 {
     private BlowFish _blowfish { get; }
     public List<DataSegment> Segments { get; } = new();
