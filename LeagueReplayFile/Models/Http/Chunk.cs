@@ -1,6 +1,6 @@
 using LeagueReplayFile.Protocols.ENet;
 
-namespace LeagueReplayFile.Models;
+namespace LeagueReplayFile.Models.Http;
 
 public class Chunk
 {

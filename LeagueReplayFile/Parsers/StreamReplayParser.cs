@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using LeagueReplayFile.Encryption;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Protocols.ENet;
 using LeagueReplayFile.Protocols.ENet.Protocols;

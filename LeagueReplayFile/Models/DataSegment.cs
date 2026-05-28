@@ -1,5 +1,8 @@
 namespace LeagueReplayFile.Models;
 
+/// <summary>
+/// Raw representation of data sent during a http request
+/// </summary>
 public class DataSegment
 {
     public float Time { get; init; }
@@ -21,9 +24,6 @@ public class DataSegment
             Data = segmentData,
             Pad = padding
         };
-        
-        
-        
         
         return segment;
     }

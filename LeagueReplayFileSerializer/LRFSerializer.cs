@@ -28,17 +28,17 @@ public static partial class LRFSerializer
         };
         switch (lrf.Type)
         {
-            case LRFTypes.HTTP:
+            case LRFType.HTTP:
                 var lrfSections = lrf.Sections;
                 SerializeSections(ref lrfSections);
                 slrf.Sections = lrfSections;
                 break;
-            case LRFTypes.NFO:
-            case LRFTypes.ENET:
+            case LRFType.NFO:
+            case LRFType.ENET:
                 var packets = SerializePackets(lrf.Packets);
                 slrf.Packets = packets;
                 break;
-            case LRFTypes.NAN:
+            case LRFType.NAN:
             default:
                 Console.WriteLine($"Unable to serialize LRF: {lrf.Type}");
                 return null;

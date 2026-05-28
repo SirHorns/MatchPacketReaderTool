@@ -30,7 +30,7 @@ public abstract class HttpProtocol
     {
         var data = segment.Data;
         var time = segment.Time;
-
+        Console.WriteLine($"[TIME]: {time}");
         switch (CurrentHttpState)
         {
             case HttpState.GetBinary:
@@ -54,6 +54,7 @@ public abstract class HttpProtocol
                 Console.WriteLine($"Skipped Segment: {CurrentHttpState}");
                 break;
         }
+        Console.WriteLine($"[SECTION]: {SectionBuffer?.GetType().Name ?? "DATA"}");
     }
     
     //<•······················•<>•······················•>

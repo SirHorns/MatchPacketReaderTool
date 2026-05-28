@@ -4,7 +4,7 @@ namespace LeagueReplayFile.Models.Sections;
 
 public class Section
 {
-    public RequestTypes Type { get; set; }
+    public RequestType Type { get; set; }
 
     public string Http { get; set; }
         
@@ -14,7 +14,7 @@ public class Section
 
     
 
-    public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)
+    public Section Copy(Section section, RequestType? type = null, string? http = null, byte[]? data = null, float? time = null)
     {
         Type = type ?? section.Type;
         Http = http ?? section.Http;

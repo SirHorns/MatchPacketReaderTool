@@ -1,4 +1,5 @@
 using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace SpectatorAPI.Controllers;
 
 public delegate Task<string> GetStringHandle();
 public delegate Task<EndOfGameStats> GetEndOfGameStatsHandle(string platformId, long gameId);
-public delegate Task<MetaData> GetMetaDataHandle(string platformId, long gameId, string unknown);
+public delegate Task<GameMetaData> GetMetaDataHandle(string platformId, long gameId, string unknown);
 public delegate Task<LastChunkInfo> GetLastChunkInfoHandle(string platformId, long gameId, string unknown);
 public delegate Task<byte[]> GetGameDataChunkHandle(string platformId, long gameId, int chunkId);
 public delegate Task<byte[]> GetKeyFrameHandle(string platformId, long gameId, int frameId);
@@ -54,7 +55,7 @@ public class SpectatorReplayController : ControllerBase
     }
 
     [HttpGet("getGameMetaData/{platformId}/{gameId}/{unknown}/token", Name = "GameMetaData")]
-    public async Task<MetaData> GetGameMetaData(string platformId, string gameId, string unknown)
+    public async Task<GameMetaData> GetGameMetaData(string platformId, string gameId, string unknown)
     {
         _logger.Log(LogLevel.Information, $"[getGameMetaData] Platform: {platformId} MatchId: {gameId} Unknown1: {unknown}");
         var result = await OnGetMetadata.Invoke(platformId, long.Parse(gameId), unknown);

@@ -1,3 +1,4 @@
+using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Protocols.ENet;
 
 namespace LeagueReplayFile.Models.Sections;

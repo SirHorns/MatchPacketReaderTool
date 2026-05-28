@@ -1,7 +1,9 @@
 ﻿using System.IO.Compression;
 using System.Text;
+using LeagueReplayFile.Encryption;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols;
 using LeagueReplayFile.Protocols.ENet;
@@ -18,7 +20,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     public List<DataSegment> Segments { get; }
     public List<ENetPacket> Packets { get; }
     public List<Section> Sections { get; }
-    public RequestTypes CurrentRequestType { get; private set; }
+    public RequestType CurrentRequestType { get; private set; }
 
     public HttpReplayParser(byte[] encryptionKey, long matchId)
     {
@@ -26,7 +28,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         var checksumBlowfish = new BlowFish(checksumKey);
         var realKey = checksumBlowfish.Decrypt(encryptionKey);
         _blowfish = new BlowFish(realKey.Take(16).ToArray());
-        CurrentRequestType = RequestTypes.NONE;
+        CurrentRequestType = RequestType.NONE;
         Sections = [];
         Packets = [];
         Segments = [];
@@ -83,10 +85,10 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     {
         switch (CurrentRequestType)
         {
-            case RequestTypes.END_OF_GAME_STATS:
-            case RequestTypes.KEY_FRAME:
-            case RequestTypes.GAME_DATA_CHUNK:
-            case RequestTypes.NONE:
+            case RequestType.END_OF_GAME_STATS:
+            case RequestType.KEY_FRAME:
+            case RequestType.GAME_DATA_CHUNK:
+            case RequestType.NONE:
                 Console.WriteLine($"Attempted to get text from non-text section!: {CurrentRequestType}");
                 return;
         }
@@ -94,9 +96,9 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         var json = Encoding.UTF8.GetString(data);
         switch (CurrentRequestType)
         {
-            case RequestTypes.VERSION:
-            case RequestTypes.GAME_META_DATA:
-            case RequestTypes.LAST_CHUNK_INFO:
+            case RequestType.VERSION:
+            case RequestType.GAME_META_DATA:
+            case RequestType.LAST_CHUNK_INFO:
                 (SectionBuffer as IJsonSection)?.SetValues(json);
                 break;
         }
@@ -138,7 +140,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         SectionBuffer.Http = replayReq;
         SectionBuffer.Data = data;
         SectionBuffer.Time = time;
-
+        Console.WriteLine($"[HTTP]: {httpReq} {replayReq}");
         switch (httpReq)
         {
             case "HTTP":
@@ -283,33 +285,33 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         switch (api[4])
         {
             case "version":
-                SetCurrentRequest(RequestTypes.VERSION);
+                SetCurrentRequest(RequestType.VERSION);
                 SetHttpState(HttpState.GetText);
-                SectionBuffer = new VersionSection().Copy(SectionBuffer, type: RequestTypes.VERSION);
+                SectionBuffer = new VersionSection().Copy(SectionBuffer, type: RequestType.VERSION);
                 break;
             case "getGameMetaData":
-                SetCurrentRequest(RequestTypes.GAME_META_DATA);
+                SetCurrentRequest(RequestType.GAME_META_DATA);
                 SetHttpState(HttpState.GetText);
-                SectionBuffer = new GameMetaDataSection().Copy(SectionBuffer, type: RequestTypes.GAME_META_DATA);
+                SectionBuffer = new GameMetaDataSection().Copy(SectionBuffer, type: RequestType.GAME_META_DATA);
                 break;
             case "getLastChunkInfo":    // /RestServicePath + /consumer/getGameDataChunk + /platformID + /gameID + /minTimeAvailable + /AccessToken
-                SetCurrentRequest(RequestTypes.LAST_CHUNK_INFO);
+                SetCurrentRequest(RequestType.LAST_CHUNK_INFO);
                 SetHttpState(HttpState.GetText);
                 SectionBuffer = new LastChunkInfoSection()
                 {
                     MinTimeAvailable = int.Parse(http[^2])
-                }.Copy(SectionBuffer, type: RequestTypes.LAST_CHUNK_INFO);
+                }.Copy(SectionBuffer, type: RequestType.LAST_CHUNK_INFO);
                 break;
             case "getKeyFrame":         // /RestServicePath + /consumer/getKeyFrame + /platformID + /gameID + /chunkID + /AccessToken
-                SetCurrentRequest(RequestTypes.KEY_FRAME);
+                SetCurrentRequest(RequestType.KEY_FRAME);
                 SetHttpState(HttpState.GetBinary);
                 SectionBuffer = new KeyFrameSection()
                 {
                     ID = int.Parse(http[^2])
-                }.Copy(SectionBuffer, type: RequestTypes.KEY_FRAME);
+                }.Copy(SectionBuffer, type: RequestType.KEY_FRAME);
                 break;
             case "getGameDataChunk":    // /RestServicePath + /consumer/getGameDataChunk + /platformID +/gameID +/chunkID + /AccessToken
-                SetCurrentRequest(RequestTypes.GAME_DATA_CHUNK);
+                SetCurrentRequest(RequestType.GAME_DATA_CHUNK);
                 SetHttpState(HttpState.GetBinary);
                 var id = int.Parse(http[^2]);
                 var gameId = long.Parse(http[^3]);
@@ -321,12 +323,12 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
                     {
                         ID = id
                     }
-                }.Copy(SectionBuffer, type: RequestTypes.GAME_DATA_CHUNK);
+                }.Copy(SectionBuffer, type: RequestType.GAME_DATA_CHUNK);
                 break;
             case "end":                 // /RestServicePath + /consumer/end + unknown-args
                 throw new NotImplementedException("end (OfGameStats) is not implemented yet");
             default:
-                SectionBuffer.Type = RequestTypes.NONE;
+                SectionBuffer.Type = RequestType.NONE;
                 Console.WriteLine(request);
                 break;
         }
@@ -350,7 +352,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     
     //<•······················•<>•······················•>
 
-    private void SetCurrentRequest(RequestTypes type)
+    private void SetCurrentRequest(RequestType type)
     {
         CurrentRequestType = type;
     }

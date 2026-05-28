@@ -1,6 +1,6 @@
 namespace LeagueReplayFile.Enums;
 
-public enum RequestTypes
+public enum RequestType
 {
     NONE,
     VERSION,

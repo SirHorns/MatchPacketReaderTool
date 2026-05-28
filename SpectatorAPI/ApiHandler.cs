@@ -1,6 +1,7 @@
 using LeagueReplayFile;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.Models;
+using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
 using Newtonsoft.Json;
 using SpectatorAPI.Controllers;
@@ -14,7 +15,7 @@ public class ApiHandler
     private WebApplication WebApp;
     public LRF Replay;
     public string Version = "";
-    public MetaData GameMetaData;
+    public GameMetaData GameMetaData;
     private List<LastChunkInfoSection> LastChunkInfos;
     private Dictionary<int, GameDataChunkSection> GameDatas;
     private Dictionary<int, KeyFrameSection> KeyFrames;
@@ -23,7 +24,7 @@ public class ApiHandler
     public ApiHandler()
     {
         _started = false;
-        GameMetaData = new MetaData();
+        GameMetaData = new GameMetaData();
         LastChunkInfos = [];
         GameDatas = [];
         KeyFrames = [];
@@ -102,7 +103,7 @@ public class ApiHandler
         return Task.FromResult(new EndOfGameStats());
     }
     
-    private Task<MetaData> GetMetaData(string platformId, long gameId, string unknown)
+    private Task<GameMetaData> GetMetaData(string platformId, long gameId, string unknown)
     {
         var platform = GetPlatform(platformId);
         var game = GetGame(gameId);
@@ -166,12 +167,12 @@ public class ApiHandler
         var lrf = ReadLRF(lrfPath);
         switch (lrf.Type)
         {
-            case LRFTypes.HTTP:
+            case LRFType.HTTP:
                 break;
-            case LRFTypes.NAN:
+            case LRFType.NAN:
                 throw new NotImplementedException($"Replay is invalid");
-            case LRFTypes.NFO:
-            case LRFTypes.ENET:
+            case LRFType.NFO:
+            case LRFType.ENET:
                 throw new NotImplementedException($"{lrf.Type} replay is not implemented yet");
             default:
                 throw new ArgumentOutOfRangeException();
@@ -186,8 +187,7 @@ public class ApiHandler
         try
         {
             var stream = File.OpenRead(path);
-            var reader = new LRFReader();
-            lrf = reader.Read(stream);
+            lrf = LRFReader.Read(stream);
         }
         catch (Exception e)
         {
@@ -213,7 +213,7 @@ public class ApiHandler
                     break;
                 case GameMetaDataSection gameMetaDataSection:
                     json = gameMetaDataSection.Json;
-                    var metaData = JsonConvert.DeserializeObject<MetaData>(json);
+                    var metaData = JsonConvert.DeserializeObject<GameMetaData>(json);
                     GameMetaData = metaData ?? throw new NullReferenceException("Game MetaData is null!!!");
                     break;
                 case KeyFrameSection keyFrameSection:

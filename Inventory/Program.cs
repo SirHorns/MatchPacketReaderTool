@@ -38,8 +38,6 @@ if (lrfs.Count == 0)
 }
 Console.WriteLine($"Total replays found: {count}");
 
-LRFReader reader;
-
 Console.WriteLine($"Looking for {args[1]} replays...");
 
 var i = 0;
@@ -48,9 +46,7 @@ foreach (var lrfPath in lrfs)
 {
     var fileName = $"{Path.GetFileName(lrfPath)}";
     var stream = File.OpenRead(lrfPath);
-    reader = new LRFReader();
-    var metaData = reader.ReadMetaData(stream, out var type);
-    reader.Dispose();
+    var metaData = LRFReader.Read(stream, out var type);
     foreach (var player in metaData.Players)
     {
         if (player.Champion.ToLowerInvariant().Equals(args[1].ToLowerInvariant()))

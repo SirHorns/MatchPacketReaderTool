@@ -9,209 +9,183 @@ using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
 
 namespace LeagueReplayFile;
 
-/// <summary>
-/// Reads LRF file contents into a C# Object
-/// </summary>
-public class LRFReader: IDisposable
+public static class LRFReader
 {
-    private BinaryReader? _reader;
-    
-    public LRF? Read(Stream stream)
+    /// <summary>
+    /// Reads a LRF file from a stream and returns a LRF object
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <returns></returns>
+    /// <exception cref="NullReferenceException"></exception>
+    public static LRF Read(Stream stream)
     {
-        _reader = new BinaryReader(stream);
-        var header = ReadHeader();
-        var lrf = new LRF()
-        {
-            Type = LRFTypes.NAN,
-            Stream = stream,
-            BasicHeader = header
-        };
-        ReplayMetaData? metaData = null;
-        var isNFO = header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' &&
-                    header.Reserved == '\0';
+        using var reader = new BinaryReader(stream);
+        var header = ReadHeader(reader);
+        MetaData? metaData = null;
+        var isNfo = header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' && header.Reserved == '\0';
 
-        if (isNFO)
+        if (isNfo)
         {
-            var nfo = Encoding.UTF8.GetString(_reader.ReadExactBytes(4)) == "nfo";
+            var nfo = Encoding.UTF8.GetString(reader.ReadExactBytes(4)) == "nfo";
+            
         }
-        var dataSize = _reader.ReadUInt32();
-        if (isNFO)
+        var dataSize = reader.ReadUInt32();
+        if (isNfo)
         {
-            var pad = _reader.ReadUInt64();
+            var pad = reader.ReadUInt64();
         }
-        metaData = ReadMetaData((int)dataSize);
-        Console.WriteLine($"Client Version: {metaData.ClientVersion}");
-        Console.WriteLine($"Replay Version: {metaData.ReplayVersion}");
-        if (isNFO)
+        metaData = ReadMetaData(reader,(int)dataSize);
+        if (metaData == null)
         {
-            var packets = NFO();
-            lrf.Packets = packets;
+            throw new NullReferenceException("Unable to read metadata!");
+        }
+        
+        LRF lrf;
+        if (isNfo)
+        {
+            lrf = new ENetLRF()
+            {
+                Type = LRFType.NFO,
+                MetaData = metaData,
+                Stream = stream,
+                BasicHeader = header
+            };
+        }
+        else if (metaData.SpectatorMode)
+        {
+            lrf = new SpectatorLRF()
+            {
+                Type = LRFType.HTTP,
+                MetaData = metaData,
+                Stream = stream,
+                BasicHeader = header
+            };
+        }
+        else
+        {
+            lrf = new ENetLRF()
+            {
+                Type = LRFType.ENET,
+                MetaData = metaData,
+                Stream = stream,
+                BasicHeader = header
+            };
+        }
+        if (isNfo)
+        {
+            NFO((ENetLRF)lrf, reader);
         } 
         else
         {
             var offsetStart = stream.Position;
-
             // Stream data
             var streamOffset = metaData.DataIndex.First(kvp => kvp.Key == "stream").Value;
-            var data = _reader.ReadExactBytes(streamOffset.Size);
+            var data = reader.ReadExactBytes(streamOffset.Size);
             if((data[0] & 0x4C) != 0)
             {
                 data = BDODecompress.Decompress(data);
             }
             
-            ENetGameClientVersions version;
-            var clientVersion = metaData.ClientVersion;
-            if (string.IsNullOrEmpty(clientVersion))
-            {
-                version = ENetGameClientVersions.Unknown;
-            }
-            else
-            {
-                var majorVersion = int.Parse(clientVersion.Split('.')[0]);
-                switch (majorVersion)
-                { 
-                    case 1:
-                        version = ENetGameClientVersions.Patch1;
-                        break;
-                    case 2:
-                        version = ENetGameClientVersions.Patch2;
-                        break;
-                    case 3:
-                        version = ENetGameClientVersions.Patch3;
-                        break;
-                    case 4:
-                        version = ENetGameClientVersions.Patch4;
-                        break;
-                    case 5:
-                        version = ENetGameClientVersions.Patch5;
-                        break;
-                    case 6:
-                        version = ENetGameClientVersions.Patch6;
-                        break;
-                    case 7:
-                        version = ENetGameClientVersions.Patch7;
-                        break;
-                    case 8:
-                        version = ENetGameClientVersions.Patch8;
-                        break;
-                    case < 8:
-                    default:
-                        version = ENetGameClientVersions.Unknown;
-                        break;
-                }
-            }
             if (metaData.SpectatorMode)
             {
-                Console.WriteLine("SpectatorMode");
-                var sections = Spectator(metaData, data);
+                var sections = Spectator((SpectatorLRF)lrf, data);
                 lrf.Sections = sections;
             }
             else if (metaData.IsStream)
             {
-                Console.WriteLine("Stream");
-                var packets = Stream(version, metaData, data);
+                var packets = Stream((ENetLRF)lrf, data);
                 lrf.Packets = packets;
             }
             else if (metaData.ObserverStream)
             {
-                Console.WriteLine("ObserverStream");
-                var packets = Stream(version, metaData, data);
+                var packets = Stream((ENetLRF)lrf, data);
                 lrf.Packets = packets;
             }
             else
             {
-                Console.WriteLine("POVStream");
-                var packets = Stream(version, metaData, data);
+                var packets = Stream((ENetLRF)lrf, data);
                 lrf.Packets = packets;
             }
         }
-
-        if (isNFO)
-        {
-            lrf.Type = LRFTypes.NFO; // LRF is a NFO replay
-        }
-        else
-        {
-            if (metaData.SpectatorMode)
-            {
-                lrf.Type = LRFTypes.HTTP;
-            }
-            else
-            {
-                lrf.Type = LRFTypes.ENET;
-            }
-        }
-        lrf.MetaData = metaData;
+        
         return lrf;
     }
 
-    public ReplayMetaData? ReadMetaData(Stream stream, out LRFTypes type)
+    /// <summary>
+    /// Reads a LRF file from a stream and returns an LRF MetaData
+    /// </summary>
+    /// <param name="stream"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static MetaData? Read(Stream stream, out LRFType type)
     {
-        _reader = new BinaryReader(stream);
-        var header = ReadHeader();
+        using var reader = new BinaryReader(stream);
+        var header = ReadHeader(reader);
 
-        ReplayMetaData? metaData = null;
+        MetaData? metaData = null;
         var isNFO = header.Unused == 'n' && header.Version == 'f' && header.Compressed == 'o' &&
                     header.Reserved == '\0';
 
         if (isNFO)
         {
-            var nfo = Encoding.UTF8.GetString(_reader.ReadExactBytes(4)) == "nfo";
+            var nfo = Encoding.UTF8.GetString(reader.ReadExactBytes(4)) == "nfo";
         }
-        var dataSize = _reader.ReadUInt32();
+        var dataSize = reader.ReadUInt32();
         if (isNFO)
         {
-            var pad = _reader.ReadUInt64();
+            var pad = reader.ReadUInt64();
         }
-        metaData = ReadMetaData((int)dataSize);
+        metaData = ReadMetaData(reader, (int)dataSize);
         
         if (isNFO)
         {
-            type = LRFTypes.NFO; // LRF is a NFO replay
+            type = LRFType.NFO; // LRF is a NFO replay
         }
         else
         {
-            type = metaData.SpectatorMode ? LRFTypes.HTTP : LRFTypes.ENET;
+            type = metaData.SpectatorMode ? LRFType.HTTP : LRFType.ENET;
         }
         
         return metaData;
     }
     
-    private BasicHeader ReadHeader()
+    //
+    
+    private static BasicHeader ReadHeader(BinaryReader reader)
     {
         return new BasicHeader()
         {
-            Unused = _reader.ReadByte(),
-            Version = _reader.ReadByte(),
-            Compressed = _reader.ReadByte(),
-            Reserved = _reader.ReadByte()
+            Unused = reader.ReadByte(),
+            Version = reader.ReadByte(),
+            Compressed = reader.ReadByte(),
+            Reserved = reader.ReadByte()
         };
     }
 
-    public ReplayMetaData? ReadMetaData(int dataSize)
+    private static MetaData? ReadMetaData(BinaryReader reader, int dataSize)
     {
-        var bytes = _reader.ReadExactBytes(dataSize);
+        var bytes = reader.ReadExactBytes(dataSize);
         var json = Encoding.UTF8.GetString(bytes);
-        var metadata = JsonConvert.DeserializeObject<ReplayMetaData>(json);
+        var metadata = JsonConvert.DeserializeObject<MetaData>(json);
         return metadata;
     }
     
-    private List<ENetPacket> NFO()
+    private static void NFO(ENetLRF lrf, BinaryReader reader)
     {
         var rawPackets = new List<ENetPacket>();
-        while(_reader.BaseStream.Position < _reader.BaseStream.Length)
+        while(reader.BaseStream.Position < reader.BaseStream.Length)
         {
-            var dataSize = (int)_reader.ReadUInt32();
-            var time = _reader.ReadSingle();
-            var channel = _reader.ReadByte();
-            var reserved = _reader.ReadExactBytes(3);
+            var dataSize = (int)reader.ReadUInt32();
+            var time = reader.ReadSingle();
+            var channel = reader.ReadByte();
+            var reserved = reader.ReadExactBytes(3);
 
             if(dataSize == 0)
             {
                 continue;
             }
 
-            var pktData = _reader.ReadExactBytes(dataSize);
+            var pktData = reader.ReadExactBytes(dataSize);
 
             rawPackets.Add(new ENetPacket()
             {
@@ -224,29 +198,65 @@ public class LRFReader: IDisposable
             var remain = dataSize % 16;
             if(remain != 0)
             {
-                _reader.BaseStream.Seek(16 - remain, SeekOrigin.Current);
+                reader.BaseStream.Seek(16 - remain, SeekOrigin.Current);
             }
         }
-
-        return rawPackets;
+        lrf.Packets = rawPackets;
     }
 
-    private List<Section> Spectator(ReplayMetaData metaData, byte[] data)
+    private static List<Section> Spectator(SpectatorLRF lrf, byte[] data)
     {
-        var parser = new HttpReplayParser(metaData.EncryptionKey, metaData.MatchId);
+        var parser = new HttpReplayParser(lrf.MetaData.EncryptionKey, lrf.MetaData.MatchId);
         parser.Read(data);
         return parser.Sections;
     }
     
-    private List<ENetPacket> Stream(ENetGameClientVersions version, ReplayMetaData metaData, byte[] data)
+    private static List<ENetPacket> Stream(ENetLRF lrf, byte[] data)
     {
-        var parser = new StreamReplayParser(version, metaData.EncryptionKey);
+        ENetGameClientVersions version;
+        var clientVersion = lrf.MetaData.ClientVersion;
+        if (string.IsNullOrEmpty(clientVersion))
+        {
+            version = ENetGameClientVersions.Unknown;
+        }
+        else
+        {
+            var majorVersion = int.Parse(clientVersion.Split('.')[0]);
+            switch (majorVersion)
+            { 
+                case 1:
+                    version = ENetGameClientVersions.Patch1;
+                    break;
+                case 2:
+                    version = ENetGameClientVersions.Patch2;
+                    break;
+                case 3:
+                    version = ENetGameClientVersions.Patch3;
+                    break;
+                case 4:
+                    version = ENetGameClientVersions.Patch4;
+                    break;
+                case 5:
+                    version = ENetGameClientVersions.Patch5;
+                    break;
+                case 6:
+                    version = ENetGameClientVersions.Patch6;
+                    break;
+                case 7:
+                    version = ENetGameClientVersions.Patch7;
+                    break;
+                case 8:
+                    version = ENetGameClientVersions.Patch8;
+                    break;
+                case < 8:
+                default:
+                    version = ENetGameClientVersions.Unknown;
+                    break;
+            }
+        }
+        
+        var parser = new StreamReplayParser(version, lrf.MetaData.EncryptionKey);
         parser.Read(data);
         return parser.Packets;
-    }
-    
-    public void Dispose()
-    {
-        _reader?.Dispose();
     }
 }

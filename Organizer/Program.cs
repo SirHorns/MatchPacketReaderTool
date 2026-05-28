@@ -49,9 +49,7 @@ foreach (var lrfPath in lrfs)
 {
     var fileName = $"{Path.GetFileName(lrfPath)}";
     var stream = File.OpenRead(lrfPath);
-    var reader = new LRFReader();
-    var metaData = reader.ReadMetaData(stream, out var type);
-    reader.Dispose();
+    var metaData = LRFReader.Read(stream, out var type);
     Directory.CreateDirectory($"{root}/{type}/{metaData.ClientVersion}");
     var newLocation = $"{root}/{type}/{metaData.ClientVersion}/{fileName}";
     File.Move(lrfPath, newLocation);

@@ -1,4 +1,4 @@
-namespace LeagueReplayFile.Models;
+namespace LeagueReplayFile.Models.Http;
 
 public class PendingAvailableChunkInfo
 {

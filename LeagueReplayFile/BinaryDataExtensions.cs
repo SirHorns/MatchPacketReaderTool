@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using LeagueReplayFile.Encryption;
 using LeagueReplayFile.Models;
 
 namespace LeagueReplayFile;

@@ -1,3 +1,4 @@
+using LeagueReplayFile.Models.Http;
 using Newtonsoft.Json.Linq;
 
 namespace LeagueReplayFile.Models.Sections;
@@ -8,7 +9,7 @@ public class GameMetaDataSection : Section, IJsonSection
 {
     
     public string Json { get;  set; }
-    public MetaData MetaData { get;  set; } = new MetaData();
+    public GameMetaData ReplayMetaData { get;  set; } = new GameMetaData();
     
 
     public void SetValues(string json)
@@ -16,7 +17,7 @@ public class GameMetaDataSection : Section, IJsonSection
         Json = json;
         
         var job = JObject.Parse(json);
-        MetaData = job.ToObject<MetaData>();
+        ReplayMetaData = job.ToObject<GameMetaData>() ?? new GameMetaData();
         
         /*GameId = job.Value<int>("gameId");
         GameKey = job["gameKey"].ToObject<GameKey>() ?? new GameKey(-1, "");

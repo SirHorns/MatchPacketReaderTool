@@ -1,0 +1,41 @@
+namespace LeagueReplayFile.Models.Http;
+
+public record GameKey(int GameId, string PlatformId);
+
+public record AvailableChunkInfo(int Id, float Duration, string ReceivedTime);
+
+public record AvailableKeyFrameInfo();
+
+/// <summary>
+/// MetaData found in a HTTP replay
+/// </summary>
+public class GameMetaData
+{
+    public int GameId { get;  set; }
+    public GameKey GameKey { get;  set; }
+    public string GameServerAddress { get;  set; }
+    public int Port { get;  set; }
+    public string EncryptionKey { get;  set; }
+    public int ChunkTimeInterval { get;  set; }
+    public string StartTime { get;  set; }
+    public bool GameEnded { get;  set; }
+    public int LastChunkId { get;  set; }
+    public int LastKeyFrameId { get;  set; }
+    public int LastAvailableChunkId { get;  set; }
+    public int EndStartupChunkId { get;  set; }
+    public int DelayTime { get;  set; }
+    public AvailableChunkInfo[] PendingAvailableChunkInfo { get;  set; }
+    public AvailableKeyFrameInfo[] PendingAvailableKeyFrameInfo { get;  set; }
+    public int KeyFrameTimeInterval { get;  set; }
+    public string DecodedEncryptionKey { get;  set; }
+    public int StartGameChunkId { get;  set; }
+    public int GameLength { get;  set; }
+    public int ClientAddedLag { get;  set; }
+    public bool ClientBackFetchingEnabled { get;  set; }
+    public int ClientBackFetchingFreq { get;  set; }
+    public int InterestScore { get;  set; }
+    public bool FeaturedGame { get;  set; }
+    public string CreateTime { get;  set; }
+    public int EndGameChunkId { get;  set; }
+    public int EndGameKeyFrameId { get;  set; }
+}

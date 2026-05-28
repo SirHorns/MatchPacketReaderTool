@@ -13,13 +13,13 @@ public partial class Unhasher
         Console.WriteLine("Unhashing is still a WIP");
         switch (slrf.Type)
         {
-            case LRFTypes.HTTP:
+            case LRFType.HTTP:
                 break;
-            case LRFTypes.NFO:
-            case LRFTypes.ENET:
+            case LRFType.NFO:
+            case LRFType.ENET:
                 UnhashPackets(slrf.Packets);
                 break;
-            case LRFTypes.NAN:
+            case LRFType.NAN:
             default:
                 throw new ArgumentOutOfRangeException();
         }

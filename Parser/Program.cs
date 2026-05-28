@@ -184,8 +184,7 @@ public static class Program
         try
         {
             var stream = File.OpenRead(path);
-            var reader = new LRFReader();
-            lrf = reader.Read(stream);
+            lrf = LRFReader.Read(stream);
         }
         catch (Exception e)
         {
@@ -269,8 +268,8 @@ public static class Program
         var dict = new Dictionary<Type, int>();
         switch (slrf.Type)
         {
-            case LRFTypes.NFO:
-            case LRFTypes.ENET:
+            case LRFType.NFO:
+            case LRFType.ENET:
                 foreach (var sp in slrf.Packets)
                 {
                     if (sp.Packet is not BasePacket packet)
@@ -289,7 +288,7 @@ public static class Program
                     }
                 }
                 break;
-            case LRFTypes.HTTP:
+            case LRFType.HTTP:
                 foreach (var section in slrf.Sections)
                 {
                     switch (section)
