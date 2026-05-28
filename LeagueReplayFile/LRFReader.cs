@@ -88,23 +88,11 @@ public static class LRFReader
             
             if (metaData.SpectatorMode)
             {
-                var sections = Spectator((SpectatorLRF)lrf, data);
-                lrf.Sections = sections;
+               Spectator((SpectatorLRF)lrf, data);
             }
-            else if (metaData.IsStream)
+            else //if (metaData.IsStream || metaData.ObserverStream)
             {
-                var packets = Stream((ENetLRF)lrf, data);
-                lrf.Packets = packets;
-            }
-            else if (metaData.ObserverStream)
-            {
-                var packets = Stream((ENetLRF)lrf, data);
-                lrf.Packets = packets;
-            }
-            else
-            {
-                var packets = Stream((ENetLRF)lrf, data);
-                lrf.Packets = packets;
+                Stream((ENetLRF)lrf, data);
             }
         }
         
@@ -204,14 +192,14 @@ public static class LRFReader
         lrf.Packets = rawPackets;
     }
 
-    private static List<Section> Spectator(SpectatorLRF lrf, byte[] data)
+    private static void Spectator(SpectatorLRF lrf, byte[] data)
     {
         var parser = new HttpReplayParser(lrf.MetaData.EncryptionKey, lrf.MetaData.MatchId);
         parser.Read(data);
-        return parser.Sections;
+        lrf.Sections = parser.Sections;
     }
     
-    private static List<ENetPacket> Stream(ENetLRF lrf, byte[] data)
+    private static void Stream(ENetLRF lrf, byte[] data)
     {
         ENetGameClientVersions version;
         var clientVersion = lrf.MetaData.ClientVersion;
@@ -254,9 +242,8 @@ public static class LRFReader
                     break;
             }
         }
-        
         var parser = new StreamReplayParser(version, lrf.MetaData.EncryptionKey);
         parser.Read(data);
-        return parser.Packets;
+        lrf.Packets = parser.Packets;
     }
 }
