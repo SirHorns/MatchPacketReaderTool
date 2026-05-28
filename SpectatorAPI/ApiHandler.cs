@@ -14,16 +14,16 @@ public class ApiHandler
     private WebApplication WebApp;
     public LRF Replay;
     public string Version = "";
-    public GameMetaData GameMetaData;
+    public MetaData GameMetaData;
     private List<LastChunkInfoSection> LastChunkInfos;
-    private Dictionary<int, GameDataSection> GameDatas;
+    private Dictionary<int, GameDataChunkSection> GameDatas;
     private Dictionary<int, KeyFrameSection> KeyFrames;
     private int Index { get; set; } = 0;
 
     public ApiHandler()
     {
         _started = false;
-        GameMetaData = new GameMetaData();
+        GameMetaData = new MetaData();
         LastChunkInfos = [];
         GameDatas = [];
         KeyFrames = [];
@@ -102,7 +102,7 @@ public class ApiHandler
         return Task.FromResult(new EndOfGameStats());
     }
     
-    private Task<GameMetaData> GetMetaData(string platformId, long gameId, string unknown)
+    private Task<MetaData> GetMetaData(string platformId, long gameId, string unknown)
     {
         var platform = GetPlatform(platformId);
         var game = GetGame(gameId);
@@ -205,7 +205,7 @@ public class ApiHandler
             string json;
             switch (section)
             {
-                case GameDataSection gameDataSection:
+                case GameDataChunkSection gameDataSection:
                     if (!GameDatas.TryAdd(gameDataSection.ID, gameDataSection))
                     {
                         //Console.WriteLine($"Duplicate GameDataSection ID: {gameDataSection.ID}");
@@ -213,7 +213,7 @@ public class ApiHandler
                     break;
                 case GameMetaDataSection gameMetaDataSection:
                     json = gameMetaDataSection.Json;
-                    var metaData = JsonConvert.DeserializeObject<GameMetaData>(json);
+                    var metaData = JsonConvert.DeserializeObject<MetaData>(json);
                     GameMetaData = metaData ?? throw new NullReferenceException("Game MetaData is null!!!");
                     break;
                 case KeyFrameSection keyFrameSection:

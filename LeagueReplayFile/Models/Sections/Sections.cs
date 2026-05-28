@@ -12,6 +12,7 @@ public class Section
     public float Time { get; set; }
     public DataSegment Segment { get; set; }
 
+    
 
     public Section Copy(Section section, RequestTypes? type = null, string? http = null, byte[]? data = null, float? time = null)
     {

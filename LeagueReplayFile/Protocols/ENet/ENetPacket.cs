@@ -13,7 +13,7 @@ public class ENetPacket
     public int BlockParam { get; set; }
     public byte PacketTypeID { get; set; }
     
-    public static ENetPacket Read(BinaryReader reader)
+    public static ENetPacket Create(BinaryReader reader)
     {
         var time = 0.0f;
         byte packetType = 0;

@@ -18,7 +18,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
     public List<DataSegment> Segments { get; }
     public List<ENetPacket> Packets { get; }
     public List<Section> Sections { get; }
-    public RequestTypes CurrentRequest { get; private set; }
+    public RequestTypes CurrentRequestType { get; private set; }
 
     public HttpReplayParser(byte[] encryptionKey, long matchId)
     {
@@ -26,7 +26,7 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         var checksumBlowfish = new BlowFish(checksumKey);
         var realKey = checksumBlowfish.Decrypt(encryptionKey);
         _blowfish = new BlowFish(realKey.Take(16).ToArray());
-        CurrentRequest = RequestTypes.NONE;
+        CurrentRequestType = RequestTypes.NONE;
         Sections = [];
         Packets = [];
         Segments = [];
@@ -51,75 +51,73 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         }
     }
 
-    private MemoryStream Decompress(byte[] data)
-    {
-        var decrypted = _blowfish.Decrypt(data);
-        var decompressed = new MemoryStream();
-        using var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress);
-        compressed.CopyTo(decompressed);
-        decompressed.Seek(0, SeekOrigin.Begin);
-        return decompressed;
-    }
-
     //<•······················•<>•······················•>
     
     protected override void OnGetBinary(byte[] data)
     {
-        List<ENetPacket> pkts;
-        var decompressed = Decompress(data);
-        decompressed.Seek(0, SeekOrigin.Begin);
-        using (var reader = new BinaryReader(decompressed))
+        var decompressed = _blowfish.DecompressToMemoryStream(data);
+        using var reader = new BinaryReader(decompressed) ;
+        var pkts = new List<ENetPacket>();
+        while (reader.BaseStream.Position < reader.BaseStream.Length)
         {
-            pkts = ReadSectionPackets(reader);
+            var packet = ENetPacket.Create(reader);
+            pkts.Add(packet);
         }
-
-        switch (CurrentSection)
+        
+        switch (SectionBuffer)
         {
-            case GameDataSection gameDataSection:
+            case GameDataChunkSection gameDataSection:
+                gameDataSection.PacketData = data;
                 gameDataSection.Chunk.Packets.AddRange(pkts);
                 break;
             case KeyFrameSection keyFrameSection:
+                keyFrameSection.PacketData = data;
                 keyFrameSection.Packets.AddRange(pkts);
                 break;
         }
         
-        Sections.Add(CurrentSection);
+        Sections.Add(SectionBuffer);
     }
     
     protected override void OnGetText(byte[] data)
     {
-        switch (CurrentRequest)
+        switch (CurrentRequestType)
         {
-            case RequestTypes.VERSION:
-                ((VersionSection)CurrentSection).Text = Encoding.UTF8.GetString(data);
-                break;
-            case RequestTypes.GAME_META_DATA:
-                ((GameMetaDataSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
-                break;
-            case RequestTypes.LAST_CHUNK_INFO:
-                ((LastChunkInfoSection)CurrentSection).Json = Encoding.UTF8.GetString(data);
-                break;
             case RequestTypes.END_OF_GAME_STATS:
-                break;
             case RequestTypes.KEY_FRAME:
             case RequestTypes.GAME_DATA_CHUNK:
             case RequestTypes.NONE:
-            default:
-                Console.WriteLine($"Attempted to get text from non-text section!: {CurrentRequest}");
+                Console.WriteLine($"Attempted to get text from non-text section!: {CurrentRequestType}");
+                return;
+        }
+
+        var json = Encoding.UTF8.GetString(data);
+        switch (CurrentRequestType)
+        {
+            case RequestTypes.VERSION:
+            case RequestTypes.GAME_META_DATA:
+            case RequestTypes.LAST_CHUNK_INFO:
+                (SectionBuffer as IJsonSection)?.SetValues(json);
                 break;
         }
 
         // probbly a better way to do this
         // but most non data chunks so far are at most a little over 800 bytes
-        if (data.Length > 900)
+        /*if (data.Length > 900)
         {
             OnGetBinary(data);
-        }
+        }*/
     }
     
+    /// <summary>
+    /// Reads the next HTTP request
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="time"></param>
+    /// <param name="segment"></param>
     protected override void OnDone(byte[] data, float time, DataSegment segment)
     {
-        CurrentSection = new Section()
+        SectionBuffer = new Section()
         {
             Segment = segment,
         };
@@ -137,9 +135,9 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
 
         var replayReq = req[1];
 
-        CurrentSection.Http = replayReq;
-        CurrentSection.Data = data;
-        CurrentSection.Time = time;
+        SectionBuffer.Http = replayReq;
+        SectionBuffer.Data = data;
+        SectionBuffer.Time = time;
 
         switch (httpReq)
         {
@@ -163,47 +161,47 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
                 break;
         }
         
-        Sections.Add(CurrentSection);
+        Sections.Add(SectionBuffer);
     }
 
     protected override void OnContinueBinary(byte[] data )
     {
-        Buffer.AddRange(data);
-        if (Buffer.Count > BufferExpectedLength)
+        ByteBuffer.AddRange(data);
+        if (ByteBuffer.Count > ExpectedLengthBuffer)
         {
             throw new IOException("Buffer overrun!");
         }
 
-        if (Buffer.Count != BufferExpectedLength)
+        if (ByteBuffer.Count != ExpectedLengthBuffer)
         {
             return;
         }
 
-        OnGetBinary(Buffer.ToArray());
+        OnGetBinary(ByteBuffer.ToArray());
         SetHttpState(HttpState.Done);
-        Sections.Add(CurrentSection);
-        Buffer.Clear();
-        BufferExpectedLength = 0;
+        Sections.Add(SectionBuffer);
+        ByteBuffer.Clear();
+        ExpectedLengthBuffer = 0;
     }
     
     protected override void OnContinueText(byte[] data)
     {
-        Buffer.AddRange(data);
-        if (Buffer.Count > BufferExpectedLength)
+        ByteBuffer.AddRange(data);
+        if (ByteBuffer.Count > ExpectedLengthBuffer)
         {
             throw new IOException("Buffer overrun!");
         }
 
-        if (Buffer.Count != BufferExpectedLength)
+        if (ByteBuffer.Count != ExpectedLengthBuffer)
         {
             return;
         }
 
-        OnGetText(Buffer.ToArray());
+        OnGetText(ByteBuffer.ToArray());
         SetHttpState(HttpState.Done);
-        Sections.Add(CurrentSection);
-        Buffer.Clear();
-        BufferExpectedLength = 0;
+        Sections.Add(SectionBuffer);
+        ByteBuffer.Clear();
+        ExpectedLengthBuffer = 0;
     }
     
     //<•······················•<>•······················•>
@@ -246,8 +244,8 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         {
             if (content.Length < contentLength)
             {
-                Buffer.AddRange(content);
-                BufferExpectedLength = contentLength;
+                ByteBuffer.AddRange(content);
+                ExpectedLengthBuffer = contentLength;
                 SetHttpState(HttpState.ContinueText);
             }
             else
@@ -259,8 +257,8 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         {
             if (content.Length < contentLength)
             {
-                Buffer.AddRange(content);
-                BufferExpectedLength = contentLength;
+                ByteBuffer.AddRange(content);
+                ExpectedLengthBuffer = contentLength;
                 SetHttpState(HttpState.ContinueBinary);
             }
             else
@@ -276,64 +274,59 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
         if (request.Equals("\r\n"))
         {
             SetHttpState(HttpState.Done);
-            Sections.Add(CurrentSection);
+            Sections.Add(SectionBuffer);
             return;
         }
 
         var api = request.Split("/");
-        var http = CurrentSection.Http.Split("/");
+        var http = SectionBuffer.Http.Split("/");
         switch (api[4])
         {
             case "version":
                 SetCurrentRequest(RequestTypes.VERSION);
                 SetHttpState(HttpState.GetText);
-                CurrentSection = new VersionSection()
-                {
-                }.Copy(CurrentSection, type: RequestTypes.VERSION);
+                SectionBuffer = new VersionSection().Copy(SectionBuffer, type: RequestTypes.VERSION);
                 break;
             case "getGameMetaData":
                 SetCurrentRequest(RequestTypes.GAME_META_DATA);
                 SetHttpState(HttpState.GetText);
-                CurrentSection = new GameMetaDataSection()
-                {
-                    GameId = int.Parse(http[^2])
-                }.Copy(CurrentSection, type: RequestTypes.GAME_META_DATA);
+                SectionBuffer = new GameMetaDataSection().Copy(SectionBuffer, type: RequestTypes.GAME_META_DATA);
                 break;
-            case "getLastChunkInfo":
+            case "getLastChunkInfo":    // /RestServicePath + /consumer/getGameDataChunk + /platformID + /gameID + /minTimeAvailable + /AccessToken
                 SetCurrentRequest(RequestTypes.LAST_CHUNK_INFO);
                 SetHttpState(HttpState.GetText);
-                CurrentSection = new LastChunkInfoSection()
+                SectionBuffer = new LastChunkInfoSection()
                 {
-                    Unknown = int.Parse(http[^2])
-                }.Copy(CurrentSection, type: RequestTypes.LAST_CHUNK_INFO);
+                    MinTimeAvailable = int.Parse(http[^2])
+                }.Copy(SectionBuffer, type: RequestTypes.LAST_CHUNK_INFO);
                 break;
-            case "getKeyFrame":
+            case "getKeyFrame":         // /RestServicePath + /consumer/getKeyFrame + /platformID + /gameID + /chunkID + /AccessToken
                 SetCurrentRequest(RequestTypes.KEY_FRAME);
                 SetHttpState(HttpState.GetBinary);
-                CurrentSection = new KeyFrameSection()
+                SectionBuffer = new KeyFrameSection()
                 {
                     ID = int.Parse(http[^2])
-                }.Copy(CurrentSection, type: RequestTypes.KEY_FRAME);
+                }.Copy(SectionBuffer, type: RequestTypes.KEY_FRAME);
                 break;
-            case "getGameDataChunk":
+            case "getGameDataChunk":    // /RestServicePath + /consumer/getGameDataChunk + /platformID +/gameID +/chunkID + /AccessToken
                 SetCurrentRequest(RequestTypes.GAME_DATA_CHUNK);
                 SetHttpState(HttpState.GetBinary);
                 var id = int.Parse(http[^2]);
                 var gameId = long.Parse(http[^3]);
-                CurrentSection = new GameDataSection
+                SectionBuffer = new GameDataChunkSection
                 {
                     ID = id,
                     GameId = gameId,
-                    Chunk = new GameDataChunk()
+                    Chunk = new Chunk()
                     {
                         ID = id
                     }
-                }.Copy(CurrentSection, type: RequestTypes.GAME_DATA_CHUNK);
+                }.Copy(SectionBuffer, type: RequestTypes.GAME_DATA_CHUNK);
                 break;
-            case "endOfGameStats":
-                throw new NotImplementedException("endOfGameStats is not implemented yet");
+            case "end":                 // /RestServicePath + /consumer/end + unknown-args
+                throw new NotImplementedException("end (OfGameStats) is not implemented yet");
             default:
-                CurrentSection.Type = RequestTypes.NONE;
+                SectionBuffer.Type = RequestTypes.NONE;
                 Console.WriteLine(request);
                 break;
         }
@@ -359,19 +352,6 @@ public class HttpReplayParser : HttpProtocol, ILRFParser
 
     private void SetCurrentRequest(RequestTypes type)
     {
-        CurrentRequest = type;
-    }
-    
-    //<•······················•<>•······················•>
-    
-    private List<ENetPacket> ReadSectionPackets(BinaryReader reader)
-    {
-        var pkts = new List<ENetPacket>();
-        while (reader.BaseStream.Position < reader.BaseStream.Length)
-        {
-            var packet = ENetPacket.Read(reader);;
-            pkts.Add(packet);
-        }
-        return pkts;
+        CurrentRequestType = type;
     }
 }

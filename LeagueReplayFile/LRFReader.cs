@@ -61,39 +61,45 @@ public class LRFReader: IDisposable
             
             ENetGameClientVersions version;
             var clientVersion = metaData.ClientVersion;
-            var majorVersion = int.Parse(clientVersion.Split('.')[0]);
-            switch (majorVersion)
-            { 
-                case 1:
-                    version = ENetGameClientVersions.Patch1;
-                    break;
-                case 2:
-                    version = ENetGameClientVersions.Patch2;
-                    break;
-                case 3:
-                    version = ENetGameClientVersions.Patch3;
-                    break;
-                case 4:
-                    version = ENetGameClientVersions.Patch4;
-                    break;
-                case 5:
-                    version = ENetGameClientVersions.Patch5;
-                    break;
-                case 6:
-                    version = ENetGameClientVersions.Patch6;
-                    break;
-                case 7:
-                    version = ENetGameClientVersions.Patch7;
-                    break;
-                case 8:
-                    version = ENetGameClientVersions.Patch8;
-                    break;
-                case < 8:
-                default:
-                    version = ENetGameClientVersions.Unknown;
-                    break;
+            if (string.IsNullOrEmpty(clientVersion))
+            {
+                version = ENetGameClientVersions.Unknown;
             }
-        
+            else
+            {
+                var majorVersion = int.Parse(clientVersion.Split('.')[0]);
+                switch (majorVersion)
+                { 
+                    case 1:
+                        version = ENetGameClientVersions.Patch1;
+                        break;
+                    case 2:
+                        version = ENetGameClientVersions.Patch2;
+                        break;
+                    case 3:
+                        version = ENetGameClientVersions.Patch3;
+                        break;
+                    case 4:
+                        version = ENetGameClientVersions.Patch4;
+                        break;
+                    case 5:
+                        version = ENetGameClientVersions.Patch5;
+                        break;
+                    case 6:
+                        version = ENetGameClientVersions.Patch6;
+                        break;
+                    case 7:
+                        version = ENetGameClientVersions.Patch7;
+                        break;
+                    case 8:
+                        version = ENetGameClientVersions.Patch8;
+                        break;
+                    case < 8:
+                    default:
+                        version = ENetGameClientVersions.Unknown;
+                        break;
+                }
+            }
             if (metaData.SpectatorMode)
             {
                 Console.WriteLine("SpectatorMode");

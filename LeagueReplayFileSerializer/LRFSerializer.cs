@@ -144,7 +144,7 @@ public static partial class LRFSerializer
             var section = sections[i];
             switch (section)
             {
-                case GameDataSection gameDataSection:
+                case GameDataChunkSection gameDataSection:
                     var sgds = new SerializedGameDataSection()
                     {
                         Type = gameDataSection.Type,

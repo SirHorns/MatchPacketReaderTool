@@ -11,20 +11,18 @@ public abstract class HttpProtocol
 
     protected static byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
 
-    
-    
-    private HttpState _httpState = HttpState.Done;
-    
-    
-    protected List<byte> Buffer { get; }
-    protected long BufferExpectedLength { get; set; }
-    protected Section CurrentSection { get; set; }
+
+
+    public HttpState CurrentHttpState { get; private set; }
+    protected List<byte> ByteBuffer { get; }
+    protected long ExpectedLengthBuffer { get; set; }
+    protected Section? SectionBuffer { get; set; }
 
 
     protected HttpProtocol()
     {
-        Buffer = [];
-        
+        ByteBuffer = [];
+        CurrentHttpState = HttpState.Done;
     }
 
 
@@ -33,56 +31,29 @@ public abstract class HttpProtocol
         var data = segment.Data;
         var time = segment.Time;
 
-        switch (_httpState)
+        switch (CurrentHttpState)
         {
             case HttpState.GetBinary:
-                HandleGetBinary(data);
+                OnGetBinary(data);
+                SetHttpState(HttpState.Done);
                 break;
             case HttpState.GetText:
-                HandleGetText(data);
+                OnGetText(data);
+                SetHttpState(HttpState.Done);
                 break;
             case HttpState.Done:
-                HandleDone(data, time, segment);
+                OnDone(data, time, segment);
                 break;
             case HttpState.ContinueBinary:
-                HandleContinueBinary(data);
+                OnContinueBinary(data);
                 break;
             case HttpState.ContinueText:
-                HandleContinueText(data);
+                OnContinueText(data);
                 break;
             default:
-                Console.WriteLine($"Skipped Segment: {_httpState}");
+                Console.WriteLine($"Skipped Segment: {CurrentHttpState}");
                 break;
         }
-    }
-    
-    //<•······················•<>•······················•>
-
-    private void HandleGetBinary(byte[] data)
-    {
-        OnGetBinary(data);
-        SetHttpState(HttpState.Done);
-    }
-    
-    private void HandleGetText(byte[] data)
-    {
-        OnGetText(data);
-        SetHttpState(HttpState.Done);
-    }
-    
-    private void HandleDone(byte[] data, float time, DataSegment segment)
-    {
-        OnDone(data, time, segment);
-    }
-    
-    private void HandleContinueBinary(byte[] data)
-    {
-        OnContinueBinary(data);
-    }
-    
-    private void HandleContinueText(byte[] data)
-    {
-        OnContinueText(data);
     }
     
     //<•······················•<>•······················•>
@@ -95,8 +66,5 @@ public abstract class HttpProtocol
     
     //<•······················•<>•······················•>
 
-    protected void SetHttpState(HttpState state)
-    {
-        _httpState = state;
-    }
+    protected void SetHttpState(HttpState state) => CurrentHttpState = state;
 }
