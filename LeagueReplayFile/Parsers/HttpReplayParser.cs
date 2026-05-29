@@ -317,17 +317,62 @@ public class HttpReplayParser : HttpProtocol
             Segment = segment,
         };
 
-        var req = Encoding.UTF8.GetString(data).Split(' ');
+        
+        var str = Encoding.UTF8.GetString(data);
 
+        if (str.StartsWith("<"))
+        {
+            //Console.WriteLine("XMPP in stream http stream??");
+            //str.Replace("<>", "");
+            //str.Replace("</>", "");
+            Console.WriteLine($"[XMPP]: {str}");
+            return;
+        }
+        
+        var req = str.Split(' ');
         var httpReq = req[0];
 
         if (req.Length <= 1)
         {
-            // weird http done req?
-            // TODO: track janky requests
+            var message = Testing.Read(data);
+            switch (message.Type)
+            {
+                case MessageTypes.GAME_START:
+                    break;
+                case MessageTypes.GAME_END:
+                    break;
+                case MessageTypes.GAME_CRASHED:
+                    break;
+                case MessageTypes.CLOSE:
+                    break;
+                case MessageTypes.HEARTBEAT:
+                case MessageTypes.ACK:
+                    return;
+                case MessageTypes.GAMECLIENT_CREATE:
+                    break;
+                case MessageTypes.GAMECLIENT_ABANDONED:
+                    break;
+                case MessageTypes.GAMECLIENT_LAUNCHED:
+                    break;
+                case MessageTypes.GAMECLIENT_STOPPED:
+                    break;
+                case MessageTypes.GAMECLIENT_CONNECTED_TO_SERVER:
+                    break;
+                case MessageTypes.CHATMESSAGE_TO_GAME:
+                    break;
+                case MessageTypes.CHATMESSAGE_FROM_GAME:
+                    var reader = new BinaryReader(new MemoryStream(data));
+                    var bytes = reader.ReadBytes(message.DataLength);
+                    break;
+                case MessageTypes.DUMMY:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            Console.WriteLine($"[MAESTRO]: <{string.Join(",", data)}>\n<{message.Type}>");
             return;
         }
-
+        
         var replayReq = req[1];
 
         _currentSection.Http = replayReq;
