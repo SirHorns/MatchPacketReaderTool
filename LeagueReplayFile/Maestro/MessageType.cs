@@ -1,0 +1,18 @@
+namespace LeagueReplayFile.Maestro;
+
+public enum MessageType
+{
+    GAME_START = 0,
+    GAME_END = 1,
+    GAME_CRASHED = 2,
+    CLOSE = 3,
+    HEARTBEAT = 4,
+    ACK = 5,
+    GAMECLIENT_CREATE = 6,
+    GAMECLIENT_ABANDONED = 7,
+    GAMECLIENT_LAUNCHED = 8,
+    GAMECLIENT_STOPPED = 9,
+    GAMECLIENT_CONNECTED_TO_SERVER = 10,
+    CHATMESSAGE_TO_GAME = 11,
+    CHATMESSAGE_FROM_GAME = 12,
+}

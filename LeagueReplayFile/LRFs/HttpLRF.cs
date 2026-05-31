@@ -1,3 +1,4 @@
+using LeagueReplayFile.Maestro;
 using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
 
@@ -17,6 +18,9 @@ public class HttpLRF : LRF
     /// Represents Http requests and their following data
     /// </summary>
     public List<Section> Sections { get; internal set; } = [];
+
+    public List<MaestroMessage> Messages { get; internal set; } = [];
+    
 
     public List<LastChunkInfoSection> GetLastChunkInfoSections()
     {
@@ -56,4 +60,5 @@ public class HttpLRF : LRF
         }
         return sections;
     }
+    
 }

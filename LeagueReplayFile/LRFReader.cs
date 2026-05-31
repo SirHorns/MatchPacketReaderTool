@@ -40,6 +40,8 @@ public static class LRFReader
             throw new NullReferenceException("Unable to read metadata!");
         }
         
+        Console.WriteLine($"[LRF METADATA]\n{JsonConvert.SerializeObject(metaData)}");
+        
         LRF lrf;
         if (isNfo)
         {

@@ -2,6 +2,7 @@
 using LeagueReplayFile.Encryption;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.LRFs;
+using LeagueReplayFile.Maestro;
 using LeagueReplayFile.Models;
 using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
@@ -20,6 +21,8 @@ public class HttpReplayParser : HttpProtocol
     private RequestType _currentRequestType;
     private HttpState _currentHttpState;
     private Section? _currentSection;
+    private bool _checkForMaestroData;
+    private MaestroMessage? _lastMaestroMessage;
     private HttpLRF _lrf;
     
     private List<byte> Buffer { get; }
@@ -291,6 +294,7 @@ public class HttpReplayParser : HttpProtocol
                 break;
             case RequestType.GAME_META_DATA:
                 _lrf.GameMetaData = (_currentSection as GameMetaDataSection).GameMetaData;
+                Console.WriteLine($"[GAME METADATA]\n{json}");
                 break;
             case RequestType.LAST_CHUNK_INFO:
                 break;
@@ -317,61 +321,70 @@ public class HttpReplayParser : HttpProtocol
             Segment = segment,
         };
 
-        
-        var str = Encoding.UTF8.GetString(data);
-
-        if (str.StartsWith("<"))
+        if (data.Length == 16) // Maestro message packets ate four sets of 8 bytes longs (16 bytes)
         {
-            //Console.WriteLine("XMPP in stream http stream??");
-            //str.Replace("<>", "");
-            //str.Replace("</>", "");
-            Console.WriteLine($"[XMPP]: {str}");
-            return;
-        }
-        
-        var req = str.Split(' ');
-        var httpReq = req[0];
-
-        if (req.Length <= 1)
-        {
-            var message = Testing.Read(data);
+            var message = MaestroMessage.Read(data);
+            _lastMaestroMessage = message;
+            _lrf.Messages.Add(message);
+            if (message.Type is  (MessageType.ACK or MessageType.HEARTBEAT))
+            {
+                return;
+            }
+            Console.Write($"[MAESTRO]: {message.Type};");
+            if (message.DataLength > 0)
+            {
+                Console.WriteLine($" Next data is {message.DataLength} bytes long;");
+            }
+            else
+            {
+                Console.WriteLine("");
+            }
             switch (message.Type)
             {
-                case MessageTypes.GAME_START:
+                case MessageType.GAME_START:
                     break;
-                case MessageTypes.GAME_END:
+                case MessageType.GAME_END:
                     break;
-                case MessageTypes.GAME_CRASHED:
+                case MessageType.GAME_CRASHED:
                     break;
-                case MessageTypes.CLOSE:
+                case MessageType.CLOSE:
                     break;
-                case MessageTypes.HEARTBEAT:
-                case MessageTypes.ACK:
+                case MessageType.HEARTBEAT:
+                    break;
+                case MessageType.ACK:
                     return;
-                case MessageTypes.GAMECLIENT_CREATE:
+                case MessageType.GAMECLIENT_CREATE:
                     break;
-                case MessageTypes.GAMECLIENT_ABANDONED:
+                case MessageType.GAMECLIENT_ABANDONED:
                     break;
-                case MessageTypes.GAMECLIENT_LAUNCHED:
+                case MessageType.GAMECLIENT_LAUNCHED:
                     break;
-                case MessageTypes.GAMECLIENT_STOPPED:
+                case MessageType.GAMECLIENT_STOPPED:
                     break;
-                case MessageTypes.GAMECLIENT_CONNECTED_TO_SERVER:
+                case MessageType.GAMECLIENT_CONNECTED_TO_SERVER:
                     break;
-                case MessageTypes.CHATMESSAGE_TO_GAME:
-                    break;
-                case MessageTypes.CHATMESSAGE_FROM_GAME:
-                    var reader = new BinaryReader(new MemoryStream(data));
-                    var bytes = reader.ReadBytes(message.DataLength);
-                    break;
-                case MessageTypes.DUMMY:
+                case MessageType.CHATMESSAGE_TO_GAME:
+                case MessageType.CHATMESSAGE_FROM_GAME:
+                    _checkForMaestroData = true;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
-            Console.WriteLine($"[MAESTRO]: <{string.Join(",", data)}>\n<{message.Type}>");
             return;
         }
+
+        var text = Encoding.UTF8.GetString(data);
+        Console.WriteLine($"{text}");
+        if (_checkForMaestroData)
+        {
+            _lastMaestroMessage.ExtraBytes = data;
+            _checkForMaestroData = false;
+            return;
+        }
+        
+        
+        var req = text.Split(' ');
+        var httpReq = req[0];
         
         var replayReq = req[1];
 
