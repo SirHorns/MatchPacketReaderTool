@@ -109,7 +109,7 @@ public static class Program
     {
         Console.WriteLine("Serialize replay? (y/n)");
         var answer = Console.ReadLine();
-        if (string.IsNullOrEmpty(answer) || answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+        if (string.IsNullOrEmpty(answer) || !answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
         {
             return;
         }
@@ -125,11 +125,12 @@ public static class Program
         } 
         if (slrf == null)
         {
+            Console.Error.WriteLine("Couldn't serialize replay. Possible error in stream or no packets to serialize?");
             return;
         }
         Console.WriteLine("Unhash serialized replay? (y/n)");
         answer = Console.ReadLine();
-        if (!string.IsNullOrEmpty(answer) && !answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+        if (!string.IsNullOrEmpty(answer) && answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
         {
             Console.WriteLine("Unhashing replay...");
             try
@@ -143,7 +144,7 @@ public static class Program
         }
         Console.WriteLine("Write serialized replay to file? (y/n)");
         answer = Console.ReadLine();
-        if (!string.IsNullOrEmpty(answer) && !answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
+        if (!string.IsNullOrEmpty(answer) && answer.Equals("y", StringComparison.InvariantCultureIgnoreCase))
         {
             WriteToFile(slrf, fileName);
         }
