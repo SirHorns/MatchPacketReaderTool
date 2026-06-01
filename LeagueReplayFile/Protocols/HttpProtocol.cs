@@ -9,8 +9,6 @@ public abstract class HttpProtocol
 
     protected byte[] HTTP_END = { 0x0D, 0x0A, 0x0D, 0x0A };
     
-    protected HttpProtocol() { }
-    
     //<•······················•<>•······················•>
 
     protected abstract void Http(byte[] data);

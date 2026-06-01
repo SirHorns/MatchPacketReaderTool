@@ -6,11 +6,19 @@ using LeagueReplayFile.Parsers;
 using LeagueReplayFile.Protocols.ENet;
 using Newtonsoft.Json;
 using ENetPacketFlags = LeagueReplayFile.Protocols.ENet.ENetPacketFlags;
+using StreamReader = LeagueReplayFile.Parsers.StreamReader;
 
 namespace LeagueReplayFile;
 
 public static class LRFReader
 {
+    public static Version SpectatorVersion;
+
+    static LRFReader()
+    {
+        SpectatorVersion = new Version("1.56");
+    }
+    
     /// <summary>
     /// Reads a LRF file from a stream and returns a LRF object
     /// </summary>
@@ -39,9 +47,6 @@ public static class LRFReader
         {
             throw new NullReferenceException("Unable to read metadata!");
         }
-        
-        Console.WriteLine($"[LRF METADATA]\n{JsonConvert.SerializeObject(metaData)}");
-        
         LRF lrf;
         if (isNfo)
         {
@@ -70,6 +75,25 @@ public static class LRFReader
                 BasicHeader = header
             };
         }
+        
+        var  replayVersion = new Version(metaData.ReplayVersion);
+        Version clientVersion;
+        if (!string.IsNullOrEmpty(metaData.ClientVersion))
+        {
+            clientVersion = new Version(metaData.ClientVersion);
+        }
+        else
+        {
+            clientVersion = new Version("0.0.0.0");
+        }
+
+        lrf.ReplayVersion = replayVersion;
+        lrf.ClientVersion = clientVersion;
+        
+        PrintLRFMetaData(lrf);
+        
+        
+        
         if (isNfo)
         {
             NFO((StreamLRF)lrf, reader);
@@ -132,7 +156,6 @@ public static class LRFReader
         {
             type = metaData.SpectatorMode ? LRFType.HTTP : LRFType.ENET;
         }
-        
         return metaData;
     }
     
@@ -193,8 +216,8 @@ public static class LRFReader
 
     private static void Spectator(HttpLRF lrf, byte[] data)
     {
-        var parser = new HttpReplayParser(lrf);
-        parser.Test(data);
+        var parser = new HttpReader(lrf);
+        parser.Read(data);
         lrf.Sections = parser.Sections;
     }
     
@@ -241,8 +264,32 @@ public static class LRFReader
                     break;
             }
         }
-        var parser = new StreamReplayParser(version, lrf.MetaData.EncryptionKey);
+        var parser = new StreamReader(version, lrf.MetaData.EncryptionKey);
         parser.Read(data);
         lrf.Packets = parser.Packets;
+    }
+    
+    //
+    
+    private static void PrintLRFMetaData(LRF lrf)
+    {
+        var metaData = lrf.MetaData;
+        Console.WriteLine("<LRF METADATA>");
+        Console.WriteLine($"ClientVersion: {lrf.ClientVersion}.");
+        Console.WriteLine($"ReplayVersion: {lrf.ReplayVersion}.");
+        Console.WriteLine($"MatchID: {metaData.MatchId}.");
+        Console.WriteLine($"EncryptionKey: {Convert.ToBase64String(metaData.EncryptionKey)}.");
+        Console.WriteLine($"AccountID: {metaData.AccountId}.");
+        Console.WriteLine($"Platform: {metaData.Region}.");
+        Console.WriteLine($"SpectorMode: {metaData.SpectatorMode}.");
+        Console.WriteLine($"Stream: {metaData.IsStream}.");
+        Console.WriteLine($"ObserverStream: {metaData.ObserverStream}.");
+        if (lrf.ReplayVersion > SpectatorVersion)
+        {
+            Console.WriteLine($"[WARNING] ReplayVersion {lrf.ReplayVersion} is newer than {SpectatorVersion}.\n" +
+                              $"These use the SpectatorID API and possibly contain Maestro Packets embedded " +
+                              $"in the replay data.");
+        }
+        Console.WriteLine("</LRF METADATA>]");
     }
 }

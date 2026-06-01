@@ -15,7 +15,6 @@ public class DataSegment
         DataSegment segment;
         var time = reader.ReadSingle();
         var length = reader.ReadInt32();
-        Console.WriteLine(length);
         var segmentData = reader.ReadExactBytes(length);
         var padding = reader.ReadByte();
 

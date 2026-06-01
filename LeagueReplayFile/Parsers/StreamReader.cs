@@ -9,7 +9,7 @@ namespace LeagueReplayFile.Parsers;
 /// <summary>
 /// Parses replays sent as a stream
 /// </summary>
-public class StreamReplayParser : ENetProtocol
+public class StreamReader : ENetProtocol
 {
     private BlowFish _blowfish { get; }
     public List<DataSegment> Segments { get; } = new();
@@ -17,7 +17,7 @@ public class StreamReplayParser : ENetProtocol
     public ENetGameClientVersions Version { get; }
     protected Dictionary<byte, Dictionary<ushort, FragmentBuffer>> ChannelFragmentBuffer = MakeChannelBuffers();
 
-    public StreamReplayParser(ENetGameClientVersions version, byte[] key)
+    public StreamReader(ENetGameClientVersions version, byte[] key)
     {
         Version = version;
         _blowfish = new BlowFish(key);

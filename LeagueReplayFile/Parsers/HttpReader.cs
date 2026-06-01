@@ -8,13 +8,14 @@ using LeagueReplayFile.Models.Http;
 using LeagueReplayFile.Models.Sections;
 using LeagueReplayFile.Protocols;
 using LeagueReplayFile.Protocols.ENet;
+using Newtonsoft.Json;
 
 namespace LeagueReplayFile.Parsers;
 
 /// <summary>
 /// Parses replays sent over HTTP
 /// </summary>
-public class HttpReplayParser : HttpProtocol
+public class HttpReader : HttpProtocol
 {
     private readonly BlowFish _blowfish;
     
@@ -31,7 +32,7 @@ public class HttpReplayParser : HttpProtocol
     public List<ENetPacket> Packets { get; }
     public List<Section> Sections { get; }
     
-    public HttpReplayParser(HttpLRF lrf)
+    public HttpReader(HttpLRF lrf)
     {
         _lrf = lrf;
         var encryptionKey = lrf.MetaData.EncryptionKey;
@@ -54,18 +55,36 @@ public class HttpReplayParser : HttpProtocol
     private bool _read;
     
 
-    public void Test(byte[] replayBytes)
+    public void Read(byte[] replayBytes)
     {
-        
-        Console.WriteLine("Reading/Parsing...");
-        List<byte[]> datas = [];
-        var offset = _lrf.MetaData.DataIndex[0].Value;
-        byte[] res = new byte[offset.Size];
-        Array.Copy(replayBytes, offset.Offset, res, 0, offset.Size);
-        
-        using var reader = new BinaryReader(new MemoryStream(res));
-        
-        
+        byte[] streamBytes;
+        var streamOffset = _lrf.MetaData.DataIndex[0].Value;
+        if (replayBytes.Length < streamOffset.Size)
+        {
+            Console.Error.WriteLine($"[WARNING]: Stream data size ({streamOffset.Size}) is larger than " +
+                                    $"recorded data size ({replayBytes.Length})! Defaulting to read all bytes.");
+            streamBytes = new byte[replayBytes.Length];
+            Array.Copy(replayBytes, streamBytes, replayBytes.Length);
+        }
+        else
+        {
+            streamBytes = new byte[streamOffset.Size];
+            Array.Copy(replayBytes, streamOffset.Offset, streamBytes, 0, streamOffset.Size);
+        }
+        using var reader = new BinaryReader(new MemoryStream(streamBytes));
+
+        if (_lrf.ReplayVersion > LRFReader.SpectatorVersion)
+        {
+            ReadSpectatorIdStream(reader);
+        }
+        else
+        {
+            ReadStream(reader);
+        }
+    }
+
+    private void ReadSpectatorIdStream(BinaryReader reader)
+    {
         while (reader.BaseStream.Position < reader.BaseStream.Length)
         {
             var time = reader.ReadSingle();
@@ -121,6 +140,17 @@ public class HttpReplayParser : HttpProtocol
             {
                 Console.WriteLine(Encoding.UTF8.GetString(data));
             }
+        }
+    }
+    
+    private void ReadStream(BinaryReader reader)
+    {
+        List<DataSegment> segments = [];
+        while (reader.BaseStream.Position < reader.BaseStream.Length)
+        {
+            var segment = DataSegment.Read(reader);
+            segments.Add(segment);
+            ParseSegment(segment);
         }
     }
 
@@ -344,7 +374,10 @@ public class HttpReplayParser : HttpProtocol
                 break;
             case RequestType.GAME_META_DATA:
                 _lrf.GameMetaData = (_currentSection as GameMetaDataSection).GameMetaData;
-                Console.WriteLine($"[GAME METADATA]\n{json}");
+                Console.WriteLine($"<GAME METADATA>");
+                Console.WriteLine($"EncryptionKey: {_lrf.GameMetaData.EncryptionKey}");
+                Console.WriteLine($"DecodedEncryptionKey: {_lrf.GameMetaData.DecodedEncryptionKey}");
+                Console.WriteLine($"</GAME METADATA>");
                 break;
             case RequestType.LAST_CHUNK_INFO:
                 break;
@@ -424,7 +457,6 @@ public class HttpReplayParser : HttpProtocol
         }
 
         var text = Encoding.UTF8.GetString(data);
-        Console.WriteLine($"{text}");
         if (_checkForMaestroData)
         {
             _lastMaestroMessage.ExtraBytes = data;
