@@ -18,12 +18,16 @@ public static class BinaryDataExtensions
     public static MemoryStream DecompressToMemoryStream(this BlowFish blowfish, byte[] data)
     {
         var decrypted = blowfish.Decrypt(data);
-        var result = new MemoryStream();
-        using var decompressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress);
-        decompressed.CopyTo(result);
-        result.Seek(0, SeekOrigin.Begin);
-        return result;
+        var decompressed = new MemoryStream();
+        using var compressed = new GZipStream(new MemoryStream(decrypted), CompressionMode.Decompress);
+        {
+            compressed.CopyTo(decompressed);
+        }
+        decompressed.Seek(0, SeekOrigin.Begin);
+        return decompressed;
     }
+    
+    //
     
     public static byte[] CompressToByteArray(this BlowFish blowfish, byte[] data)
     {
@@ -42,6 +46,8 @@ public static class BinaryDataExtensions
         decompressed.Write(output, 0, decrypted.Length);
         return output;
     }
+    
+    //
     
     public static byte[] Compress(this byte[] data)
     {

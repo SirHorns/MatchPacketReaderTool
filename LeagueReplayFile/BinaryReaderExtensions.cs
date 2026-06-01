@@ -5,10 +5,17 @@
         public static byte[] ReadExactBytes(this BinaryReader reader, int count)
         {
             var result = reader.ReadBytes(count);
+            
+            if (result.Length < count)
+            {
+                throw new IOException($"Tried to read past the end of Stream!");
+            }
+
             if(result.Length != count)
             {
                 throw new IOException($"Failed to read bytes, expected: {count}, got: {result.Length}!");
             }
+            
             return result;
         }
 

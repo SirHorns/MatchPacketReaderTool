@@ -194,8 +194,7 @@ public static class LRFReader
     private static void Spectator(HttpLRF lrf, byte[] data)
     {
         var parser = new HttpReplayParser(lrf);
-        var segments = parser.Read(data);
-        parser.Parse(segments);
+        parser.Test(data);
         lrf.Sections = parser.Sections;
     }
     

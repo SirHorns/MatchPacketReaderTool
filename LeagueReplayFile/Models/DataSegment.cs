@@ -12,12 +12,14 @@ public class DataSegment
 
     public static DataSegment Read(BinaryReader reader)
     {
+        DataSegment segment;
         var time = reader.ReadSingle();
         var length = reader.ReadInt32();
+        Console.WriteLine(length);
         var segmentData = reader.ReadExactBytes(length);
         var padding = reader.ReadByte();
-        
-        var segment = new DataSegment()
+
+        segment = new DataSegment()
         {
             Time = time,
             Length = length,

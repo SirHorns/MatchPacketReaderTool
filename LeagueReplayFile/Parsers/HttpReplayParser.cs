@@ -51,26 +51,76 @@ public class HttpReplayParser : HttpProtocol
         Buffer = [];
     }
 
-    public List<DataSegment> Read(byte[] data)
+    private bool _read;
+    
+
+    public void Test(byte[] replayBytes)
     {
-        using var reader = new BinaryReader(new MemoryStream(data));
-        Console.WriteLine("Reading DataSegments..."); 
-        List<DataSegment> segments = [];
+        
+        Console.WriteLine("Reading/Parsing...");
+        List<byte[]> datas = [];
+        var offset = _lrf.MetaData.DataIndex[0].Value;
+        byte[] res = new byte[offset.Size];
+        Array.Copy(replayBytes, offset.Offset, res, 0, offset.Size);
+        
+        using var reader = new BinaryReader(new MemoryStream(res));
+        
+        
         while (reader.BaseStream.Position < reader.BaseStream.Length)
         {
-            var segment = DataSegment.Read(reader);
-            segments.Add(segment);
-        }
-        Console.WriteLine($"Found {segments.Count} DataSegments");
-        return segments;
-    }
-
-    public void Parse(List<DataSegment> segments)
-    {
-        Console.WriteLine($"Parsing DataSegments...");
-        foreach (var segment in segments)
-        {
-            ParseSegment(segment);
+            var time = reader.ReadSingle();
+            var length = reader.ReadInt32();
+            Console.WriteLine($"Position: {reader.BaseStream.Position}  Reading: {length}");
+            byte[] data;
+            byte padding;
+            if (length + reader.BaseStream.Position > reader.BaseStream.Length)
+            {
+                Console.Error.WriteLine("Replay tries to go past stored stream!!!");
+                var remaining = reader.BaseStream.Length - reader.BaseStream.Position;
+                data = new byte[remaining];
+                for (int i = 0; i < remaining; i++)
+                {
+                    data[i] = reader.ReadByte();
+                }
+            }
+            else
+            {
+                data = reader.ReadExactBytes(length);
+                padding = reader.ReadByte();
+            }
+  
+            if (length == 16)
+            {
+                var mm = MaestroMessage.Read(data);
+                switch (mm.Type)
+                {
+                    case MessageType.CHATMESSAGE_TO_GAME:
+                        break;
+                    case MessageType.CHATMESSAGE_FROM_GAME:
+                        /*var x = 0;
+                        List<byte> t = [];
+                        while (x != mm.DataLength)
+                        {
+                            time = reader.ReadSingle();
+                            length = reader.ReadInt32();
+                            x += length;
+                            data = reader.ReadExactBytes(length); 
+                            t.AddRange(data);
+                            padding = reader.ReadByte();
+                        }
+                        mm.ExtraBytes = t.ToArray();
+                        Console.WriteLine(Encoding.UTF8.GetString(mm.ExtraBytes));*/
+                        //_read = true;
+                        break;
+                    default:
+                        continue;
+                }
+                Console.WriteLine($"<{mm.Type}> :: <{mm.DataLength}>:: <{mm.Unknown2}>");
+            }
+            else
+            {
+                Console.WriteLine(Encoding.UTF8.GetString(data));
+            }
         }
     }
 
