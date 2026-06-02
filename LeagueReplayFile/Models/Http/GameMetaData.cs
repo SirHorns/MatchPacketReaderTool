@@ -16,20 +16,20 @@ public class GameMetaData
     public string GameServerAddress { get;  set; }
     public int Port { get;  set; }
     public string EncryptionKey { get;  set; }
-    public int ChunkTimeInterval { get;  set; }
+    public long ChunkTimeInterval { get;  set; }
     public string StartTime { get;  set; }
     public bool GameEnded { get;  set; }
     public int LastChunkId { get;  set; }
     public int LastKeyFrameId { get;  set; }
     public int LastAvailableChunkId { get;  set; }
     public int EndStartupChunkId { get;  set; }
-    public int DelayTime { get;  set; }
+    public long DelayTime { get;  set; }
     public AvailableChunkInfo[] PendingAvailableChunkInfo { get;  set; }
     public AvailableKeyFrameInfo[] PendingAvailableKeyFrameInfo { get;  set; }
-    public int KeyFrameTimeInterval { get;  set; }
+    public long KeyFrameTimeInterval { get;  set; }
     public string DecodedEncryptionKey { get;  set; }
     public int StartGameChunkId { get;  set; }
-    public int GameLength { get;  set; }
+    public long GameLength { get;  set; }
     public int ClientAddedLag { get;  set; }
     public bool ClientBackFetchingEnabled { get;  set; }
     public int ClientBackFetchingFreq { get;  set; }

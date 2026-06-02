@@ -55,22 +55,8 @@ public class HttpReader : HttpProtocol
     private bool _read;
     
 
-    public void Read(byte[] replayBytes)
+    public void ReadStream(byte[] streamBytes)
     {
-        byte[] streamBytes;
-        var streamOffset = _lrf.MetaData.DataIndex[0].Value;
-        if (replayBytes.Length < streamOffset.Size)
-        {
-            Console.Error.WriteLine($"[WARNING]: Stream data size ({streamOffset.Size}) is larger than " +
-                                    $"recorded data size ({replayBytes.Length})! Defaulting to read all bytes.");
-            streamBytes = new byte[replayBytes.Length];
-            Array.Copy(replayBytes, streamBytes, replayBytes.Length);
-        }
-        else
-        {
-            streamBytes = new byte[streamOffset.Size];
-            Array.Copy(replayBytes, streamOffset.Offset, streamBytes, 0, streamOffset.Size);
-        }
         using var reader = new BinaryReader(new MemoryStream(streamBytes));
 
         if (_lrf.ReplayVersion > LRFReader.SpectatorVersion)

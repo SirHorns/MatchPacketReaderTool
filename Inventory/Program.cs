@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Text.Json.Serialization;
+using Inventory;
 using LeagueReplayFile;
 using LeagueReplayFileSerializer.Enums;
 using Newtonsoft.Json;
@@ -38,39 +39,17 @@ if (lrfs.Count == 0)
 }
 Console.WriteLine($"Total replays found: {count}");
 
-Console.WriteLine($"Looking for {args[1]} replays...");
-
-var i = 0;
-JArray jar = [];
-foreach (var lrfPath in lrfs)
+switch (args[1])
 {
-    var fileName = $"{Path.GetFileName(lrfPath)}";
-    var stream = File.OpenRead(lrfPath);
-    var metaData = LRFReader.Read(stream, out var type);
-    foreach (var player in metaData.Players)
-    {
-        if (player.Champion.ToLowerInvariant().Equals(args[1].ToLowerInvariant()))
-        {
-            i++;
-            Console.WriteLine($"[{i}]: {lrfPath}");
-            var heros = metaData.Players.Select(p => p.Champion.ToLowerInvariant());
-            Console.WriteLine($"- [{string.Join(", ", heros)}]");
-            object[] props = 
-            [
-                new JProperty("index", i), 
-                new JProperty("path", lrfPath), 
-                new JProperty("name", fileName), 
-                new JProperty("heros", heros)
-            ];
-            jar.Add(new JObject(props));
-        }
-    }
+    case "-c":
+        Searches.FindChampionReplays(directory, lrfs,args[2]);
+        break;
+    case "-s":
+        Searches.FindSpectatorReplays(directory, lrfs);
+        break;
+    default:
+        break;
 }
-
-Console.WriteLine($"Total {args[1]} replays found: {i}");
-var json = JsonConvert.SerializeObject(jar, Formatting.Indented,
-    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-File.WriteAllText($"{directory}\\{args[1]}_replays.json", json);
 
 Console.WriteLine("Press any key to exit...");
 Console.Read();

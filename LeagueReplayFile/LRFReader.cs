@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Text;
 using LeagueReplayFile.Enums;
 using LeagueReplayFile.LRFs;
@@ -100,27 +101,44 @@ public static class LRFReader
         } 
         else
         {
-            var offsetStart = stream.Position;
-            // Stream data
-            var streamOffset = metaData.DataIndex.First(kvp => kvp.Key == "stream").Value;
-            var data = reader.ReadExactBytes(streamOffset.Size);
-            if((data[0] & 0x4C) != 0)
+            Dictionary<string, byte[]> dataSets = [];
+            foreach (var (name, offset) in metaData.DataIndex)
             {
-                data = BDODecompress.Decompress(data);
+                dataSets.Add(name, reader.ReadExactBytes(offset.Size));
+            }
+            // Stream data
+            var streamData = dataSets["stream"];
+            if((streamData[0] & 0x4C) != 0)
+            {
+                streamData = BDODecompress.Decompress(streamData);
             }
             
             if (metaData.SpectatorMode)
             {
-               Spectator((HttpLRF)lrf, data);
+               Spectator((HttpLRF)lrf, streamData);
             }
             else //if (metaData.IsStream || metaData.ObserverStream)
             {
-                Stream((StreamLRF)lrf, data);
+                Stream((StreamLRF)lrf, streamData);
+            }
+
+            foreach (var (name, bytes) in dataSets)
+            {
+                switch (name)
+                {
+                    case "stream":
+                        continue;
+                    default:
+                        ReadScreenShot(bytes);
+                        break;
+                }
             }
         }
         
         return lrf;
     }
+
+    private static  void ReadScreenShot(byte[] bytes) { /*TODO*/ }
 
     /// <summary>
     /// Reads a LRF file from a stream and returns an LRF MetaData
@@ -217,7 +235,7 @@ public static class LRFReader
     private static void Spectator(HttpLRF lrf, byte[] data)
     {
         var parser = new HttpReader(lrf);
-        parser.Read(data);
+        parser.ReadStream(data);
         lrf.Sections = parser.Sections;
     }
     
