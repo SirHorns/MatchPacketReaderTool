@@ -8,7 +8,6 @@ public class GameDataChunkSection : Section, IStreamSection
     public int ID { get; internal set; }
     public long GameId { get; set; }
     public Chunk Chunk { get; internal set; } = new Chunk();
-    public byte[] PacketData { get; internal set; }
     
     public void Write(BinaryWriter writer)
     {

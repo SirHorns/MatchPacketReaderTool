@@ -5,11 +5,11 @@ namespace LeagueReplayFile.Models;
 /// </summary>
 public class DataSegment
 {
-    public float Time { get; init; }
-    public int Length { get; init; }
-    public byte[] Data { get; init; }
-    public byte Pad { get; init; }
-
+    public float Time { get; set; }
+    public int Length  { get; set; }
+    public byte[] Data { get; set; }
+    public byte Pad { get; set; }
+ 
     public static DataSegment Read(BinaryReader reader)
     {
         DataSegment segment;

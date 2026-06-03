@@ -235,52 +235,43 @@ public static class LRFReader
     private static void Spectator(HttpLRF lrf, byte[] data)
     {
         var parser = new HttpReader(lrf);
-        parser.ReadStream(data);
+        parser.ReadStreamData(data);
         lrf.Sections = parser.Sections;
     }
     
     private static void Stream(StreamLRF lrf, byte[] data)
     {
         ENetGameClientVersions version;
-        var clientVersion = lrf.MetaData.ClientVersion;
-        if (string.IsNullOrEmpty(clientVersion))
+        switch (lrf.ClientVersion.Major)
         {
-            version = ENetGameClientVersions.Unknown;
-        }
-        else
-        {
-            var majorVersion = int.Parse(clientVersion.Split('.')[0]);
-            switch (majorVersion)
-            { 
-                case 1:
-                    version = ENetGameClientVersions.Patch1;
-                    break;
-                case 2:
-                    version = ENetGameClientVersions.Patch2;
-                    break;
-                case 3:
-                    version = ENetGameClientVersions.Patch3;
-                    break;
-                case 4:
-                    version = ENetGameClientVersions.Patch4;
-                    break;
-                case 5:
-                    version = ENetGameClientVersions.Patch5;
-                    break;
-                case 6:
-                    version = ENetGameClientVersions.Patch6;
-                    break;
-                case 7:
-                    version = ENetGameClientVersions.Patch7;
-                    break;
-                case 8:
-                    version = ENetGameClientVersions.Patch8;
-                    break;
-                case < 8:
-                default:
-                    version = ENetGameClientVersions.Unknown;
-                    break;
-            }
+            case 1:
+                version = ENetGameClientVersions.Patch1;
+                break;
+            case 2:
+                version = ENetGameClientVersions.Patch2;
+                break;
+            case 3:
+                version = ENetGameClientVersions.Patch3;
+                break;
+            case 4:
+                version = ENetGameClientVersions.Patch4;
+                break;
+            case 5:
+                version = ENetGameClientVersions.Patch5;
+                break;
+            case 6:
+                version = ENetGameClientVersions.Patch6;
+                break;
+            case 7:
+                version = ENetGameClientVersions.Patch7;
+                break;
+            case 8:
+                version = ENetGameClientVersions.Patch8;
+                break;
+            case < 8:
+            default:
+                version = ENetGameClientVersions.Unknown;
+                break;
         }
         var parser = new StreamReader(version, lrf.MetaData.EncryptionKey);
         parser.Read(data);

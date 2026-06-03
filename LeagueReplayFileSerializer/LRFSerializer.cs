@@ -148,7 +148,7 @@ public static partial class LRFSerializer
                 case GameDataChunkSection gameDataSection:
                     var sgds = new SerializedGameDataSection()
                     {
-                        Type = gameDataSection.Type,
+                        Request = gameDataSection.Request,
                         Http = gameDataSection.Http,
                         Data = gameDataSection.Data,
                         Time = gameDataSection.Time,
@@ -165,7 +165,7 @@ public static partial class LRFSerializer
                 case KeyFrameSection keyFrameSection:
                     var skfs = new SerializedKeyFrameSection()
                     {
-                        Type = keyFrameSection.Type,
+                        Request = keyFrameSection.Request,
                         Http = keyFrameSection.Http,
                         Data = keyFrameSection.Data,
                         Time = keyFrameSection.Time,

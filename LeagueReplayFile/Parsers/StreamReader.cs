@@ -23,8 +23,6 @@ public class StreamReader : ENetProtocol
         _blowfish = new BlowFish(key);
     }
     
-    
-    
     /// <summary>
     /// Read the data stream from the ENet Chunk replay
     /// </summary>
@@ -52,9 +50,8 @@ public class StreamReader : ENetProtocol
     /// <param name="segment"></param>
     private void ParseSegment(DataSegment segment)
     {
-        var data = segment.Data;
         var time = segment.Time;
-        var stream = new MemoryStream(data);
+        var stream = new MemoryStream(segment.Data);
         using var reader = new BinaryReader(stream);
         Read(reader, time, Version);
     }
@@ -69,19 +66,7 @@ public class StreamReader : ENetProtocol
 
         return tmp;
     }
-
-    // overrides
-
-    protected override bool HandleProtocolHeader(ENetProtocolHeader header)
-    {
-        return base.HandleProtocolHeader(header);
-    }
-
-    protected override bool HandleProtocolCommandHeader(ENetProtocolHeader protocol, ENetProtocolCommandHeader command)
-    {
-        return base.HandleProtocolCommandHeader(protocol, command);
-    }
-
+    
     protected override bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader, ENetProtocolBase protocol)
     {
         dynamic dinProtocol = protocol;

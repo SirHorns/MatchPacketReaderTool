@@ -9,12 +9,7 @@ public abstract class ENetProtocol
     protected virtual bool HandleProtocol(ENetProtocolHeader protocolHeader, ENetProtocolCommandHeader commandHeader, ENetProtocolBase protocol) => true;
 
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="reader"></param>
-    /// <param name="timeReceived"></param>
-    /// <param name="version"></param>
+
     protected void Read(BinaryReader reader, float timeReceived, ENetGameClientVersions version)
     {
         var protocolHeaderSize = reader.BytesLeft();
