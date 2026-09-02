@@ -3,6 +3,7 @@ using LeaguePackets;
 using LeaguePackets.Game;
 using LeagueReplayFile.Enums;
 using LeagueReplayFileSerializer;
+using LeagueReplayFileSerializer.Data;
 
 namespace ReplayNamesUnhasher;
 

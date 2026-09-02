@@ -30,9 +30,8 @@ public static partial class LRFSerializer
         switch (lrf.Type)
         {
             case LRFType.HTTP:
-                var lrfSections = (lrf as HttpLRF).Sections;
-                SerializeSections(ref lrfSections);
-                slrf.Sections = lrfSections;
+                var sections = SerializeSections((lrf as HttpLRF).Sections);
+                slrf.Sections = sections;
                 break;
             case LRFType.NFO:
             case LRFType.ENET:
@@ -47,6 +46,8 @@ public static partial class LRFSerializer
         
         return slrf;
     }
+    
+    //
 
     /// <summary>
     /// Convert ENetPackets into LeaguePackets
@@ -138,11 +139,11 @@ public static partial class LRFSerializer
         return serializedPackets;
     }
 
-    private static void SerializeSections(ref List<Section> sections)
+    private static List<SerializedSection> SerializeSections(List<Section> sections)
     {
-        for (var i = 0; i < sections.Count; i++)
+        List<SerializedSection> res = [];
+        foreach (var section in sections)
         {
-            var section = sections[i];
             switch (section)
             {
                 case GameDataChunkSection gameDataSection:
@@ -160,7 +161,7 @@ public static partial class LRFSerializer
                             Packets = SerializePackets(gameDataSection.Chunk.Packets)
                         }
                     };
-                    sections[i] = sgds;
+                    res.Add(sgds);
                     break;
                 case KeyFrameSection keyFrameSection:
                     var skfs = new SerializedKeyFrameSection()
@@ -173,12 +174,13 @@ public static partial class LRFSerializer
                         ID = keyFrameSection.ID,
                         Packets = SerializePackets(keyFrameSection.Packets)
                     };
-                    sections[i] = skfs;
+                    res.Add(skfs);
                     break;
                 default:
                     continue;
             }
         }
+        return res;
     }
 
     private static int GetID(ENetPacket eNetPacket)
