@@ -8,8 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LeagueReplayFileUnhasher\LeagueReplayFileUnhasher.csproj" />
-      <ProjectReference Include="..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
+      <ProjectReference Include="..\..\LeagueReplayFileUnhasher\LeagueReplayFileUnhasher.csproj" />
+      <ProjectReference Include="..\..\ReplayNamesUnhasher\ReplayNamesUnhasher.csproj" />
     </ItemGroup>
 
 </Project>

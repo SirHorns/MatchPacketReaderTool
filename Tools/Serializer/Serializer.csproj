@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj" />
+      <ProjectReference Include="..\..\LeagueReplayFileSerializer\LeagueReplayFileSerializer.csproj" />
     </ItemGroup>
 
 </Project>
