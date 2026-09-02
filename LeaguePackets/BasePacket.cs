@@ -43,33 +43,49 @@ public abstract class BasePacket
         }
     }
     
-    public static BasePacket Create(byte[] data, ChannelID channel)
+    public static BasePacket? Create(byte[] data, ChannelID channel)
     {
-        switch (channel)
+        try
         {
-            case ChannelID.Default:
-                return KeyCheckPacket.Create(data);
-            case ChannelID.ClientToServer:
-            case ChannelID.SynchClock:
-            case ChannelID.Broadcast:
-            case ChannelID.BroadcastUnreliable:
-                return GamePacket.Create(data);
-            case ChannelID.Chat: {
-                var packet = new Chat();
-                packet.Read(data);
-                return packet;
+            switch (channel)
+            {
+                case ChannelID.Default:
+                    return KeyCheckPacket.Create(data);
+                case ChannelID.ClientToServer:
+                case ChannelID.SynchClock:
+                case ChannelID.Broadcast:
+                case ChannelID.BroadcastUnreliable:
+                    return GamePacket.Create(data);
+                case ChannelID.Chat:
+                {
+                    var packet = new Chat();
+                    packet.Read(data);
+                    return packet;
+                }
+                case ChannelID.QuickChat:
+                {
+                    var packet = new QuickChat();
+                    packet.Read(data);
+                    return packet;
+                }
+                case ChannelID.LoadingScreen:
+                {
+                    var packet = LoadScreenPacket.Create(data);
+                    return packet;
+                }
+                default:
+                    // Sometimes we get packets with unknown channels
+                    // Their use or what they do is unknown as of now
+                    return UnknownPacket.Create(data);
             }
-            case ChannelID.QuickChat:{
-                var packet = new QuickChat();
-                packet.Read(data);
-                return packet;
-            }
-            case ChannelID.LoadingScreen:
-                return LoadScreenPacket.Create(data);
-            default:
-                // Sometimes we get packets with unknown channels
-                // Their use or what they do is unknown as of now
-                return UnknownPacket.Create(data);
         }
+        catch (Exception e)
+        {
+            //ignore
+        }
+
+        var unknown1 = Unknown1.Create(data);
+
+        return unknown1;
     }
 }

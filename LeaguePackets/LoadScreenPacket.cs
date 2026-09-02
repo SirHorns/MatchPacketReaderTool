@@ -32,11 +32,11 @@ namespace LeaguePackets
                 throw new IOException("LoadScreenPacket too short!");
             }
             var id = (LoadScreenPacketID)data[0];
-            if (!Lookup.ContainsKey(id))
+            if (!Lookup.TryGetValue(id, out var value))
             {
                 throw new IOException($"Unknown payload packet!");
             }
-            var packet = Lookup[id]();
+            var packet = value();
             packet.Read(data);
             return packet;
         }
